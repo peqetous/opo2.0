@@ -4,15 +4,19 @@ El opositor indica qué temas ha estudiado hoy (por ejemplo: «Tema 1, Tema 14 y
 
 - **Fichero:** `utilidades/bitacora.md` (bitácora del estudio; no uses otro nombre de ruta).
 - **Fecha de hoy:** día/mes/año en formato numérico con ceros a la izquierda si aplica (ej. `02/05/2026`). Usa la fecha local del sistema donde corre el entorno.
-- **Temas:** extrae los números de tema del mensaje del usuario (normaliza «Tema», «tema», «TEMA», etc.). Construye un array de enteros únicos, ordenados de menor a mayor (ej. `[1, 14, 15]`).
+- **Temas:** extrae los números de tema del mensaje del usuario (normaliza «Tema», «tema», «TEMA», etc.). Construye una lista de enteros únicos, ordenados de menor a mayor (ej. `1, 14, 15`).
 
-**Formato de cada día** (append al final del fichero; si el fichero está vacío, añade antes una línea `# Bitácora de estudio` y una línea en blanco):
+**Formato:** una **tabla Markdown** en `utilidades/bitacora.md` con exactamente estas columnas: **Fecha** y **Temas**.
 
-- Encabezado de segundo nivel: `## DD/MM/AAAA`
-- Línea en blanco
-- Un bloque de código etiquetado como `yaml` con exactamente estas claves: `fecha` (string `DD/MM/AAAA`) y `temas` (lista de enteros, p. ej. `[1, 14, 15]`).
+- Primera línea del cuerpo tras el título: cabecera `| Fecha | Temas |`
+- Siguiente línea: separador `| --- | --- |`
+- Cada día es **una fila**: `| DD/MM/AAAA | n1, n2, n3 |` (en la columna Temas, números separados por coma y un espacio, sin corchetes).
 
-Si **ya existe** una sección `## DD/MM/AAAA` para la fecha de hoy, no dupliques el encabezado: actualiza solo el bloque `yaml` de ese día fusionando los temas ya guardados con los números nuevos (unión, sin duplicados, orden ascendente).
+Si el fichero está vacío o no tiene tabla, crea `# Bitácora de estudio`, la cabecera y el separador, y la primera fila.
+
+Si **ya existe una fila** cuya columna Fecha coincide con la fecha de hoy, **no añadas otra fila**: edita solo esa fila y fusiona los temas ya guardados con los nuevos (unión, sin duplicados, orden ascendente), manteniendo el mismo formato en la columna Temas.
+
+Si es un **día nuevo**, añade una **nueva fila** al final de la tabla (antes de cualquier línea en blanco final opcional).
 
 ## 2. Git: cambios y subida a `main`
 
