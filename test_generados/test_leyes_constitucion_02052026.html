@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Test Constitución Española - 100 preguntas</title>
+  <style>
+    :root {
+      --bg: #f2f2f7;
+      --surface: #ffffff;
+      --separator: rgba(60, 60, 67, 0.12);
+      --text: #1c1c1e;
+      --text-secondary: rgba(60, 60, 67, 0.6);
+      --text-tertiary: rgba(60, 60, 67, 0.45);
+      --blue: #007aff;
+      --blue-pressed: #0062cc;
+      --green: #34c759;
+      --red: #ff3b30;
+      --radius-lg: 14px;
+      --radius-pill: 980px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Text",
+        "SF Pro Display",
+        "Helvetica Neue",
+        sans-serif;
+      font-size: 17px;
+      line-height: 1.35;
+      letter-spacing: -0.022em;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1.25rem;
+      padding-top: max(0.75rem, env(safe-area-inset-top));
+      background: rgba(255, 255, 255, 0.72);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .topbar-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.024em;
+    }
+
+    .timer-block {
+      text-align: right;
+      min-width: 4.5rem;
+    }
+
+    .timer-block .timer-caption {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 1px;
+    }
+
+    .timer-block .timer-value {
+      font-size: 20px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .timer-block.inactivo .timer-value {
+      color: var(--text-tertiary);
+    }
+
+    main {
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 2.5rem;
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .sheet {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.25rem 1.35rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .sheet + .sheet {
+      margin-top: 1rem;
+    }
+
+    .inicio .lead {
+      margin: 0 0 0.75rem;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .hint {
+      margin: 0 0 1.25rem;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text-tertiary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.022em;
+      padding: 0.65rem 1.35rem;
+      border: none;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-pressed);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.38;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    #panel-examen {
+      margin-top: 1rem;
+    }
+
+    #panel-examen[hidden] {
+      display: none !important;
+    }
+
+    fieldset {
+      margin: 0 0 0.75rem;
+      padding: 0;
+      border: none;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    fieldset:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .enunciado {
+      padding: 0.95rem 1rem 0.85rem;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.022em;
+      line-height: 1.35;
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .options {
+      padding: 0 0 0.35rem;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 0;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      font-size: 17px;
+      color: var(--text);
+      border-top: 0.5px solid var(--separator);
+    }
+
+    label.opt-skip {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    label:first-of-type {
+      border-top: none;
+    }
+
+    label input {
+      margin: 0;
+      width: 1.15rem;
+      height: 1.15rem;
+      accent-color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .acciones {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .acciones .hint {
+      margin: 0;
+    }
+
+    #panel-inicio[hidden],
+    #panel-resultados[hidden] {
+      display: none !important;
+    }
+
+    .result-block h2 {
+      margin: 0 0 0.35rem;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.026em;
+    }
+
+    .result-block .puntos {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.35rem;
+      line-height: 1.15;
+    }
+
+    .result-block .detalle {
+      margin: 0 0 1.5rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .result-block h3 {
+      margin: 0 0 0.5rem;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-tertiary);
+    }
+
+    .result-block h3 + .result-muted {
+      margin-top: -0.25rem;
+    }
+
+    .result-muted {
+      margin: 0 0 1rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .err-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .err-list li {
+      padding: 0.85rem 1rem;
+      background: rgba(255, 59, 48, 0.06);
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      border: 0.5px solid rgba(255, 59, 48, 0.18);
+    }
+
+    .err-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .err-list li strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .err-list .mini {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    .err-list .explicacion {
+      display: block;
+      margin-top: 0.55rem;
+      padding-top: 0.55rem;
+      border-top: 0.5px solid rgba(255, 59, 48, 0.2);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .omit-list li {
+      background: rgba(60, 60, 67, 0.06);
+      border-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .omit-list .explicacion {
+      border-top-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .bloque-repaso {
+      margin-bottom: 1.25rem;
+    }
+
+    .bloque-repaso:last-child {
+      margin-bottom: 0;
+    }
+
+    .sin-errores {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--green);
+    }
+    </style>
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="topbar-title">Test Constitución Española - 100 preguntas</h1>
+    <div id="timer-block" class="timer-block inactivo" aria-live="polite">
+      <span class="timer-caption">Transcurrido</span>
+      <span id="timer" class="timer-value">0:00</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="panel-inicio" class="sheet inicio">
+      <p class="lead">
+        Pulsa <strong>Empezar</strong> para iniciar el cronómetro y ver las 100 preguntas.
+        Puedes pulsar <strong>Corregir</strong> cuando quieras; las que dejes en «Sin responder» no suman ni restan.
+      </p>
+      <p class="hint">
+        Puntuación (solo sobre las contestadas, excluido «Sin responder»): cada 2 incorrectas restan 1 acierto (la nota puede ser negativa).
+      </p>
+      <button type="button" class="btn btn-primary" id="btn-empezar">Empezar</button>
+    </section>
+
+    <section id="panel-examen" hidden>
+      <form id="form-examen">
+        <!-- Fuente: Constitución Española, art. 1 -->
+        <fieldset data-q="q1">
+          <legend class="visually-hidden">Pregunta 1</legend>
+          <div class="enunciado" id="enun-q1"><strong>1.</strong> Según el artículo 1 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q1">
+            <label><input type="radio" name="q1" value="a" /> a) España se constituye en un Estado social y democrático de Derecho, que propugna como valores superiores de su ordenamiento jurídico la libertad, la justicia, la igualdad y el pluralismo político.</label>
+            <label><input type="radio" name="q1" value="b" /> b) Toda persona tiene derecho a la libertad y a la seguridad.</label>
+            <label><input type="radio" name="q1" value="c" /> c) Los poderes públicos promoverán y tutelarán el acceso a la cultura, a la que todos tienen derecho.</label>
+            <label class="opt-skip"><input type="radio" name="q1" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 2 -->
+        <fieldset data-q="q2">
+          <legend class="visually-hidden">Pregunta 2</legend>
+          <div class="enunciado" id="enun-q2"><strong>2.</strong> Según el artículo 2 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q2">
+            <label><input type="radio" name="q2" value="a" /> a) Todos tienen el derecho a disfrutar de un medio ambiente adecuado para el desarrollo de la persona, así como el deber de conservarlo.</label>
+            <label><input type="radio" name="q2" value="b" /> b) La Constitución se fundamenta en la indisoluble unidad de la Nación española, patria común e indivisible de todos los españoles, y reconoce y garantiza el derecho a la autonomía de las nacionalidades y regiones que la integran y la solidaridad entre todas ellas.</label>
+            <label><input type="radio" name="q2" value="c" /> c) Se garantiza el derecho al honor, a la intimidad personal y familiar y a la propia imagen.</label>
+            <label class="opt-skip"><input type="radio" name="q2" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 3 -->
+        <fieldset data-q="q3">
+          <legend class="visually-hidden">Pregunta 3</legend>
+          <div class="enunciado" id="enun-q3"><strong>3.</strong> Según el artículo 3 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q3">
+            <label><input type="radio" name="q3" value="a" /> a) Los españoles tienen derecho a elegir libremente su residencia y a circular por el territorio nacional.</label>
+            <label><input type="radio" name="q3" value="b" /> b) Los poderes públicos garantizarán la conservación y promoverán el enriquecimiento del patrimonio histórico, cultural y artístico de los pueblos de España y de los bienes que lo integran, cualquiera que sea su régimen jurídico y su titularidad.</label>
+            <label><input type="radio" name="q3" value="c" /> c) El castellano es la lengua española oficial del Estado.</label>
+            <label class="opt-skip"><input type="radio" name="q3" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 4 -->
+        <fieldset data-q="q4">
+          <legend class="visually-hidden">Pregunta 4</legend>
+          <div class="enunciado" id="enun-q4"><strong>4.</strong> Según el artículo 4 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q4">
+            <label><input type="radio" name="q4" value="a" /> a) La bandera de España está formada por tres franjas horizontales, roja, amarilla y roja, siendo la amarilla de doble anchura que cada una de las rojas.</label>
+            <label><input type="radio" name="q4" value="b" /> b) Se reconocen y protegen los derechos: a) A expresar y difundir libremente los pensamientos, ideas y opiniones mediante la palabra, el escrito o cualquier otro medio de reproducción.</label>
+            <label><input type="radio" name="q4" value="c" /> c) Todos los españoles tienen derecho a disfrutar de una vivienda digna y adecuada.</label>
+            <label class="opt-skip"><input type="radio" name="q4" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 5 -->
+        <fieldset data-q="q5">
+          <legend class="visually-hidden">Pregunta 5</legend>
+          <div class="enunciado" id="enun-q5"><strong>5.</strong> Según el artículo 5 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q5">
+            <label><input type="radio" name="q5" value="a" /> a) Los poderes públicos promoverán las condiciones para la participación libre y eficaz de la juventud en el desarrollo político, social, económico y cultural.</label>
+            <label><input type="radio" name="q5" value="b" /> b) La capital del Estado es la villa de Madrid.</label>
+            <label><input type="radio" name="q5" value="c" /> c) Se reconoce el derecho de reunión pacífica y sin armas.</label>
+            <label class="opt-skip"><input type="radio" name="q5" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 6 -->
+        <fieldset data-q="q6">
+          <legend class="visually-hidden">Pregunta 6</legend>
+          <div class="enunciado" id="enun-q6"><strong>6.</strong> Según el artículo 6 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q6">
+            <label><input type="radio" name="q6" value="a" /> a) Se reconoce el derecho de asociación.</label>
+            <label><input type="radio" name="q6" value="b" /> b) Las personas con discapacidad ejercen los derechos previstos en este Título en condiciones de libertad e igualdad reales y efectivas.</label>
+            <label><input type="radio" name="q6" value="c" /> c) Los partidos políticos expresan el pluralismo político, concurren a la formación y manifestación de la voluntad popular y son instrumento fundamental para la participación política.</label>
+            <label class="opt-skip"><input type="radio" name="q6" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 7 -->
+        <fieldset data-q="q7">
+          <legend class="visually-hidden">Pregunta 7</legend>
+          <div class="enunciado" id="enun-q7"><strong>7.</strong> Según el artículo 7 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q7">
+            <label><input type="radio" name="q7" value="a" /> a) Los sindicatos de trabajadores y las asociaciones empresariales contribuyen a la defensa y promoción de los intereses económicos y sociales que les son propios.</label>
+            <label><input type="radio" name="q7" value="b" /> b) Los ciudadanos tienen el derecho a participar en los asuntos públicos, directamente o por medio de representantes, libremente elegidos en elecciones periódicas por sufragio universal.</label>
+            <label><input type="radio" name="q7" value="c" /> c) Los poderes públicos garantizarán, mediante pensiones adecuadas y periódicamente actualizadas, la suficiencia económica a los ciudadanos durante la tercera edad.</label>
+            <label class="opt-skip"><input type="radio" name="q7" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 8 -->
+        <fieldset data-q="q8">
+          <legend class="visually-hidden">Pregunta 8</legend>
+          <div class="enunciado" id="enun-q8"><strong>8.</strong> Según el artículo 8 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q8">
+            <label><input type="radio" name="q8" value="a" /> a) Los poderes públicos garantizarán la defensa de los consumidores y usuarios, protegiendo, mediante procedimientos eficaces, la seguridad, la salud y los legítimos intereses económicos de los mismos.</label>
+            <label><input type="radio" name="q8" value="b" /> b) Las Fuerzas Armadas, constituidas por el Ejército de Tierra, la Armada y el Ejército del Aire, tienen como misión garantizar la soberanía e independencia de España, defender su integridad territorial y el ordenamiento constitucional.</label>
+            <label><input type="radio" name="q8" value="c" /> c) Todas las personas tienen derecho a obtener la tutela efectiva de los jueces y tribunales en el ejercicio de sus derechos e intereses legítimos, sin que, en ningún caso, pueda producirse indefensión.</label>
+            <label class="opt-skip"><input type="radio" name="q8" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 9 -->
+        <fieldset data-q="q9">
+          <legend class="visually-hidden">Pregunta 9</legend>
+          <div class="enunciado" id="enun-q9"><strong>9.</strong> Según el artículo 9 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q9">
+            <label><input type="radio" name="q9" value="a" /> a) Nadie puede ser condenado o sancionado por acciones u omisiones que en el momento de producirse no constituyan delito, falta o infracción administrativa, según la legislación vigente en aquel momento.</label>
+            <label><input type="radio" name="q9" value="b" /> b) La ley regulará las organizaciones profesionales que contribuyan a la defensa de los intereses económicos que les sean propios.</label>
+            <label><input type="radio" name="q9" value="c" /> c) Los ciudadanos y los poderes públicos están sujetos a la Constitución y al resto del ordenamiento jurídico.</label>
+            <label class="opt-skip"><input type="radio" name="q9" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 10 -->
+        <fieldset data-q="q10">
+          <legend class="visually-hidden">Pregunta 10</legend>
+          <div class="enunciado" id="enun-q10"><strong>10.</strong> Según el artículo 10 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q10">
+            <label><input type="radio" name="q10" value="a" /> a) La dignidad de la persona, los derechos inviolables que le son inherentes, el libre desarrollo de la personalidad, el respeto a la ley y a los derechos de los demás son fundamento del orden político y de la paz social.</label>
+            <label><input type="radio" name="q10" value="b" /> b) Se prohíben los Tribunales de Honor en el ámbito de la Administración civil y de las organizaciones profesionales.</label>
+            <label><input type="radio" name="q10" value="c" /> c) Los derechos y libertades reconocidos en el Capítulo segundo del presente Título vinculan a todos los poderes públicos.</label>
+            <label class="opt-skip"><input type="radio" name="q10" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 11 -->
+        <fieldset data-q="q11">
+          <legend class="visually-hidden">Pregunta 11</legend>
+          <div class="enunciado" id="enun-q11"><strong>11.</strong> Según el artículo 11 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q11">
+            <label><input type="radio" name="q11" value="a" /> a) Una ley orgánica regulará la institución del Defensor del Pueblo, como alto comisionado de las Cortes Generales, designado por éstas para la defensa de los derechos comprendidos en este Título, a cuyo efecto podrá supervisar la actividad de la Administración, dando cuenta a las Cortes Generales.</label>
+            <label><input type="radio" name="q11" value="b" /> b) La nacionalidad española se adquiere, se conserva y se pierde de acuerdo con lo establecido por la ley.</label>
+            <label><input type="radio" name="q11" value="c" /> c) Todos tienen el derecho a la educación.</label>
+            <label class="opt-skip"><input type="radio" name="q11" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 12 -->
+        <fieldset data-q="q12">
+          <legend class="visually-hidden">Pregunta 12</legend>
+          <div class="enunciado" id="enun-q12"><strong>12.</strong> Según el artículo 12 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q12">
+            <label><input type="radio" name="q12" value="a" /> a) Todos tienen derecho a sindicarse libremente.</label>
+            <label><input type="radio" name="q12" value="b" /> b) Los derechos reconocidos en los artículos 17, 18, apartados 2 y 3, artículos 19, 20, apartados 1, a) y d), y 5, artículos 21, 28, apartado 2, y artículo 37, apartado 2, podrán ser suspendidos cuando se acuerde la declaración del estado de excepción o de sitio en los términos previstos en la Constitución.</label>
+            <label><input type="radio" name="q12" value="c" /> c) Los españoles son mayores de edad a los dieciocho años.</label>
+            <label class="opt-skip"><input type="radio" name="q12" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 13 -->
+        <fieldset data-q="q13">
+          <legend class="visually-hidden">Pregunta 13</legend>
+          <div class="enunciado" id="enun-q13"><strong>13.</strong> Según el artículo 13 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q13">
+            <label><input type="radio" name="q13" value="a" /> a) Los extranjeros gozarán en España de las libertades públicas que garantiza el presente Título en los términos que establezcan los tratados y la ley.</label>
+            <label><input type="radio" name="q13" value="b" /> b) Todos los españoles tendrán el derecho de petición individual y colectiva, por escrito, en la forma y con los efectos que determine la ley.</label>
+            <label><input type="radio" name="q13" value="c" /> c) El Rey es el Jefe del Estado, símbolo de su unidad y permanencia, arbitra y modera el funcionamiento regular de las instituciones, asume la más alta representación del Estado español en las relaciones internacionales, especialmente con las naciones de su comunidad histórica, y ejerce las funciones que le atribuyen expresamente la Constitución y las leyes.</label>
+            <label class="opt-skip"><input type="radio" name="q13" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 14 -->
+        <fieldset data-q="q14">
+          <legend class="visually-hidden">Pregunta 14</legend>
+          <div class="enunciado" id="enun-q14"><strong>14.</strong> Según el artículo 14 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q14">
+            <label><input type="radio" name="q14" value="a" /> a) La Corona de España es hereditaria en los sucesores de S.</label>
+            <label><input type="radio" name="q14" value="b" /> b) Los españoles son iguales ante la ley, sin que pueda prevalecer discriminación alguna por razón de nacimiento, raza, sexo, religión, opinión o cualquier otra condición o circunstancia personal o social.</label>
+            <label><input type="radio" name="q14" value="c" /> c) Los españoles tienen el derecho y el deber de defender a España.</label>
+            <label class="opt-skip"><input type="radio" name="q14" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 15 -->
+        <fieldset data-q="q15">
+          <legend class="visually-hidden">Pregunta 15</legend>
+          <div class="enunciado" id="enun-q15"><strong>15.</strong> Según el artículo 15 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q15">
+            <label><input type="radio" name="q15" value="a" /> a) Todos contribuirán al sostenimiento de los gastos públicos de acuerdo con su capacidad económica mediante un sistema tributario justo inspirado en los principios de igualdad y progresividad que, en ningún caso, tendrá alcance confiscatorio.</label>
+            <label><input type="radio" name="q15" value="b" /> b) La Reina consorte o el consorte de la Reina no podrán asumir funciones constitucionales, salvo lo dispuesto para la Regencia.</label>
+            <label><input type="radio" name="q15" value="c" /> c) Todos tienen derecho a la vida y a la integridad física y moral, sin que, en ningún caso, puedan ser sometidos a tortura ni a penas o tratos inhumanos o degradantes.</label>
+            <label class="opt-skip"><input type="radio" name="q15" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 16 -->
+        <fieldset data-q="q16">
+          <legend class="visually-hidden">Pregunta 16</legend>
+          <div class="enunciado" id="enun-q16"><strong>16.</strong> Según el artículo 16 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q16">
+            <label><input type="radio" name="q16" value="a" /> a) Se garantiza la libertad ideológica, religiosa y de culto de los individuos y las comunidades sin más limitación, en sus manifestaciones, que la necesaria para el mantenimiento del orden público protegido por la ley.</label>
+            <label><input type="radio" name="q16" value="b" /> b) El hombre y la mujer tienen derecho a contraer matrimonio con plena igualdad jurídica.</label>
+            <label><input type="radio" name="q16" value="c" /> c) Cuando el Rey fuere menor de edad, el padre o la madre del Rey y, en su defecto, el pariente mayor de edad más próximo a suceder en la Corona, según el orden establecido en la Constitución, entrará a ejercer inmediatamente la Regencia y la ejercerá durante el tiempo de la minoría de edad del Rey.</label>
+            <label class="opt-skip"><input type="radio" name="q16" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 17 -->
+        <fieldset data-q="q17">
+          <legend class="visually-hidden">Pregunta 17</legend>
+          <div class="enunciado" id="enun-q17"><strong>17.</strong> Según el artículo 17 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q17">
+            <label><input type="radio" name="q17" value="a" /> a) Será tutor del Rey menor la persona que en su testamento hubiese nombrado el Rey difunto, siempre que sea mayor de edad y español de nacimiento; si no lo hubiese nombrado, será tutor el padre o la madre mientras permanezcan viudos.</label>
+            <label><input type="radio" name="q17" value="b" /> b) Toda persona tiene derecho a la libertad y a la seguridad.</label>
+            <label><input type="radio" name="q17" value="c" /> c) Se reconoce el derecho a la propiedad privada y a la herencia.</label>
+            <label class="opt-skip"><input type="radio" name="q17" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 18 -->
+        <fieldset data-q="q18">
+          <legend class="visually-hidden">Pregunta 18</legend>
+          <div class="enunciado" id="enun-q18"><strong>18.</strong> Según el artículo 18 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q18">
+            <label><input type="radio" name="q18" value="a" /> a) Se reconoce el derecho de fundación para fines de interés general, con arreglo a la ley.</label>
+            <label><input type="radio" name="q18" value="b" /> b) El Rey, al ser proclamado ante las Cortes Generales, prestará juramento de desempeñar fielmente sus funciones, guardar y hacer guardar la Constitución y las leyes y respetar los derechos de los ciudadanos y de las Comunidades Autónomas.</label>
+            <label><input type="radio" name="q18" value="c" /> c) Se garantiza el derecho al honor, a la intimidad personal y familiar y a la propia imagen.</label>
+            <label class="opt-skip"><input type="radio" name="q18" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 19 -->
+        <fieldset data-q="q19">
+          <legend class="visually-hidden">Pregunta 19</legend>
+          <div class="enunciado" id="enun-q19"><strong>19.</strong> Según el artículo 19 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q19">
+            <label><input type="radio" name="q19" value="a" /> a) Los españoles tienen derecho a elegir libremente su residencia y a circular por el territorio nacional.</label>
+            <label><input type="radio" name="q19" value="b" /> b) Todos los españoles tienen el deber de trabajar y el derecho al trabajo, a la libre elección de profesión u oficio, a la promoción a través del trabajo y a una remuneración suficiente para satisfacer sus necesidades y las de su familia, sin que en ningún caso pueda hacerse discriminación por razón de sexo.</label>
+            <label><input type="radio" name="q19" value="c" /> c) Corresponde al Rey: a) Sancionar y promulgar las leyes.</label>
+            <label class="opt-skip"><input type="radio" name="q19" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 20 -->
+        <fieldset data-q="q20">
+          <legend class="visually-hidden">Pregunta 20</legend>
+          <div class="enunciado" id="enun-q20"><strong>20.</strong> Según el artículo 20 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q20">
+            <label><input type="radio" name="q20" value="a" /> a) El Rey acredita a los embajadores y otros representantes diplomáticos.</label>
+            <label><input type="radio" name="q20" value="b" /> b) Se reconocen y protegen los derechos: a) A expresar y difundir libremente los pensamientos, ideas y opiniones mediante la palabra, el escrito o cualquier otro medio de reproducción.</label>
+            <label><input type="radio" name="q20" value="c" /> c) La ley regulará las peculiaridades propias del régimen jurídico de los Colegios Profesionales y el ejercicio de las profesiones tituladas.</label>
+            <label class="opt-skip"><input type="radio" name="q20" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 21 -->
+        <fieldset data-q="q21">
+          <legend class="visually-hidden">Pregunta 21</legend>
+          <div class="enunciado" id="enun-q21"><strong>21.</strong> Según el artículo 21 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q21">
+            <label><input type="radio" name="q21" value="a" /> a) La ley garantizará el derecho a la negociación colectiva laboral entre los representantes de los trabajadores y empresarios, así como la fuerza vinculante de los convenios.</label>
+            <label><input type="radio" name="q21" value="b" /> b) Los actos del Rey serán refrendados por el Presidente del Gobierno y, en su caso, por los Ministros competentes.</label>
+            <label><input type="radio" name="q21" value="c" /> c) Se reconoce el derecho de reunión pacífica y sin armas.</label>
+            <label class="opt-skip"><input type="radio" name="q21" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 22 -->
+        <fieldset data-q="q22">
+          <legend class="visually-hidden">Pregunta 22</legend>
+          <div class="enunciado" id="enun-q22"><strong>22.</strong> Según el artículo 22 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q22">
+            <label><input type="radio" name="q22" value="a" /> a) Se reconoce el derecho de asociación.</label>
+            <label><input type="radio" name="q22" value="b" /> b) Se reconoce la libertad de empresa en el marco de la economía de mercado.</label>
+            <label><input type="radio" name="q22" value="c" /> c) El Rey recibe de los Presupuestos del Estado una cantidad global para el sostenimiento de su Familia y Casa, y distribuye libremente la misma.</label>
+            <label class="opt-skip"><input type="radio" name="q22" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 23 -->
+        <fieldset data-q="q23">
+          <legend class="visually-hidden">Pregunta 23</legend>
+          <div class="enunciado" id="enun-q23"><strong>23.</strong> Según el artículo 23 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q23">
+            <label><input type="radio" name="q23" value="a" /> a) Las Cortes Generales representan al pueblo español y están formadas por el Congreso de los Diputados y el Senado.</label>
+            <label><input type="radio" name="q23" value="b" /> b) Los ciudadanos tienen el derecho a participar en los asuntos públicos, directamente o por medio de representantes, libremente elegidos en elecciones periódicas por sufragio universal.</label>
+            <label><input type="radio" name="q23" value="c" /> c) Los poderes públicos aseguran la protección social, económica y jurídica de la familia.</label>
+            <label class="opt-skip"><input type="radio" name="q23" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 24 -->
+        <fieldset data-q="q24">
+          <legend class="visually-hidden">Pregunta 24</legend>
+          <div class="enunciado" id="enun-q24"><strong>24.</strong> Según el artículo 24 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q24">
+            <label><input type="radio" name="q24" value="a" /> a) Los poderes públicos promoverán las condiciones favorables para el progreso social y económico y para una distribución de la renta regional y personal más equitativa, en el marco de una política de estabilidad económica.</label>
+            <label><input type="radio" name="q24" value="b" /> b) Nadie podrá ser miembro de las dos Cámaras simultáneamente, ni acumular el acta de una Asamblea de Comunidad Autónoma con la de Diputado al Congreso.</label>
+            <label><input type="radio" name="q24" value="c" /> c) Todas las personas tienen derecho a obtener la tutela efectiva de los jueces y tribunales en el ejercicio de sus derechos e intereses legítimos, sin que, en ningún caso, pueda producirse indefensión.</label>
+            <label class="opt-skip"><input type="radio" name="q24" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 25 -->
+        <fieldset data-q="q25">
+          <legend class="visually-hidden">Pregunta 25</legend>
+          <div class="enunciado" id="enun-q25"><strong>25.</strong> Según el artículo 25 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q25">
+            <label><input type="radio" name="q25" value="a" /> a) Nadie puede ser condenado o sancionado por acciones u omisiones que en el momento de producirse no constituyan delito, falta o infracción administrativa, según la legislación vigente en aquel momento.</label>
+            <label><input type="radio" name="q25" value="b" /> b) Los poderes públicos mantendrán un régimen público de Seguridad Social para todos los ciudadanos, que garantice la asistencia y prestaciones sociales suficientes ante situaciones de necesidad, especialmente en caso de desempleo.</label>
+            <label><input type="radio" name="q25" value="c" /> c) El Congreso se compone de un mínimo de 300 y un máximo de 400 Diputados, elegidos por sufragio universal, libre, igual, directo y secreto, en los términos que establezca la ley.</label>
+            <label class="opt-skip"><input type="radio" name="q25" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 26 -->
+        <fieldset data-q="q26">
+          <legend class="visually-hidden">Pregunta 26</legend>
+          <div class="enunciado" id="enun-q26"><strong>26.</strong> Según el artículo 26 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q26">
+            <label><input type="radio" name="q26" value="a" /> a) El Senado es la Cámara de representación territorial.</label>
+            <label><input type="radio" name="q26" value="b" /> b) Se prohíben los Tribunales de Honor en el ámbito de la Administración civil y de las organizaciones profesionales.</label>
+            <label><input type="radio" name="q26" value="c" /> c) El Estado velará especialmente por la salvaguardia de los derechos económicos y sociales de los trabajadores españoles en el extranjero y orientará su política hacia su retorno.</label>
+            <label class="opt-skip"><input type="radio" name="q26" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 27 -->
+        <fieldset data-q="q27">
+          <legend class="visually-hidden">Pregunta 27</legend>
+          <div class="enunciado" id="enun-q27"><strong>27.</strong> Según el artículo 27 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q27">
+            <label><input type="radio" name="q27" value="a" /> a) Se reconoce el derecho a la protección de la salud.</label>
+            <label><input type="radio" name="q27" value="b" /> b) La ley electoral determinará las causas de inelegibilidad e incompatibilidad de los Diputados y Senadores, que comprenderán, en todo caso: a) A los componentes del Tribunal Constitucional.</label>
+            <label><input type="radio" name="q27" value="c" /> c) Todos tienen el derecho a la educación.</label>
+            <label class="opt-skip"><input type="radio" name="q27" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 28 -->
+        <fieldset data-q="q28">
+          <legend class="visually-hidden">Pregunta 28</legend>
+          <div class="enunciado" id="enun-q28"><strong>28.</strong> Según el artículo 28 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q28">
+            <label><input type="radio" name="q28" value="a" /> a) Todos tienen derecho a sindicarse libremente.</label>
+            <label><input type="radio" name="q28" value="b" /> b) Los poderes públicos promoverán y tutelarán el acceso a la cultura, a la que todos tienen derecho.</label>
+            <label><input type="radio" name="q28" value="c" /> c) Los Diputados y Senadores gozarán de inviolabilidad por las opiniones manifestadas en el ejercicio de sus funciones.</label>
+            <label class="opt-skip"><input type="radio" name="q28" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 29 -->
+        <fieldset data-q="q29">
+          <legend class="visually-hidden">Pregunta 29</legend>
+          <div class="enunciado" id="enun-q29"><strong>29.</strong> Según el artículo 29 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q29">
+            <label><input type="radio" name="q29" value="a" /> a) Las Cámaras establecen sus propios Reglamentos, aprueban autónomamente sus presupuestos y, de común acuerdo, regulan el Estatuto del Personal de las Cortes Generales.</label>
+            <label><input type="radio" name="q29" value="b" /> b) Todos los españoles tendrán el derecho de petición individual y colectiva, por escrito, en la forma y con los efectos que determine la ley.</label>
+            <label><input type="radio" name="q29" value="c" /> c) Todos tienen el derecho a disfrutar de un medio ambiente adecuado para el desarrollo de la persona, así como el deber de conservarlo.</label>
+            <label class="opt-skip"><input type="radio" name="q29" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 30 -->
+        <fieldset data-q="q30">
+          <legend class="visually-hidden">Pregunta 30</legend>
+          <div class="enunciado" id="enun-q30"><strong>30.</strong> Según el artículo 30 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q30">
+            <label><input type="radio" name="q30" value="a" /> a) Los poderes públicos garantizarán la conservación y promoverán el enriquecimiento del patrimonio histórico, cultural y artístico de los pueblos de España y de los bienes que lo integran, cualquiera que sea su régimen jurídico y su titularidad.</label>
+            <label><input type="radio" name="q30" value="b" /> b) Las Cámaras se reunirán anualmente en dos períodos ordinarios de sesiones: el primero, de septiembre a diciembre, y el segundo, de febrero a junio.</label>
+            <label><input type="radio" name="q30" value="c" /> c) Los españoles tienen el derecho y el deber de defender a España.</label>
+            <label class="opt-skip"><input type="radio" name="q30" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 31 -->
+        <fieldset data-q="q31">
+          <legend class="visually-hidden">Pregunta 31</legend>
+          <div class="enunciado" id="enun-q31"><strong>31.</strong> Según el artículo 31 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q31">
+            <label><input type="radio" name="q31" value="a" /> a) Todos contribuirán al sostenimiento de los gastos públicos de acuerdo con su capacidad económica mediante un sistema tributario justo inspirado en los principios de igualdad y progresividad que, en ningún caso, tendrá alcance confiscatorio.</label>
+            <label><input type="radio" name="q31" value="b" /> b) Todos los españoles tienen derecho a disfrutar de una vivienda digna y adecuada.</label>
+            <label><input type="radio" name="q31" value="c" /> c) Las Cámaras se reunirán en sesión conjunta para ejercer las competencias no legislativas que el Título II atribuye expresamente a las Cortes Generales.</label>
+            <label class="opt-skip"><input type="radio" name="q31" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 32 -->
+        <fieldset data-q="q32">
+          <legend class="visually-hidden">Pregunta 32</legend>
+          <div class="enunciado" id="enun-q32"><strong>32.</strong> Según el artículo 32 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q32">
+            <label><input type="radio" name="q32" value="a" /> a) Las Cámaras funcionarán en Pleno y por Comisiones.</label>
+            <label><input type="radio" name="q32" value="b" /> b) El hombre y la mujer tienen derecho a contraer matrimonio con plena igualdad jurídica.</label>
+            <label><input type="radio" name="q32" value="c" /> c) Los poderes públicos promoverán las condiciones para la participación libre y eficaz de la juventud en el desarrollo político, social, económico y cultural.</label>
+            <label class="opt-skip"><input type="radio" name="q32" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 33 -->
+        <fieldset data-q="q33">
+          <legend class="visually-hidden">Pregunta 33</legend>
+          <div class="enunciado" id="enun-q33"><strong>33.</strong> Según el artículo 33 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q33">
+            <label><input type="radio" name="q33" value="a" /> a) Las personas con discapacidad ejercen los derechos previstos en este Título en condiciones de libertad e igualdad reales y efectivas.</label>
+            <label><input type="radio" name="q33" value="b" /> b) El Congreso y el Senado, y, en su caso, ambas Cámaras conjuntamente, podrán nombrar Comisiones de investigación sobre cualquier asunto de interés público.</label>
+            <label><input type="radio" name="q33" value="c" /> c) Se reconoce el derecho a la propiedad privada y a la herencia.</label>
+            <label class="opt-skip"><input type="radio" name="q33" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 34 -->
+        <fieldset data-q="q34">
+          <legend class="visually-hidden">Pregunta 34</legend>
+          <div class="enunciado" id="enun-q34"><strong>34.</strong> Según el artículo 34 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q34">
+            <label><input type="radio" name="q34" value="a" /> a) Se reconoce el derecho de fundación para fines de interés general, con arreglo a la ley.</label>
+            <label><input type="radio" name="q34" value="b" /> b) Los poderes públicos garantizarán, mediante pensiones adecuadas y periódicamente actualizadas, la suficiencia económica a los ciudadanos durante la tercera edad.</label>
+            <label><input type="radio" name="q34" value="c" /> c) Las Cámaras pueden recibir peticiones individuales y colectivas, siempre por escrito, quedando prohibida la presentación directa por manifestaciones ciudadanas.</label>
+            <label class="opt-skip"><input type="radio" name="q34" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 35 -->
+        <fieldset data-q="q35">
+          <legend class="visually-hidden">Pregunta 35</legend>
+          <div class="enunciado" id="enun-q35"><strong>35.</strong> Según el artículo 35 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q35">
+            <label><input type="radio" name="q35" value="a" /> a) En cada Cámara habrá una Diputación Permanente compuesta por un mínimo de veintiún miembros, que representarán a los grupos parlamentarios, en proporción a su importancia numérica.</label>
+            <label><input type="radio" name="q35" value="b" /> b) Todos los españoles tienen el deber de trabajar y el derecho al trabajo, a la libre elección de profesión u oficio, a la promoción a través del trabajo y a una remuneración suficiente para satisfacer sus necesidades y las de su familia, sin que en ningún caso pueda hacerse discriminación por razón de sexo.</label>
+            <label><input type="radio" name="q35" value="c" /> c) Los poderes públicos garantizarán la defensa de los consumidores y usuarios, protegiendo, mediante procedimientos eficaces, la seguridad, la salud y los legítimos intereses económicos de los mismos.</label>
+            <label class="opt-skip"><input type="radio" name="q35" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 36 -->
+        <fieldset data-q="q36">
+          <legend class="visually-hidden">Pregunta 36</legend>
+          <div class="enunciado" id="enun-q36"><strong>36.</strong> Según el artículo 36 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q36">
+            <label><input type="radio" name="q36" value="a" /> a) La ley regulará las organizaciones profesionales que contribuyan a la defensa de los intereses económicos que les sean propios.</label>
+            <label><input type="radio" name="q36" value="b" /> b) Para adoptar acuerdos, las Cámaras deben estar reunidas reglamentariamente y con asistencia de la mayoría de sus miembros.</label>
+            <label><input type="radio" name="q36" value="c" /> c) La ley regulará las peculiaridades propias del régimen jurídico de los Colegios Profesionales y el ejercicio de las profesiones tituladas.</label>
+            <label class="opt-skip"><input type="radio" name="q36" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 37 -->
+        <fieldset data-q="q37">
+          <legend class="visually-hidden">Pregunta 37</legend>
+          <div class="enunciado" id="enun-q37"><strong>37.</strong> Según el artículo 37 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q37">
+            <label><input type="radio" name="q37" value="a" /> a) La ley garantizará el derecho a la negociación colectiva laboral entre los representantes de los trabajadores y empresarios, así como la fuerza vinculante de los convenios.</label>
+            <label><input type="radio" name="q37" value="b" /> b) Los derechos y libertades reconocidos en el Capítulo segundo del presente Título vinculan a todos los poderes públicos.</label>
+            <label><input type="radio" name="q37" value="c" /> c) Las sesiones plenarias de las Cámaras serán públicas, salvo acuerdo en contrario de cada Cámara, adoptado por mayoría absoluta o con arreglo al Reglamento.</label>
+            <label class="opt-skip"><input type="radio" name="q37" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 38 -->
+        <fieldset data-q="q38">
+          <legend class="visually-hidden">Pregunta 38</legend>
+          <div class="enunciado" id="enun-q38"><strong>38.</strong> Según el artículo 38 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q38">
+            <label><input type="radio" name="q38" value="a" /> a) Son leyes orgánicas las relativas al desarrollo de los derechos fundamentales y de las libertades públicas, las que aprueben los Estatutos de Autonomía y el régimen electoral general y las demás previstas en la Constitución.</label>
+            <label><input type="radio" name="q38" value="b" /> b) Se reconoce la libertad de empresa en el marco de la economía de mercado.</label>
+            <label><input type="radio" name="q38" value="c" /> c) Una ley orgánica regulará la institución del Defensor del Pueblo, como alto comisionado de las Cortes Generales, designado por éstas para la defensa de los derechos comprendidos en este Título, a cuyo efecto podrá supervisar la actividad de la Administración, dando cuenta a las Cortes Generales.</label>
+            <label class="opt-skip"><input type="radio" name="q38" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 39 -->
+        <fieldset data-q="q39">
+          <legend class="visually-hidden">Pregunta 39</legend>
+          <div class="enunciado" id="enun-q39"><strong>39.</strong> Según el artículo 39 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q39">
+            <label><input type="radio" name="q39" value="a" /> a) Los derechos reconocidos en los artículos 17, 18, apartados 2 y 3, artículos 19, 20, apartados 1, a) y d), y 5, artículos 21, 28, apartado 2, y artículo 37, apartado 2, podrán ser suspendidos cuando se acuerde la declaración del estado de excepción o de sitio en los términos previstos en la Constitución.</label>
+            <label><input type="radio" name="q39" value="b" /> b) Las Cortes Generales podrán delegar en el Gobierno la potestad de dictar normas con rango de ley sobre materias determinadas no incluidas en el artículo anterior.</label>
+            <label><input type="radio" name="q39" value="c" /> c) Los poderes públicos aseguran la protección social, económica y jurídica de la familia.</label>
+            <label class="opt-skip"><input type="radio" name="q39" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 40 -->
+        <fieldset data-q="q40">
+          <legend class="visually-hidden">Pregunta 40</legend>
+          <div class="enunciado" id="enun-q40"><strong>40.</strong> Según el artículo 40 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q40">
+            <label><input type="radio" name="q40" value="a" /> a) Los poderes públicos promoverán las condiciones favorables para el progreso social y económico y para una distribución de la renta regional y personal más equitativa, en el marco de una política de estabilidad económica.</label>
+            <label><input type="radio" name="q40" value="b" /> b) El Rey es el Jefe del Estado, símbolo de su unidad y permanencia, arbitra y modera el funcionamiento regular de las instituciones, asume la más alta representación del Estado español en las relaciones internacionales, especialmente con las naciones de su comunidad histórica, y ejerce las funciones que le atribuyen expresamente la Constitución y las leyes.</label>
+            <label><input type="radio" name="q40" value="c" /> c) Las leyes de bases no podrán en ningún caso: a) Autorizar la modificación de la propia ley de bases.</label>
+            <label class="opt-skip"><input type="radio" name="q40" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 41 -->
+        <fieldset data-q="q41">
+          <legend class="visually-hidden">Pregunta 41</legend>
+          <div class="enunciado" id="enun-q41"><strong>41.</strong> Según el artículo 41 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q41">
+            <label><input type="radio" name="q41" value="a" /> a) Cuando una proposición de ley o una enmienda fuere contraria a una delegación legislativa en vigor, el Gobierno está facultado para oponerse a su tramitación.</label>
+            <label><input type="radio" name="q41" value="b" /> b) Los poderes públicos mantendrán un régimen público de Seguridad Social para todos los ciudadanos, que garantice la asistencia y prestaciones sociales suficientes ante situaciones de necesidad, especialmente en caso de desempleo.</label>
+            <label><input type="radio" name="q41" value="c" /> c) La Corona de España es hereditaria en los sucesores de S.</label>
+            <label class="opt-skip"><input type="radio" name="q41" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 42 -->
+        <fieldset data-q="q42">
+          <legend class="visually-hidden">Pregunta 42</legend>
+          <div class="enunciado" id="enun-q42"><strong>42.</strong> Según el artículo 42 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q42">
+            <label><input type="radio" name="q42" value="a" /> a) La Reina consorte o el consorte de la Reina no podrán asumir funciones constitucionales, salvo lo dispuesto para la Regencia.</label>
+            <label><input type="radio" name="q42" value="b" /> b) Las disposiciones del Gobierno que contengan legislación delegada recibirán el título de Decretos Legislativos.</label>
+            <label><input type="radio" name="q42" value="c" /> c) El Estado velará especialmente por la salvaguardia de los derechos económicos y sociales de los trabajadores españoles en el extranjero y orientará su política hacia su retorno.</label>
+            <label class="opt-skip"><input type="radio" name="q42" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 43 -->
+        <fieldset data-q="q43">
+          <legend class="visually-hidden">Pregunta 43</legend>
+          <div class="enunciado" id="enun-q43"><strong>43.</strong> Según el artículo 43 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q43">
+            <label><input type="radio" name="q43" value="a" /> a) Se reconoce el derecho a la protección de la salud.</label>
+            <label><input type="radio" name="q43" value="b" /> b) Cuando el Rey fuere menor de edad, el padre o la madre del Rey y, en su defecto, el pariente mayor de edad más próximo a suceder en la Corona, según el orden establecido en la Constitución, entrará a ejercer inmediatamente la Regencia y la ejercerá durante el tiempo de la minoría de edad del Rey.</label>
+            <label><input type="radio" name="q43" value="c" /> c) En caso de extraordinaria y urgente necesidad, el Gobierno podrá dictar disposiciones legislativas provisionales que tomarán la forma de Decretos-leyes y que no podrán afectar al ordenamiento de las instituciones básicas del Estado, a los derechos, deberes y libertades de los ciudadanos regulados en el Título I, al régimen de las Comunidades Autónomas ni al Derecho electoral general.</label>
+            <label class="opt-skip"><input type="radio" name="q43" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 44 -->
+        <fieldset data-q="q44">
+          <legend class="visually-hidden">Pregunta 44</legend>
+          <div class="enunciado" id="enun-q44"><strong>44.</strong> Según el artículo 44 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q44">
+            <label><input type="radio" name="q44" value="a" /> a) La iniciativa legislativa corresponde al Gobierno, al Congreso y al Senado, de acuerdo con la Constitución y los Reglamentos de las Cámaras.</label>
+            <label><input type="radio" name="q44" value="b" /> b) Los poderes públicos promoverán y tutelarán el acceso a la cultura, a la que todos tienen derecho.</label>
+            <label><input type="radio" name="q44" value="c" /> c) Será tutor del Rey menor la persona que en su testamento hubiese nombrado el Rey difunto, siempre que sea mayor de edad y español de nacimiento; si no lo hubiese nombrado, será tutor el padre o la madre mientras permanezcan viudos.</label>
+            <label class="opt-skip"><input type="radio" name="q44" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 45 -->
+        <fieldset data-q="q45">
+          <legend class="visually-hidden">Pregunta 45</legend>
+          <div class="enunciado" id="enun-q45"><strong>45.</strong> Según el artículo 45 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q45">
+            <label><input type="radio" name="q45" value="a" /> a) El Rey, al ser proclamado ante las Cortes Generales, prestará juramento de desempeñar fielmente sus funciones, guardar y hacer guardar la Constitución y las leyes y respetar los derechos de los ciudadanos y de las Comunidades Autónomas.</label>
+            <label><input type="radio" name="q45" value="b" /> b) Los proyectos de ley serán aprobados en Consejo de Ministros, que los someterá al Congreso, acompañados de una exposición de motivos y de los antecedentes necesarios para pronunciarse sobre ellos.</label>
+            <label><input type="radio" name="q45" value="c" /> c) Todos tienen el derecho a disfrutar de un medio ambiente adecuado para el desarrollo de la persona, así como el deber de conservarlo.</label>
+            <label class="opt-skip"><input type="radio" name="q45" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 46 -->
+        <fieldset data-q="q46">
+          <legend class="visually-hidden">Pregunta 46</legend>
+          <div class="enunciado" id="enun-q46"><strong>46.</strong> Según el artículo 46 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q46">
+            <label><input type="radio" name="q46" value="a" /> a) Los poderes públicos garantizarán la conservación y promoverán el enriquecimiento del patrimonio histórico, cultural y artístico de los pueblos de España y de los bienes que lo integran, cualquiera que sea su régimen jurídico y su titularidad.</label>
+            <label><input type="radio" name="q46" value="b" /> b) Corresponde al Rey: a) Sancionar y promulgar las leyes.</label>
+            <label><input type="radio" name="q46" value="c" /> c) La tramitación de las proposiciones de ley se regulará por los Reglamentos de las Cámaras, sin que la prioridad debida a los proyectos de ley impida el ejercicio de la iniciativa legislativa en los términos regulados por el artículo 87.</label>
+            <label class="opt-skip"><input type="radio" name="q46" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 47 -->
+        <fieldset data-q="q47">
+          <legend class="visually-hidden">Pregunta 47</legend>
+          <div class="enunciado" id="enun-q47"><strong>47.</strong> Según el artículo 47 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q47">
+            <label><input type="radio" name="q47" value="a" /> a) Aprobado un proyecto de ley ordinaria u orgánica por el Congreso de los Diputados, su Presidente dará inmediata cuenta del mismo al Presidente del Senado, el cual lo someterá a la deliberación de éste.</label>
+            <label><input type="radio" name="q47" value="b" /> b) Todos los españoles tienen derecho a disfrutar de una vivienda digna y adecuada.</label>
+            <label><input type="radio" name="q47" value="c" /> c) El Rey acredita a los embajadores y otros representantes diplomáticos.</label>
+            <label class="opt-skip"><input type="radio" name="q47" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 48 -->
+        <fieldset data-q="q48">
+          <legend class="visually-hidden">Pregunta 48</legend>
+          <div class="enunciado" id="enun-q48"><strong>48.</strong> Según el artículo 48 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q48">
+            <label><input type="radio" name="q48" value="a" /> a) Los actos del Rey serán refrendados por el Presidente del Gobierno y, en su caso, por los Ministros competentes.</label>
+            <label><input type="radio" name="q48" value="b" /> b) El Rey sancionará en el plazo de quince días las leyes aprobadas por las Cortes Generales, y las promulgará y ordenará su inmediata publicación.</label>
+            <label><input type="radio" name="q48" value="c" /> c) Los poderes públicos promoverán las condiciones para la participación libre y eficaz de la juventud en el desarrollo político, social, económico y cultural.</label>
+            <label class="opt-skip"><input type="radio" name="q48" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 49 -->
+        <fieldset data-q="q49">
+          <legend class="visually-hidden">Pregunta 49</legend>
+          <div class="enunciado" id="enun-q49"><strong>49.</strong> Según el artículo 49 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q49">
+            <label><input type="radio" name="q49" value="a" /> a) Las personas con discapacidad ejercen los derechos previstos en este Título en condiciones de libertad e igualdad reales y efectivas.</label>
+            <label><input type="radio" name="q49" value="b" /> b) El Rey recibe de los Presupuestos del Estado una cantidad global para el sostenimiento de su Familia y Casa, y distribuye libremente la misma.</label>
+            <label><input type="radio" name="q49" value="c" /> c) Las decisiones políticas de especial trascendencia podrán ser sometidas a referéndum consultivo de todos los ciudadanos.</label>
+            <label class="opt-skip"><input type="radio" name="q49" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 50 -->
+        <fieldset data-q="q50">
+          <legend class="visually-hidden">Pregunta 50</legend>
+          <div class="enunciado" id="enun-q50"><strong>50.</strong> Según el artículo 50 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q50">
+            <label><input type="radio" name="q50" value="a" /> a) Mediante ley orgánica se podrá autorizar la celebración de tratados por los que se atribuya a una organización o institución internacional el ejercicio de competencias derivadas de la Constitución.</label>
+            <label><input type="radio" name="q50" value="b" /> b) Los poderes públicos garantizarán, mediante pensiones adecuadas y periódicamente actualizadas, la suficiencia económica a los ciudadanos durante la tercera edad.</label>
+            <label><input type="radio" name="q50" value="c" /> c) Las Cortes Generales representan al pueblo español y están formadas por el Congreso de los Diputados y el Senado.</label>
+            <label class="opt-skip"><input type="radio" name="q50" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 51 -->
+        <fieldset data-q="q51">
+          <legend class="visually-hidden">Pregunta 51</legend>
+          <div class="enunciado" id="enun-q51"><strong>51.</strong> Según el artículo 51 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q51">
+            <label><input type="radio" name="q51" value="a" /> a) Nadie podrá ser miembro de las dos Cámaras simultáneamente, ni acumular el acta de una Asamblea de Comunidad Autónoma con la de Diputado al Congreso.</label>
+            <label><input type="radio" name="q51" value="b" /> b) La prestación del consentimiento del Estado para obligarse por medio de tratados o convenios requerirá la previa autorización de las Cortes Generales, en los siguientes casos: a) Tratados de carácter político.</label>
+            <label><input type="radio" name="q51" value="c" /> c) Los poderes públicos garantizarán la defensa de los consumidores y usuarios, protegiendo, mediante procedimientos eficaces, la seguridad, la salud y los legítimos intereses económicos de los mismos.</label>
+            <label class="opt-skip"><input type="radio" name="q51" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 52 -->
+        <fieldset data-q="q52">
+          <legend class="visually-hidden">Pregunta 52</legend>
+          <div class="enunciado" id="enun-q52"><strong>52.</strong> Según el artículo 52 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q52">
+            <label><input type="radio" name="q52" value="a" /> a) La ley regulará las organizaciones profesionales que contribuyan a la defensa de los intereses económicos que les sean propios.</label>
+            <label><input type="radio" name="q52" value="b" /> b) El Congreso se compone de un mínimo de 300 y un máximo de 400 Diputados, elegidos por sufragio universal, libre, igual, directo y secreto, en los términos que establezca la ley.</label>
+            <label><input type="radio" name="q52" value="c" /> c) La celebración de un tratado internacional que contenga estipulaciones contrarias a la Constitución exigirá la previa revisión constitucional.</label>
+            <label class="opt-skip"><input type="radio" name="q52" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 53 -->
+        <fieldset data-q="q53">
+          <legend class="visually-hidden">Pregunta 53</legend>
+          <div class="enunciado" id="enun-q53"><strong>53.</strong> Según el artículo 53 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q53">
+            <label><input type="radio" name="q53" value="a" /> a) Los tratados internacionales válidamente celebrados, una vez publicados oficialmente en España, formarán parte del ordenamiento interno.</label>
+            <label><input type="radio" name="q53" value="b" /> b) Los derechos y libertades reconocidos en el Capítulo segundo del presente Título vinculan a todos los poderes públicos.</label>
+            <label><input type="radio" name="q53" value="c" /> c) El Senado es la Cámara de representación territorial.</label>
+            <label class="opt-skip"><input type="radio" name="q53" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 54 -->
+        <fieldset data-q="q54">
+          <legend class="visually-hidden">Pregunta 54</legend>
+          <div class="enunciado" id="enun-q54"><strong>54.</strong> Según el artículo 54 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q54">
+            <label><input type="radio" name="q54" value="a" /> a) La ley electoral determinará las causas de inelegibilidad e incompatibilidad de los Diputados y Senadores, que comprenderán, en todo caso: a) A los componentes del Tribunal Constitucional.</label>
+            <label><input type="radio" name="q54" value="b" /> b) El Gobierno dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado.</label>
+            <label><input type="radio" name="q54" value="c" /> c) Una ley orgánica regulará la institución del Defensor del Pueblo, como alto comisionado de las Cortes Generales, designado por éstas para la defensa de los derechos comprendidos en este Título, a cuyo efecto podrá supervisar la actividad de la Administración, dando cuenta a las Cortes Generales.</label>
+            <label class="opt-skip"><input type="radio" name="q54" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 55 -->
+        <fieldset data-q="q55">
+          <legend class="visually-hidden">Pregunta 55</legend>
+          <div class="enunciado" id="enun-q55"><strong>55.</strong> Según el artículo 55 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q55">
+            <label><input type="radio" name="q55" value="a" /> a) Los derechos reconocidos en los artículos 17, 18, apartados 2 y 3, artículos 19, 20, apartados 1, a) y d), y 5, artículos 21, 28, apartado 2, y artículo 37, apartado 2, podrán ser suspendidos cuando se acuerde la declaración del estado de excepción o de sitio en los términos previstos en la Constitución.</label>
+            <label><input type="radio" name="q55" value="b" /> b) Los Diputados y Senadores gozarán de inviolabilidad por las opiniones manifestadas en el ejercicio de sus funciones.</label>
+            <label><input type="radio" name="q55" value="c" /> c) El Gobierno se compone del Presidente, de los Vicepresidentes, en su caso, de los Ministros y de los demás miembros que establezca la ley.</label>
+            <label class="opt-skip"><input type="radio" name="q55" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 56 -->
+        <fieldset data-q="q56">
+          <legend class="visually-hidden">Pregunta 56</legend>
+          <div class="enunciado" id="enun-q56"><strong>56.</strong> Según el artículo 56 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q56">
+            <label><input type="radio" name="q56" value="a" /> a) Después de cada renovación del Congreso de los Diputados, y en los demás supuestos constitucionales en que así proceda, el Rey, previa consulta con los representantes designados por los Grupos políticos con representación parlamentaria, y a través del Presidente del Congreso, propondrá un candidato a la Presidencia del Gobierno.</label>
+            <label><input type="radio" name="q56" value="b" /> b) El Rey es el Jefe del Estado, símbolo de su unidad y permanencia, arbitra y modera el funcionamiento regular de las instituciones, asume la más alta representación del Estado español en las relaciones internacionales, especialmente con las naciones de su comunidad histórica, y ejerce las funciones que le atribuyen expresamente la Constitución y las leyes.</label>
+            <label><input type="radio" name="q56" value="c" /> c) Las Cámaras establecen sus propios Reglamentos, aprueban autónomamente sus presupuestos y, de común acuerdo, regulan el Estatuto del Personal de las Cortes Generales.</label>
+            <label class="opt-skip"><input type="radio" name="q56" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 57 -->
+        <fieldset data-q="q57">
+          <legend class="visually-hidden">Pregunta 57</legend>
+          <div class="enunciado" id="enun-q57"><strong>57.</strong> Según el artículo 57 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q57">
+            <label><input type="radio" name="q57" value="a" /> a) Las Cámaras se reunirán anualmente en dos períodos ordinarios de sesiones: el primero, de septiembre a diciembre, y el segundo, de febrero a junio.</label>
+            <label><input type="radio" name="q57" value="b" /> b) Los demás miembros del Gobierno serán nombrados y separados por el Rey, a propuesta de su Presidente.</label>
+            <label><input type="radio" name="q57" value="c" /> c) La Corona de España es hereditaria en los sucesores de S.</label>
+            <label class="opt-skip"><input type="radio" name="q57" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 58 -->
+        <fieldset data-q="q58">
+          <legend class="visually-hidden">Pregunta 58</legend>
+          <div class="enunciado" id="enun-q58"><strong>58.</strong> Según el artículo 58 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q58">
+            <label><input type="radio" name="q58" value="a" /> a) La Reina consorte o el consorte de la Reina no podrán asumir funciones constitucionales, salvo lo dispuesto para la Regencia.</label>
+            <label><input type="radio" name="q58" value="b" /> b) Las Cámaras se reunirán en sesión conjunta para ejercer las competencias no legislativas que el Título II atribuye expresamente a las Cortes Generales.</label>
+            <label><input type="radio" name="q58" value="c" /> c) España se constituye en un Estado social y democrático de Derecho, que propugna como valores superiores de su ordenamiento jurídico la libertad, la justicia, la igualdad y el pluralismo político.</label>
+            <label class="opt-skip"><input type="radio" name="q58" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 59 -->
+        <fieldset data-q="q59">
+          <legend class="visually-hidden">Pregunta 59</legend>
+          <div class="enunciado" id="enun-q59"><strong>59.</strong> Según el artículo 59 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q59">
+            <label><input type="radio" name="q59" value="a" /> a) La Constitución se fundamenta en la indisoluble unidad de la Nación española, patria común e indivisible de todos los españoles, y reconoce y garantiza el derecho a la autonomía de las nacionalidades y regiones que la integran y la solidaridad entre todas ellas.</label>
+            <label><input type="radio" name="q59" value="b" /> b) Cuando el Rey fuere menor de edad, el padre o la madre del Rey y, en su defecto, el pariente mayor de edad más próximo a suceder en la Corona, según el orden establecido en la Constitución, entrará a ejercer inmediatamente la Regencia y la ejercerá durante el tiempo de la minoría de edad del Rey.</label>
+            <label><input type="radio" name="q59" value="c" /> c) Las Cámaras funcionarán en Pleno y por Comisiones.</label>
+            <label class="opt-skip"><input type="radio" name="q59" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 60 -->
+        <fieldset data-q="q60">
+          <legend class="visually-hidden">Pregunta 60</legend>
+          <div class="enunciado" id="enun-q60"><strong>60.</strong> Según el artículo 60 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q60">
+            <label><input type="radio" name="q60" value="a" /> a) El Congreso y el Senado, y, en su caso, ambas Cámaras conjuntamente, podrán nombrar Comisiones de investigación sobre cualquier asunto de interés público.</label>
+            <label><input type="radio" name="q60" value="b" /> b) El castellano es la lengua española oficial del Estado.</label>
+            <label><input type="radio" name="q60" value="c" /> c) Será tutor del Rey menor la persona que en su testamento hubiese nombrado el Rey difunto, siempre que sea mayor de edad y español de nacimiento; si no lo hubiese nombrado, será tutor el padre o la madre mientras permanezcan viudos.</label>
+            <label class="opt-skip"><input type="radio" name="q60" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 61 -->
+        <fieldset data-q="q61">
+          <legend class="visually-hidden">Pregunta 61</legend>
+          <div class="enunciado" id="enun-q61"><strong>61.</strong> Según el artículo 61 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q61">
+            <label><input type="radio" name="q61" value="a" /> a) El Rey, al ser proclamado ante las Cortes Generales, prestará juramento de desempeñar fielmente sus funciones, guardar y hacer guardar la Constitución y las leyes y respetar los derechos de los ciudadanos y de las Comunidades Autónomas.</label>
+            <label><input type="radio" name="q61" value="b" /> b) Las Cámaras pueden recibir peticiones individuales y colectivas, siempre por escrito, quedando prohibida la presentación directa por manifestaciones ciudadanas.</label>
+            <label><input type="radio" name="q61" value="c" /> c) La bandera de España está formada por tres franjas horizontales, roja, amarilla y roja, siendo la amarilla de doble anchura que cada una de las rojas.</label>
+            <label class="opt-skip"><input type="radio" name="q61" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 62 -->
+        <fieldset data-q="q62">
+          <legend class="visually-hidden">Pregunta 62</legend>
+          <div class="enunciado" id="enun-q62"><strong>62.</strong> Según el artículo 62 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q62">
+            <label><input type="radio" name="q62" value="a" /> a) La capital del Estado es la villa de Madrid.</label>
+            <label><input type="radio" name="q62" value="b" /> b) Corresponde al Rey: a) Sancionar y promulgar las leyes.</label>
+            <label><input type="radio" name="q62" value="c" /> c) En cada Cámara habrá una Diputación Permanente compuesta por un mínimo de veintiún miembros, que representarán a los grupos parlamentarios, en proporción a su importancia numérica.</label>
+            <label class="opt-skip"><input type="radio" name="q62" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 63 -->
+        <fieldset data-q="q63">
+          <legend class="visually-hidden">Pregunta 63</legend>
+          <div class="enunciado" id="enun-q63"><strong>63.</strong> Según el artículo 63 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q63">
+            <label><input type="radio" name="q63" value="a" /> a) Para adoptar acuerdos, las Cámaras deben estar reunidas reglamentariamente y con asistencia de la mayoría de sus miembros.</label>
+            <label><input type="radio" name="q63" value="b" /> b) Los partidos políticos expresan el pluralismo político, concurren a la formación y manifestación de la voluntad popular y son instrumento fundamental para la participación política.</label>
+            <label><input type="radio" name="q63" value="c" /> c) El Rey acredita a los embajadores y otros representantes diplomáticos.</label>
+            <label class="opt-skip"><input type="radio" name="q63" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 64 -->
+        <fieldset data-q="q64">
+          <legend class="visually-hidden">Pregunta 64</legend>
+          <div class="enunciado" id="enun-q64"><strong>64.</strong> Según el artículo 64 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q64">
+            <label><input type="radio" name="q64" value="a" /> a) Los actos del Rey serán refrendados por el Presidente del Gobierno y, en su caso, por los Ministros competentes.</label>
+            <label><input type="radio" name="q64" value="b" /> b) Las sesiones plenarias de las Cámaras serán públicas, salvo acuerdo en contrario de cada Cámara, adoptado por mayoría absoluta o con arreglo al Reglamento.</label>
+            <label><input type="radio" name="q64" value="c" /> c) Los sindicatos de trabajadores y las asociaciones empresariales contribuyen a la defensa y promoción de los intereses económicos y sociales que les son propios.</label>
+            <label class="opt-skip"><input type="radio" name="q64" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 65 -->
+        <fieldset data-q="q65">
+          <legend class="visually-hidden">Pregunta 65</legend>
+          <div class="enunciado" id="enun-q65"><strong>65.</strong> Según el artículo 65 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q65">
+            <label><input type="radio" name="q65" value="a" /> a) Las Fuerzas Armadas, constituidas por el Ejército de Tierra, la Armada y el Ejército del Aire, tienen como misión garantizar la soberanía e independencia de España, defender su integridad territorial y el ordenamiento constitucional.</label>
+            <label><input type="radio" name="q65" value="b" /> b) El Rey recibe de los Presupuestos del Estado una cantidad global para el sostenimiento de su Familia y Casa, y distribuye libremente la misma.</label>
+            <label><input type="radio" name="q65" value="c" /> c) Son leyes orgánicas las relativas al desarrollo de los derechos fundamentales y de las libertades públicas, las que aprueben los Estatutos de Autonomía y el régimen electoral general y las demás previstas en la Constitución.</label>
+            <label class="opt-skip"><input type="radio" name="q65" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 66 -->
+        <fieldset data-q="q66">
+          <legend class="visually-hidden">Pregunta 66</legend>
+          <div class="enunciado" id="enun-q66"><strong>66.</strong> Según el artículo 66 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q66">
+            <label><input type="radio" name="q66" value="a" /> a) Las Cortes Generales podrán delegar en el Gobierno la potestad de dictar normas con rango de ley sobre materias determinadas no incluidas en el artículo anterior.</label>
+            <label><input type="radio" name="q66" value="b" /> b) Los ciudadanos y los poderes públicos están sujetos a la Constitución y al resto del ordenamiento jurídico.</label>
+            <label><input type="radio" name="q66" value="c" /> c) Las Cortes Generales representan al pueblo español y están formadas por el Congreso de los Diputados y el Senado.</label>
+            <label class="opt-skip"><input type="radio" name="q66" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 67 -->
+        <fieldset data-q="q67">
+          <legend class="visually-hidden">Pregunta 67</legend>
+          <div class="enunciado" id="enun-q67"><strong>67.</strong> Según el artículo 67 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q67">
+            <label><input type="radio" name="q67" value="a" /> a) Nadie podrá ser miembro de las dos Cámaras simultáneamente, ni acumular el acta de una Asamblea de Comunidad Autónoma con la de Diputado al Congreso.</label>
+            <label><input type="radio" name="q67" value="b" /> b) Las leyes de bases no podrán en ningún caso: a) Autorizar la modificación de la propia ley de bases.</label>
+            <label><input type="radio" name="q67" value="c" /> c) La dignidad de la persona, los derechos inviolables que le son inherentes, el libre desarrollo de la personalidad, el respeto a la ley y a los derechos de los demás son fundamento del orden político y de la paz social.</label>
+            <label class="opt-skip"><input type="radio" name="q67" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 68 -->
+        <fieldset data-q="q68">
+          <legend class="visually-hidden">Pregunta 68</legend>
+          <div class="enunciado" id="enun-q68"><strong>68.</strong> Según el artículo 68 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q68">
+            <label><input type="radio" name="q68" value="a" /> a) La nacionalidad española se adquiere, se conserva y se pierde de acuerdo con lo establecido por la ley.</label>
+            <label><input type="radio" name="q68" value="b" /> b) El Congreso se compone de un mínimo de 300 y un máximo de 400 Diputados, elegidos por sufragio universal, libre, igual, directo y secreto, en los términos que establezca la ley.</label>
+            <label><input type="radio" name="q68" value="c" /> c) Cuando una proposición de ley o una enmienda fuere contraria a una delegación legislativa en vigor, el Gobierno está facultado para oponerse a su tramitación.</label>
+            <label class="opt-skip"><input type="radio" name="q68" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 69 -->
+        <fieldset data-q="q69">
+          <legend class="visually-hidden">Pregunta 69</legend>
+          <div class="enunciado" id="enun-q69"><strong>69.</strong> Según el artículo 69 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q69">
+            <label><input type="radio" name="q69" value="a" /> a) Las disposiciones del Gobierno que contengan legislación delegada recibirán el título de Decretos Legislativos.</label>
+            <label><input type="radio" name="q69" value="b" /> b) Los españoles son mayores de edad a los dieciocho años.</label>
+            <label><input type="radio" name="q69" value="c" /> c) El Senado es la Cámara de representación territorial.</label>
+            <label class="opt-skip"><input type="radio" name="q69" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 70 -->
+        <fieldset data-q="q70">
+          <legend class="visually-hidden">Pregunta 70</legend>
+          <div class="enunciado" id="enun-q70"><strong>70.</strong> Según el artículo 70 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q70">
+            <label><input type="radio" name="q70" value="a" /> a) La ley electoral determinará las causas de inelegibilidad e incompatibilidad de los Diputados y Senadores, que comprenderán, en todo caso: a) A los componentes del Tribunal Constitucional.</label>
+            <label><input type="radio" name="q70" value="b" /> b) En caso de extraordinaria y urgente necesidad, el Gobierno podrá dictar disposiciones legislativas provisionales que tomarán la forma de Decretos-leyes y que no podrán afectar al ordenamiento de las instituciones básicas del Estado, a los derechos, deberes y libertades de los ciudadanos regulados en el Título I, al régimen de las Comunidades Autónomas ni al Derecho electoral general.</label>
+            <label><input type="radio" name="q70" value="c" /> c) Los extranjeros gozarán en España de las libertades públicas que garantiza el presente Título en los términos que establezcan los tratados y la ley.</label>
+            <label class="opt-skip"><input type="radio" name="q70" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 71 -->
+        <fieldset data-q="q71">
+          <legend class="visually-hidden">Pregunta 71</legend>
+          <div class="enunciado" id="enun-q71"><strong>71.</strong> Según el artículo 71 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q71">
+            <label><input type="radio" name="q71" value="a" /> a) Los españoles son iguales ante la ley, sin que pueda prevalecer discriminación alguna por razón de nacimiento, raza, sexo, religión, opinión o cualquier otra condición o circunstancia personal o social.</label>
+            <label><input type="radio" name="q71" value="b" /> b) Los Diputados y Senadores gozarán de inviolabilidad por las opiniones manifestadas en el ejercicio de sus funciones.</label>
+            <label><input type="radio" name="q71" value="c" /> c) La iniciativa legislativa corresponde al Gobierno, al Congreso y al Senado, de acuerdo con la Constitución y los Reglamentos de las Cámaras.</label>
+            <label class="opt-skip"><input type="radio" name="q71" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 72 -->
+        <fieldset data-q="q72">
+          <legend class="visually-hidden">Pregunta 72</legend>
+          <div class="enunciado" id="enun-q72"><strong>72.</strong> Según el artículo 72 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q72">
+            <label><input type="radio" name="q72" value="a" /> a) Los proyectos de ley serán aprobados en Consejo de Ministros, que los someterá al Congreso, acompañados de una exposición de motivos y de los antecedentes necesarios para pronunciarse sobre ellos.</label>
+            <label><input type="radio" name="q72" value="b" /> b) Todos tienen derecho a la vida y a la integridad física y moral, sin que, en ningún caso, puedan ser sometidos a tortura ni a penas o tratos inhumanos o degradantes.</label>
+            <label><input type="radio" name="q72" value="c" /> c) Las Cámaras establecen sus propios Reglamentos, aprueban autónomamente sus presupuestos y, de común acuerdo, regulan el Estatuto del Personal de las Cortes Generales.</label>
+            <label class="opt-skip"><input type="radio" name="q72" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 73 -->
+        <fieldset data-q="q73">
+          <legend class="visually-hidden">Pregunta 73</legend>
+          <div class="enunciado" id="enun-q73"><strong>73.</strong> Según el artículo 73 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q73">
+            <label><input type="radio" name="q73" value="a" /> a) Las Cámaras se reunirán anualmente en dos períodos ordinarios de sesiones: el primero, de septiembre a diciembre, y el segundo, de febrero a junio.</label>
+            <label><input type="radio" name="q73" value="b" /> b) La tramitación de las proposiciones de ley se regulará por los Reglamentos de las Cámaras, sin que la prioridad debida a los proyectos de ley impida el ejercicio de la iniciativa legislativa en los términos regulados por el artículo 87.</label>
+            <label><input type="radio" name="q73" value="c" /> c) Se garantiza la libertad ideológica, religiosa y de culto de los individuos y las comunidades sin más limitación, en sus manifestaciones, que la necesaria para el mantenimiento del orden público protegido por la ley.</label>
+            <label class="opt-skip"><input type="radio" name="q73" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 74 -->
+        <fieldset data-q="q74">
+          <legend class="visually-hidden">Pregunta 74</legend>
+          <div class="enunciado" id="enun-q74"><strong>74.</strong> Según el artículo 74 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q74">
+            <label><input type="radio" name="q74" value="a" /> a) Toda persona tiene derecho a la libertad y a la seguridad.</label>
+            <label><input type="radio" name="q74" value="b" /> b) Las Cámaras se reunirán en sesión conjunta para ejercer las competencias no legislativas que el Título II atribuye expresamente a las Cortes Generales.</label>
+            <label><input type="radio" name="q74" value="c" /> c) Aprobado un proyecto de ley ordinaria u orgánica por el Congreso de los Diputados, su Presidente dará inmediata cuenta del mismo al Presidente del Senado, el cual lo someterá a la deliberación de éste.</label>
+            <label class="opt-skip"><input type="radio" name="q74" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 75 -->
+        <fieldset data-q="q75">
+          <legend class="visually-hidden">Pregunta 75</legend>
+          <div class="enunciado" id="enun-q75"><strong>75.</strong> Según el artículo 75 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q75">
+            <label><input type="radio" name="q75" value="a" /> a) El Rey sancionará en el plazo de quince días las leyes aprobadas por las Cortes Generales, y las promulgará y ordenará su inmediata publicación.</label>
+            <label><input type="radio" name="q75" value="b" /> b) Se garantiza el derecho al honor, a la intimidad personal y familiar y a la propia imagen.</label>
+            <label><input type="radio" name="q75" value="c" /> c) Las Cámaras funcionarán en Pleno y por Comisiones.</label>
+            <label class="opt-skip"><input type="radio" name="q75" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 76 -->
+        <fieldset data-q="q76">
+          <legend class="visually-hidden">Pregunta 76</legend>
+          <div class="enunciado" id="enun-q76"><strong>76.</strong> Según el artículo 76 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q76">
+            <label><input type="radio" name="q76" value="a" /> a) El Congreso y el Senado, y, en su caso, ambas Cámaras conjuntamente, podrán nombrar Comisiones de investigación sobre cualquier asunto de interés público.</label>
+            <label><input type="radio" name="q76" value="b" /> b) Las decisiones políticas de especial trascendencia podrán ser sometidas a referéndum consultivo de todos los ciudadanos.</label>
+            <label><input type="radio" name="q76" value="c" /> c) Los españoles tienen derecho a elegir libremente su residencia y a circular por el territorio nacional.</label>
+            <label class="opt-skip"><input type="radio" name="q76" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 77 -->
+        <fieldset data-q="q77">
+          <legend class="visually-hidden">Pregunta 77</legend>
+          <div class="enunciado" id="enun-q77"><strong>77.</strong> Según el artículo 77 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q77">
+            <label><input type="radio" name="q77" value="a" /> a) Se reconocen y protegen los derechos: a) A expresar y difundir libremente los pensamientos, ideas y opiniones mediante la palabra, el escrito o cualquier otro medio de reproducción.</label>
+            <label><input type="radio" name="q77" value="b" /> b) Las Cámaras pueden recibir peticiones individuales y colectivas, siempre por escrito, quedando prohibida la presentación directa por manifestaciones ciudadanas.</label>
+            <label><input type="radio" name="q77" value="c" /> c) Mediante ley orgánica se podrá autorizar la celebración de tratados por los que se atribuya a una organización o institución internacional el ejercicio de competencias derivadas de la Constitución.</label>
+            <label class="opt-skip"><input type="radio" name="q77" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 78 -->
+        <fieldset data-q="q78">
+          <legend class="visually-hidden">Pregunta 78</legend>
+          <div class="enunciado" id="enun-q78"><strong>78.</strong> Según el artículo 78 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q78">
+            <label><input type="radio" name="q78" value="a" /> a) La prestación del consentimiento del Estado para obligarse por medio de tratados o convenios requerirá la previa autorización de las Cortes Generales, en los siguientes casos: a) Tratados de carácter político.</label>
+            <label><input type="radio" name="q78" value="b" /> b) Se reconoce el derecho de reunión pacífica y sin armas.</label>
+            <label><input type="radio" name="q78" value="c" /> c) En cada Cámara habrá una Diputación Permanente compuesta por un mínimo de veintiún miembros, que representarán a los grupos parlamentarios, en proporción a su importancia numérica.</label>
+            <label class="opt-skip"><input type="radio" name="q78" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 79 -->
+        <fieldset data-q="q79">
+          <legend class="visually-hidden">Pregunta 79</legend>
+          <div class="enunciado" id="enun-q79"><strong>79.</strong> Según el artículo 79 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q79">
+            <label><input type="radio" name="q79" value="a" /> a) Para adoptar acuerdos, las Cámaras deben estar reunidas reglamentariamente y con asistencia de la mayoría de sus miembros.</label>
+            <label><input type="radio" name="q79" value="b" /> b) La celebración de un tratado internacional que contenga estipulaciones contrarias a la Constitución exigirá la previa revisión constitucional.</label>
+            <label><input type="radio" name="q79" value="c" /> c) Se reconoce el derecho de asociación.</label>
+            <label class="opt-skip"><input type="radio" name="q79" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 80 -->
+        <fieldset data-q="q80">
+          <legend class="visually-hidden">Pregunta 80</legend>
+          <div class="enunciado" id="enun-q80"><strong>80.</strong> Según el artículo 80 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q80">
+            <label><input type="radio" name="q80" value="a" /> a) Los ciudadanos tienen el derecho a participar en los asuntos públicos, directamente o por medio de representantes, libremente elegidos en elecciones periódicas por sufragio universal.</label>
+            <label><input type="radio" name="q80" value="b" /> b) Las sesiones plenarias de las Cámaras serán públicas, salvo acuerdo en contrario de cada Cámara, adoptado por mayoría absoluta o con arreglo al Reglamento.</label>
+            <label><input type="radio" name="q80" value="c" /> c) Los tratados internacionales válidamente celebrados, una vez publicados oficialmente en España, formarán parte del ordenamiento interno.</label>
+            <label class="opt-skip"><input type="radio" name="q80" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 81 -->
+        <fieldset data-q="q81">
+          <legend class="visually-hidden">Pregunta 81</legend>
+          <div class="enunciado" id="enun-q81"><strong>81.</strong> Según el artículo 81 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q81">
+            <label><input type="radio" name="q81" value="a" /> a) El Gobierno dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado.</label>
+            <label><input type="radio" name="q81" value="b" /> b) Todas las personas tienen derecho a obtener la tutela efectiva de los jueces y tribunales en el ejercicio de sus derechos e intereses legítimos, sin que, en ningún caso, pueda producirse indefensión.</label>
+            <label><input type="radio" name="q81" value="c" /> c) Son leyes orgánicas las relativas al desarrollo de los derechos fundamentales y de las libertades públicas, las que aprueben los Estatutos de Autonomía y el régimen electoral general y las demás previstas en la Constitución.</label>
+            <label class="opt-skip"><input type="radio" name="q81" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 82 -->
+        <fieldset data-q="q82">
+          <legend class="visually-hidden">Pregunta 82</legend>
+          <div class="enunciado" id="enun-q82"><strong>82.</strong> Según el artículo 82 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q82">
+            <label><input type="radio" name="q82" value="a" /> a) Las Cortes Generales podrán delegar en el Gobierno la potestad de dictar normas con rango de ley sobre materias determinadas no incluidas en el artículo anterior.</label>
+            <label><input type="radio" name="q82" value="b" /> b) El Gobierno se compone del Presidente, de los Vicepresidentes, en su caso, de los Ministros y de los demás miembros que establezca la ley.</label>
+            <label><input type="radio" name="q82" value="c" /> c) Nadie puede ser condenado o sancionado por acciones u omisiones que en el momento de producirse no constituyan delito, falta o infracción administrativa, según la legislación vigente en aquel momento.</label>
+            <label class="opt-skip"><input type="radio" name="q82" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 83 -->
+        <fieldset data-q="q83">
+          <legend class="visually-hidden">Pregunta 83</legend>
+          <div class="enunciado" id="enun-q83"><strong>83.</strong> Según el artículo 83 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q83">
+            <label><input type="radio" name="q83" value="a" /> a) Se prohíben los Tribunales de Honor en el ámbito de la Administración civil y de las organizaciones profesionales.</label>
+            <label><input type="radio" name="q83" value="b" /> b) Las leyes de bases no podrán en ningún caso: a) Autorizar la modificación de la propia ley de bases.</label>
+            <label><input type="radio" name="q83" value="c" /> c) Después de cada renovación del Congreso de los Diputados, y en los demás supuestos constitucionales en que así proceda, el Rey, previa consulta con los representantes designados por los Grupos políticos con representación parlamentaria, y a través del Presidente del Congreso, propondrá un candidato a la Presidencia del Gobierno.</label>
+            <label class="opt-skip"><input type="radio" name="q83" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 84 -->
+        <fieldset data-q="q84">
+          <legend class="visually-hidden">Pregunta 84</legend>
+          <div class="enunciado" id="enun-q84"><strong>84.</strong> Según el artículo 84 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q84">
+            <label><input type="radio" name="q84" value="a" /> a) Los demás miembros del Gobierno serán nombrados y separados por el Rey, a propuesta de su Presidente.</label>
+            <label><input type="radio" name="q84" value="b" /> b) Todos tienen el derecho a la educación.</label>
+            <label><input type="radio" name="q84" value="c" /> c) Cuando una proposición de ley o una enmienda fuere contraria a una delegación legislativa en vigor, el Gobierno está facultado para oponerse a su tramitación.</label>
+            <label class="opt-skip"><input type="radio" name="q84" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 85 -->
+        <fieldset data-q="q85">
+          <legend class="visually-hidden">Pregunta 85</legend>
+          <div class="enunciado" id="enun-q85"><strong>85.</strong> Según el artículo 85 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q85">
+            <label><input type="radio" name="q85" value="a" /> a) Las disposiciones del Gobierno que contengan legislación delegada recibirán el título de Decretos Legislativos.</label>
+            <label><input type="radio" name="q85" value="b" /> b) España se constituye en un Estado social y democrático de Derecho, que propugna como valores superiores de su ordenamiento jurídico la libertad, la justicia, la igualdad y el pluralismo político.</label>
+            <label><input type="radio" name="q85" value="c" /> c) Todos tienen derecho a sindicarse libremente.</label>
+            <label class="opt-skip"><input type="radio" name="q85" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 86 -->
+        <fieldset data-q="q86">
+          <legend class="visually-hidden">Pregunta 86</legend>
+          <div class="enunciado" id="enun-q86"><strong>86.</strong> Según el artículo 86 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q86">
+            <label><input type="radio" name="q86" value="a" /> a) Todos los españoles tendrán el derecho de petición individual y colectiva, por escrito, en la forma y con los efectos que determine la ley.</label>
+            <label><input type="radio" name="q86" value="b" /> b) En caso de extraordinaria y urgente necesidad, el Gobierno podrá dictar disposiciones legislativas provisionales que tomarán la forma de Decretos-leyes y que no podrán afectar al ordenamiento de las instituciones básicas del Estado, a los derechos, deberes y libertades de los ciudadanos regulados en el Título I, al régimen de las Comunidades Autónomas ni al Derecho electoral general.</label>
+            <label><input type="radio" name="q86" value="c" /> c) La Constitución se fundamenta en la indisoluble unidad de la Nación española, patria común e indivisible de todos los españoles, y reconoce y garantiza el derecho a la autonomía de las nacionalidades y regiones que la integran y la solidaridad entre todas ellas.</label>
+            <label class="opt-skip"><input type="radio" name="q86" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 87 -->
+        <fieldset data-q="q87">
+          <legend class="visually-hidden">Pregunta 87</legend>
+          <div class="enunciado" id="enun-q87"><strong>87.</strong> Según el artículo 87 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q87">
+            <label><input type="radio" name="q87" value="a" /> a) El castellano es la lengua española oficial del Estado.</label>
+            <label><input type="radio" name="q87" value="b" /> b) Los españoles tienen el derecho y el deber de defender a España.</label>
+            <label><input type="radio" name="q87" value="c" /> c) La iniciativa legislativa corresponde al Gobierno, al Congreso y al Senado, de acuerdo con la Constitución y los Reglamentos de las Cámaras.</label>
+            <label class="opt-skip"><input type="radio" name="q87" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 88 -->
+        <fieldset data-q="q88">
+          <legend class="visually-hidden">Pregunta 88</legend>
+          <div class="enunciado" id="enun-q88"><strong>88.</strong> Según el artículo 88 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q88">
+            <label><input type="radio" name="q88" value="a" /> a) Los proyectos de ley serán aprobados en Consejo de Ministros, que los someterá al Congreso, acompañados de una exposición de motivos y de los antecedentes necesarios para pronunciarse sobre ellos.</label>
+            <label><input type="radio" name="q88" value="b" /> b) La bandera de España está formada por tres franjas horizontales, roja, amarilla y roja, siendo la amarilla de doble anchura que cada una de las rojas.</label>
+            <label><input type="radio" name="q88" value="c" /> c) Todos contribuirán al sostenimiento de los gastos públicos de acuerdo con su capacidad económica mediante un sistema tributario justo inspirado en los principios de igualdad y progresividad que, en ningún caso, tendrá alcance confiscatorio.</label>
+            <label class="opt-skip"><input type="radio" name="q88" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 89 -->
+        <fieldset data-q="q89">
+          <legend class="visually-hidden">Pregunta 89</legend>
+          <div class="enunciado" id="enun-q89"><strong>89.</strong> Según el artículo 89 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q89">
+            <label><input type="radio" name="q89" value="a" /> a) El hombre y la mujer tienen derecho a contraer matrimonio con plena igualdad jurídica.</label>
+            <label><input type="radio" name="q89" value="b" /> b) La tramitación de las proposiciones de ley se regulará por los Reglamentos de las Cámaras, sin que la prioridad debida a los proyectos de ley impida el ejercicio de la iniciativa legislativa en los términos regulados por el artículo 87.</label>
+            <label><input type="radio" name="q89" value="c" /> c) La capital del Estado es la villa de Madrid.</label>
+            <label class="opt-skip"><input type="radio" name="q89" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 90 -->
+        <fieldset data-q="q90">
+          <legend class="visually-hidden">Pregunta 90</legend>
+          <div class="enunciado" id="enun-q90"><strong>90.</strong> Según el artículo 90 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q90">
+            <label><input type="radio" name="q90" value="a" /> a) Los partidos políticos expresan el pluralismo político, concurren a la formación y manifestación de la voluntad popular y son instrumento fundamental para la participación política.</label>
+            <label><input type="radio" name="q90" value="b" /> b) Se reconoce el derecho a la propiedad privada y a la herencia.</label>
+            <label><input type="radio" name="q90" value="c" /> c) Aprobado un proyecto de ley ordinaria u orgánica por el Congreso de los Diputados, su Presidente dará inmediata cuenta del mismo al Presidente del Senado, el cual lo someterá a la deliberación de éste.</label>
+            <label class="opt-skip"><input type="radio" name="q90" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 91 -->
+        <fieldset data-q="q91">
+          <legend class="visually-hidden">Pregunta 91</legend>
+          <div class="enunciado" id="enun-q91"><strong>91.</strong> Según el artículo 91 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q91">
+            <label><input type="radio" name="q91" value="a" /> a) El Rey sancionará en el plazo de quince días las leyes aprobadas por las Cortes Generales, y las promulgará y ordenará su inmediata publicación.</label>
+            <label><input type="radio" name="q91" value="b" /> b) Los sindicatos de trabajadores y las asociaciones empresariales contribuyen a la defensa y promoción de los intereses económicos y sociales que les son propios.</label>
+            <label><input type="radio" name="q91" value="c" /> c) Se reconoce el derecho de fundación para fines de interés general, con arreglo a la ley.</label>
+            <label class="opt-skip"><input type="radio" name="q91" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 92 -->
+        <fieldset data-q="q92">
+          <legend class="visually-hidden">Pregunta 92</legend>
+          <div class="enunciado" id="enun-q92"><strong>92.</strong> Según el artículo 92 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q92">
+            <label><input type="radio" name="q92" value="a" /> a) Todos los españoles tienen el deber de trabajar y el derecho al trabajo, a la libre elección de profesión u oficio, a la promoción a través del trabajo y a una remuneración suficiente para satisfacer sus necesidades y las de su familia, sin que en ningún caso pueda hacerse discriminación por razón de sexo.</label>
+            <label><input type="radio" name="q92" value="b" /> b) Las decisiones políticas de especial trascendencia podrán ser sometidas a referéndum consultivo de todos los ciudadanos.</label>
+            <label><input type="radio" name="q92" value="c" /> c) Las Fuerzas Armadas, constituidas por el Ejército de Tierra, la Armada y el Ejército del Aire, tienen como misión garantizar la soberanía e independencia de España, defender su integridad territorial y el ordenamiento constitucional.</label>
+            <label class="opt-skip"><input type="radio" name="q92" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 93 -->
+        <fieldset data-q="q93">
+          <legend class="visually-hidden">Pregunta 93</legend>
+          <div class="enunciado" id="enun-q93"><strong>93.</strong> Según el artículo 93 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q93">
+            <label><input type="radio" name="q93" value="a" /> a) Los ciudadanos y los poderes públicos están sujetos a la Constitución y al resto del ordenamiento jurídico.</label>
+            <label><input type="radio" name="q93" value="b" /> b) La ley regulará las peculiaridades propias del régimen jurídico de los Colegios Profesionales y el ejercicio de las profesiones tituladas.</label>
+            <label><input type="radio" name="q93" value="c" /> c) Mediante ley orgánica se podrá autorizar la celebración de tratados por los que se atribuya a una organización o institución internacional el ejercicio de competencias derivadas de la Constitución.</label>
+            <label class="opt-skip"><input type="radio" name="q93" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 94 -->
+        <fieldset data-q="q94">
+          <legend class="visually-hidden">Pregunta 94</legend>
+          <div class="enunciado" id="enun-q94"><strong>94.</strong> Según el artículo 94 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q94">
+            <label><input type="radio" name="q94" value="a" /> a) La prestación del consentimiento del Estado para obligarse por medio de tratados o convenios requerirá la previa autorización de las Cortes Generales, en los siguientes casos: a) Tratados de carácter político.</label>
+            <label><input type="radio" name="q94" value="b" /> b) La dignidad de la persona, los derechos inviolables que le son inherentes, el libre desarrollo de la personalidad, el respeto a la ley y a los derechos de los demás son fundamento del orden político y de la paz social.</label>
+            <label><input type="radio" name="q94" value="c" /> c) La ley garantizará el derecho a la negociación colectiva laboral entre los representantes de los trabajadores y empresarios, así como la fuerza vinculante de los convenios.</label>
+            <label class="opt-skip"><input type="radio" name="q94" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 95 -->
+        <fieldset data-q="q95">
+          <legend class="visually-hidden">Pregunta 95</legend>
+          <div class="enunciado" id="enun-q95"><strong>95.</strong> Según el artículo 95 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q95">
+            <label><input type="radio" name="q95" value="a" /> a) Se reconoce la libertad de empresa en el marco de la economía de mercado.</label>
+            <label><input type="radio" name="q95" value="b" /> b) La celebración de un tratado internacional que contenga estipulaciones contrarias a la Constitución exigirá la previa revisión constitucional.</label>
+            <label><input type="radio" name="q95" value="c" /> c) La nacionalidad española se adquiere, se conserva y se pierde de acuerdo con lo establecido por la ley.</label>
+            <label class="opt-skip"><input type="radio" name="q95" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 96 -->
+        <fieldset data-q="q96">
+          <legend class="visually-hidden">Pregunta 96</legend>
+          <div class="enunciado" id="enun-q96"><strong>96.</strong> Según el artículo 96 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q96">
+            <label><input type="radio" name="q96" value="a" /> a) Los españoles son mayores de edad a los dieciocho años.</label>
+            <label><input type="radio" name="q96" value="b" /> b) Los poderes públicos aseguran la protección social, económica y jurídica de la familia.</label>
+            <label><input type="radio" name="q96" value="c" /> c) Los tratados internacionales válidamente celebrados, una vez publicados oficialmente en España, formarán parte del ordenamiento interno.</label>
+            <label class="opt-skip"><input type="radio" name="q96" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 97 -->
+        <fieldset data-q="q97">
+          <legend class="visually-hidden">Pregunta 97</legend>
+          <div class="enunciado" id="enun-q97"><strong>97.</strong> Según el artículo 97 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q97">
+            <label><input type="radio" name="q97" value="a" /> a) El Gobierno dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado.</label>
+            <label><input type="radio" name="q97" value="b" /> b) Los extranjeros gozarán en España de las libertades públicas que garantiza el presente Título en los términos que establezcan los tratados y la ley.</label>
+            <label><input type="radio" name="q97" value="c" /> c) Los poderes públicos promoverán las condiciones favorables para el progreso social y económico y para una distribución de la renta regional y personal más equitativa, en el marco de una política de estabilidad económica.</label>
+            <label class="opt-skip"><input type="radio" name="q97" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 98 -->
+        <fieldset data-q="q98">
+          <legend class="visually-hidden">Pregunta 98</legend>
+          <div class="enunciado" id="enun-q98"><strong>98.</strong> Según el artículo 98 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q98">
+            <label><input type="radio" name="q98" value="a" /> a) Los poderes públicos mantendrán un régimen público de Seguridad Social para todos los ciudadanos, que garantice la asistencia y prestaciones sociales suficientes ante situaciones de necesidad, especialmente en caso de desempleo.</label>
+            <label><input type="radio" name="q98" value="b" /> b) El Gobierno se compone del Presidente, de los Vicepresidentes, en su caso, de los Ministros y de los demás miembros que establezca la ley.</label>
+            <label><input type="radio" name="q98" value="c" /> c) Los españoles son iguales ante la ley, sin que pueda prevalecer discriminación alguna por razón de nacimiento, raza, sexo, religión, opinión o cualquier otra condición o circunstancia personal o social.</label>
+            <label class="opt-skip"><input type="radio" name="q98" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 99 -->
+        <fieldset data-q="q99">
+          <legend class="visually-hidden">Pregunta 99</legend>
+          <div class="enunciado" id="enun-q99"><strong>99.</strong> Según el artículo 99 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q99">
+            <label><input type="radio" name="q99" value="a" /> a) Todos tienen derecho a la vida y a la integridad física y moral, sin que, en ningún caso, puedan ser sometidos a tortura ni a penas o tratos inhumanos o degradantes.</label>
+            <label><input type="radio" name="q99" value="b" /> b) El Estado velará especialmente por la salvaguardia de los derechos económicos y sociales de los trabajadores españoles en el extranjero y orientará su política hacia su retorno.</label>
+            <label><input type="radio" name="q99" value="c" /> c) Después de cada renovación del Congreso de los Diputados, y en los demás supuestos constitucionales en que así proceda, el Rey, previa consulta con los representantes designados por los Grupos políticos con representación parlamentaria, y a través del Presidente del Congreso, propondrá un candidato a la Presidencia del Gobierno.</label>
+            <label class="opt-skip"><input type="radio" name="q99" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Constitución Española, art. 100 -->
+        <fieldset data-q="q100">
+          <legend class="visually-hidden">Pregunta 100</legend>
+          <div class="enunciado" id="enun-q100"><strong>100.</strong> Según el artículo 100 de la Constitución Española, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q100">
+            <label><input type="radio" name="q100" value="a" /> a) Los demás miembros del Gobierno serán nombrados y separados por el Rey, a propuesta de su Presidente.</label>
+            <label><input type="radio" name="q100" value="b" /> b) Se garantiza la libertad ideológica, religiosa y de culto de los individuos y las comunidades sin más limitación, en sus manifestaciones, que la necesaria para el mantenimiento del orden público protegido por la ley.</label>
+            <label><input type="radio" name="q100" value="c" /> c) Se reconoce el derecho a la protección de la salud.</label>
+            <label class="opt-skip"><input type="radio" name="q100" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <div class="acciones">
+          <button type="submit" class="btn btn-primary" id="btn-corregir" disabled>Corregir</button>
+          <p class="hint" id="hint-completo">
+            Las preguntas no son obligatorias. «Sin responder» queda fuera de la nota.
+          </p>
+        </div>
+      </form>
+    </section>
+
+    <section id="panel-resultados" class="sheet result-block" hidden>
+      <h2>Resultado</h2>
+      <p class="puntos" id="out-puntos"></p>
+      <p class="detalle" id="out-detalle"></p>
+      <div class="bloque-repaso" id="bloque-fallidas">
+        <h3>Fallidas</h3>
+        <p class="result-muted" id="out-msg-fallidas" hidden></p>
+        <ul class="err-list" id="out-errores"></ul>
+      </div>
+      <div class="bloque-repaso" id="bloque-omitidas" hidden>
+        <h3>Sin responder</h3>
+        <ul class="err-list omit-list" id="out-omitidas"></ul>
+      </div>
+      <p class="sin-errores" id="out-sin-errores" hidden></p>
+    </section>
+  </main>
+
+  <script>
+    const SKIP = "_skip";
+    const CORRECTAS = {
+      "q1": "a",
+      "q2": "b",
+      "q3": "c",
+      "q4": "a",
+      "q5": "b",
+      "q6": "c",
+      "q7": "a",
+      "q8": "b",
+      "q9": "c",
+      "q10": "a",
+      "q11": "b",
+      "q12": "c",
+      "q13": "a",
+      "q14": "b",
+      "q15": "c",
+      "q16": "a",
+      "q17": "b",
+      "q18": "c",
+      "q19": "a",
+      "q20": "b",
+      "q21": "c",
+      "q22": "a",
+      "q23": "b",
+      "q24": "c",
+      "q25": "a",
+      "q26": "b",
+      "q27": "c",
+      "q28": "a",
+      "q29": "b",
+      "q30": "c",
+      "q31": "a",
+      "q32": "b",
+      "q33": "c",
+      "q34": "a",
+      "q35": "b",
+      "q36": "c",
+      "q37": "a",
+      "q38": "b",
+      "q39": "c",
+      "q40": "a",
+      "q41": "b",
+      "q42": "c",
+      "q43": "a",
+      "q44": "b",
+      "q45": "c",
+      "q46": "a",
+      "q47": "b",
+      "q48": "c",
+      "q49": "a",
+      "q50": "b",
+      "q51": "c",
+      "q52": "a",
+      "q53": "b",
+      "q54": "c",
+      "q55": "a",
+      "q56": "b",
+      "q57": "c",
+      "q58": "a",
+      "q59": "b",
+      "q60": "c",
+      "q61": "a",
+      "q62": "b",
+      "q63": "c",
+      "q64": "a",
+      "q65": "b",
+      "q66": "c",
+      "q67": "a",
+      "q68": "b",
+      "q69": "c",
+      "q70": "a",
+      "q71": "b",
+      "q72": "c",
+      "q73": "a",
+      "q74": "b",
+      "q75": "c",
+      "q76": "a",
+      "q77": "b",
+      "q78": "c",
+      "q79": "a",
+      "q80": "b",
+      "q81": "c",
+      "q82": "a",
+      "q83": "b",
+      "q84": "c",
+      "q85": "a",
+      "q86": "b",
+      "q87": "c",
+      "q88": "a",
+      "q89": "b",
+      "q90": "c",
+      "q91": "a",
+      "q92": "b",
+      "q93": "c",
+      "q94": "a",
+      "q95": "b",
+      "q96": "c",
+      "q97": "a",
+      "q98": "b",
+      "q99": "c",
+      "q100": "a"
+};
+    const EXPLICACIONES = {
+      "q1": "La afirmación correcta reproduce el contenido del artículo 1 de la Constitución Española.",
+      "q2": "La afirmación correcta reproduce el contenido del artículo 2 de la Constitución Española.",
+      "q3": "La afirmación correcta reproduce el contenido del artículo 3 de la Constitución Española.",
+      "q4": "La afirmación correcta reproduce el contenido del artículo 4 de la Constitución Española.",
+      "q5": "La afirmación correcta reproduce el contenido del artículo 5 de la Constitución Española.",
+      "q6": "La afirmación correcta reproduce el contenido del artículo 6 de la Constitución Española.",
+      "q7": "La afirmación correcta reproduce el contenido del artículo 7 de la Constitución Española.",
+      "q8": "La afirmación correcta reproduce el contenido del artículo 8 de la Constitución Española.",
+      "q9": "La afirmación correcta reproduce el contenido del artículo 9 de la Constitución Española.",
+      "q10": "La afirmación correcta reproduce el contenido del artículo 10 de la Constitución Española.",
+      "q11": "La afirmación correcta reproduce el contenido del artículo 11 de la Constitución Española.",
+      "q12": "La afirmación correcta reproduce el contenido del artículo 12 de la Constitución Española.",
+      "q13": "La afirmación correcta reproduce el contenido del artículo 13 de la Constitución Española.",
+      "q14": "La afirmación correcta reproduce el contenido del artículo 14 de la Constitución Española.",
+      "q15": "La afirmación correcta reproduce el contenido del artículo 15 de la Constitución Española.",
+      "q16": "La afirmación correcta reproduce el contenido del artículo 16 de la Constitución Española.",
+      "q17": "La afirmación correcta reproduce el contenido del artículo 17 de la Constitución Española.",
+      "q18": "La afirmación correcta reproduce el contenido del artículo 18 de la Constitución Española.",
+      "q19": "La afirmación correcta reproduce el contenido del artículo 19 de la Constitución Española.",
+      "q20": "La afirmación correcta reproduce el contenido del artículo 20 de la Constitución Española.",
+      "q21": "La afirmación correcta reproduce el contenido del artículo 21 de la Constitución Española.",
+      "q22": "La afirmación correcta reproduce el contenido del artículo 22 de la Constitución Española.",
+      "q23": "La afirmación correcta reproduce el contenido del artículo 23 de la Constitución Española.",
+      "q24": "La afirmación correcta reproduce el contenido del artículo 24 de la Constitución Española.",
+      "q25": "La afirmación correcta reproduce el contenido del artículo 25 de la Constitución Española.",
+      "q26": "La afirmación correcta reproduce el contenido del artículo 26 de la Constitución Española.",
+      "q27": "La afirmación correcta reproduce el contenido del artículo 27 de la Constitución Española.",
+      "q28": "La afirmación correcta reproduce el contenido del artículo 28 de la Constitución Española.",
+      "q29": "La afirmación correcta reproduce el contenido del artículo 29 de la Constitución Española.",
+      "q30": "La afirmación correcta reproduce el contenido del artículo 30 de la Constitución Española.",
+      "q31": "La afirmación correcta reproduce el contenido del artículo 31 de la Constitución Española.",
+      "q32": "La afirmación correcta reproduce el contenido del artículo 32 de la Constitución Española.",
+      "q33": "La afirmación correcta reproduce el contenido del artículo 33 de la Constitución Española.",
+      "q34": "La afirmación correcta reproduce el contenido del artículo 34 de la Constitución Española.",
+      "q35": "La afirmación correcta reproduce el contenido del artículo 35 de la Constitución Española.",
+      "q36": "La afirmación correcta reproduce el contenido del artículo 36 de la Constitución Española.",
+      "q37": "La afirmación correcta reproduce el contenido del artículo 37 de la Constitución Española.",
+      "q38": "La afirmación correcta reproduce el contenido del artículo 38 de la Constitución Española.",
+      "q39": "La afirmación correcta reproduce el contenido del artículo 39 de la Constitución Española.",
+      "q40": "La afirmación correcta reproduce el contenido del artículo 40 de la Constitución Española.",
+      "q41": "La afirmación correcta reproduce el contenido del artículo 41 de la Constitución Española.",
+      "q42": "La afirmación correcta reproduce el contenido del artículo 42 de la Constitución Española.",
+      "q43": "La afirmación correcta reproduce el contenido del artículo 43 de la Constitución Española.",
+      "q44": "La afirmación correcta reproduce el contenido del artículo 44 de la Constitución Española.",
+      "q45": "La afirmación correcta reproduce el contenido del artículo 45 de la Constitución Española.",
+      "q46": "La afirmación correcta reproduce el contenido del artículo 46 de la Constitución Española.",
+      "q47": "La afirmación correcta reproduce el contenido del artículo 47 de la Constitución Española.",
+      "q48": "La afirmación correcta reproduce el contenido del artículo 48 de la Constitución Española.",
+      "q49": "La afirmación correcta reproduce el contenido del artículo 49 de la Constitución Española.",
+      "q50": "La afirmación correcta reproduce el contenido del artículo 50 de la Constitución Española.",
+      "q51": "La afirmación correcta reproduce el contenido del artículo 51 de la Constitución Española.",
+      "q52": "La afirmación correcta reproduce el contenido del artículo 52 de la Constitución Española.",
+      "q53": "La afirmación correcta reproduce el contenido del artículo 53 de la Constitución Española.",
+      "q54": "La afirmación correcta reproduce el contenido del artículo 54 de la Constitución Española.",
+      "q55": "La afirmación correcta reproduce el contenido del artículo 55 de la Constitución Española.",
+      "q56": "La afirmación correcta reproduce el contenido del artículo 56 de la Constitución Española.",
+      "q57": "La afirmación correcta reproduce el contenido del artículo 57 de la Constitución Española.",
+      "q58": "La afirmación correcta reproduce el contenido del artículo 58 de la Constitución Española.",
+      "q59": "La afirmación correcta reproduce el contenido del artículo 59 de la Constitución Española.",
+      "q60": "La afirmación correcta reproduce el contenido del artículo 60 de la Constitución Española.",
+      "q61": "La afirmación correcta reproduce el contenido del artículo 61 de la Constitución Española.",
+      "q62": "La afirmación correcta reproduce el contenido del artículo 62 de la Constitución Española.",
+      "q63": "La afirmación correcta reproduce el contenido del artículo 63 de la Constitución Española.",
+      "q64": "La afirmación correcta reproduce el contenido del artículo 64 de la Constitución Española.",
+      "q65": "La afirmación correcta reproduce el contenido del artículo 65 de la Constitución Española.",
+      "q66": "La afirmación correcta reproduce el contenido del artículo 66 de la Constitución Española.",
+      "q67": "La afirmación correcta reproduce el contenido del artículo 67 de la Constitución Española.",
+      "q68": "La afirmación correcta reproduce el contenido del artículo 68 de la Constitución Española.",
+      "q69": "La afirmación correcta reproduce el contenido del artículo 69 de la Constitución Española.",
+      "q70": "La afirmación correcta reproduce el contenido del artículo 70 de la Constitución Española.",
+      "q71": "La afirmación correcta reproduce el contenido del artículo 71 de la Constitución Española.",
+      "q72": "La afirmación correcta reproduce el contenido del artículo 72 de la Constitución Española.",
+      "q73": "La afirmación correcta reproduce el contenido del artículo 73 de la Constitución Española.",
+      "q74": "La afirmación correcta reproduce el contenido del artículo 74 de la Constitución Española.",
+      "q75": "La afirmación correcta reproduce el contenido del artículo 75 de la Constitución Española.",
+      "q76": "La afirmación correcta reproduce el contenido del artículo 76 de la Constitución Española.",
+      "q77": "La afirmación correcta reproduce el contenido del artículo 77 de la Constitución Española.",
+      "q78": "La afirmación correcta reproduce el contenido del artículo 78 de la Constitución Española.",
+      "q79": "La afirmación correcta reproduce el contenido del artículo 79 de la Constitución Española.",
+      "q80": "La afirmación correcta reproduce el contenido del artículo 80 de la Constitución Española.",
+      "q81": "La afirmación correcta reproduce el contenido del artículo 81 de la Constitución Española.",
+      "q82": "La afirmación correcta reproduce el contenido del artículo 82 de la Constitución Española.",
+      "q83": "La afirmación correcta reproduce el contenido del artículo 83 de la Constitución Española.",
+      "q84": "La afirmación correcta reproduce el contenido del artículo 84 de la Constitución Española.",
+      "q85": "La afirmación correcta reproduce el contenido del artículo 85 de la Constitución Española.",
+      "q86": "La afirmación correcta reproduce el contenido del artículo 86 de la Constitución Española.",
+      "q87": "La afirmación correcta reproduce el contenido del artículo 87 de la Constitución Española.",
+      "q88": "La afirmación correcta reproduce el contenido del artículo 88 de la Constitución Española.",
+      "q89": "La afirmación correcta reproduce el contenido del artículo 89 de la Constitución Española.",
+      "q90": "La afirmación correcta reproduce el contenido del artículo 90 de la Constitución Española.",
+      "q91": "La afirmación correcta reproduce el contenido del artículo 91 de la Constitución Española.",
+      "q92": "La afirmación correcta reproduce el contenido del artículo 92 de la Constitución Española.",
+      "q93": "La afirmación correcta reproduce el contenido del artículo 93 de la Constitución Española.",
+      "q94": "La afirmación correcta reproduce el contenido del artículo 94 de la Constitución Española.",
+      "q95": "La afirmación correcta reproduce el contenido del artículo 95 de la Constitución Española.",
+      "q96": "La afirmación correcta reproduce el contenido del artículo 96 de la Constitución Española.",
+      "q97": "La afirmación correcta reproduce el contenido del artículo 97 de la Constitución Española.",
+      "q98": "La afirmación correcta reproduce el contenido del artículo 98 de la Constitución Española.",
+      "q99": "La afirmación correcta reproduce el contenido del artículo 99 de la Constitución Española.",
+      "q100": "La afirmación correcta reproduce el contenido del artículo 100 de la Constitución Española."
+};
+    const IDS = Object.keys(CORRECTAS);
+
+    const elTimer = document.getElementById("timer");
+    const elTimerBlock = document.getElementById("timer-block");
+    const panelInicio = document.getElementById("panel-inicio");
+    const panelExamen = document.getElementById("panel-examen");
+    const panelResultados = document.getElementById("panel-resultados");
+    const form = document.getElementById("form-examen");
+    const btnEmpezar = document.getElementById("btn-empezar");
+    const btnCorregir = document.getElementById("btn-corregir");
+    const outPuntos = document.getElementById("out-puntos");
+    const outDetalle = document.getElementById("out-detalle");
+    const outErrores = document.getElementById("out-errores");
+    const outMsgFallidas = document.getElementById("out-msg-fallidas");
+    const bloqueOmitidas = document.getElementById("bloque-omitidas");
+    const outOmitidas = document.getElementById("out-omitidas");
+    const outSinErrores = document.getElementById("out-sin-errores");
+
+    let intervalId = null;
+    let segundosTranscurridos = 0;
+    let examenIniciado = false;
+    let cronometroParado = false;
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function formatTranscurrido(totalSeg) {
+      const h = Math.floor(totalSeg / 3600);
+      const m = Math.floor((totalSeg % 3600) / 60);
+      const s = totalSeg % 60;
+      if (h > 0) {
+        return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
+      return m + ":" + String(s).padStart(2, "0");
+    }
+
+    function tickCronometro() {
+      if (cronometroParado) return;
+      segundosTranscurridos += 1;
+      elTimer.textContent = formatTranscurrido(segundosTranscurridos);
+    }
+
+    function textoEnunciado(id) {
+      const fs = form.querySelector('fieldset[data-q="' + id + '"]');
+      const el = fs && fs.querySelector(".enunciado");
+      return el ? el.textContent.trim() : id;
+    }
+
+    function etiquetaOpcion(id, valor) {
+      if (valor === SKIP) return "Sin responder";
+      const inp = form.querySelector('input[name="' + id + '"][value="' + valor + '"]');
+      if (!inp) return valor;
+      const lab = inp.closest("label");
+      return lab ? lab.textContent.trim() : valor;
+    }
+
+    btnEmpezar.addEventListener("click", function () {
+      if (examenIniciado) return;
+      examenIniciado = true;
+      cronometroParado = false;
+      segundosTranscurridos = 0;
+      panelInicio.hidden = true;
+      panelExamen.hidden = false;
+      panelResultados.hidden = true;
+      elTimerBlock.classList.remove("inactivo");
+      elTimer.textContent = "0:00";
+      btnCorregir.disabled = false;
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(tickCronometro, 1000);
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      let aciertos = 0;
+      let fallos = 0;
+      let contestadas = 0;
+      const errores = [];
+      const omitidas = [];
+
+      for (const id of IDS) {
+        const elegido = fd.get(id);
+        const ok = CORRECTAS[id];
+        const exp = EXPLICACIONES[id] || "";
+
+        if (!elegido || elegido === SKIP) {
+          omitidas.push({ id, exp });
+          continue;
+        }
+
+        contestadas += 1;
+        if (elegido === ok) {
+          aciertos += 1;
+        } else {
+          fallos += 1;
+          errores.push({
+            id,
+            elegido: String(elegido),
+            correcta: ok,
+            exp,
+          });
+        }
+      }
+
+      const penal = Math.floor(fallos / 2);
+      const puntuacion = aciertos - penal;
+
+      cronometroParado = true;
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+
+      panelResultados.hidden = false;
+      outPuntos.textContent = String(puntuacion);
+      outDetalle.textContent =
+        "Contestadas: " +
+        contestadas +
+        " · Sin responder: " +
+        omitidas.length +
+        " · Aciertos: " +
+        aciertos +
+        " · Fallos: " +
+        fallos +
+        " · Penalización: −" +
+        penal +
+        " · Tiempo: " +
+        formatTranscurrido(segundosTranscurridos);
+
+      outErrores.innerHTML = "";
+      outMsgFallidas.hidden = true;
+      outMsgFallidas.textContent = "";
+
+      if (errores.length === 0) {
+        outMsgFallidas.hidden = false;
+        outMsgFallidas.textContent =
+          contestadas === 0
+            ? "No marcaste ninguna respuesta distinta de «Sin responder»."
+            : "Ninguna de las respuestas contestadas es incorrecta.";
+      } else {
+        for (const err of errores) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(err.id)) +
+            "</strong>" +
+            '<span class="mini">Tu respuesta: ' +
+            esc(etiquetaOpcion(err.id, err.elegido)) +
+            " · Correcta: " +
+            esc(etiquetaOpcion(err.id, err.correcta)) +
+            "</span>" +
+            '<span class="explicacion">' +
+            esc(err.exp) +
+            "</span>";
+          outErrores.appendChild(li);
+        }
+      }
+
+      outOmitidas.innerHTML = "";
+      if (omitidas.length === 0) {
+        bloqueOmitidas.hidden = true;
+      } else {
+        bloqueOmitidas.hidden = false;
+        for (const om of omitidas) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(om.id)) +
+            "</strong>" +
+            '<span class="mini">No elegiste a), b) ni c).</span>' +
+            '<span class="explicacion">Respuesta acertada habría sido: ' +
+            esc(etiquetaOpcion(om.id, CORRECTAS[om.id])) +
+            ". " +
+            esc(om.exp) +
+            "</span>";
+          outOmitidas.appendChild(li);
+        }
+      }
+
+      const perfectoContestadas = contestadas > 0 && fallos === 0;
+      const nadaContestado = contestadas === 0;
+      if (perfectoContestadas && errores.length === 0 && !nadaContestado) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length === 0) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length > 0 && perfectoContestadas) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Sin fallos en lo que respondiste; revisa las omitidas arriba.";
+      } else {
+        outSinErrores.hidden = true;
+      }
+
+      btnCorregir.disabled = true;
+      elTimerBlock.classList.add("inactivo");
+      form.querySelectorAll("input").forEach(function (inp) {
+        inp.disabled = true;
+      });
+    });
+
+  </script>
+</body>
+</html>

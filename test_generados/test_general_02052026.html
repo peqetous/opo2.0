@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Examen — 4 preguntas</title>
+  <style>
+    :root {
+      --bg: #f2f2f7;
+      --surface: #ffffff;
+      --separator: rgba(60, 60, 67, 0.12);
+      --text: #1c1c1e;
+      --text-secondary: rgba(60, 60, 67, 0.6);
+      --text-tertiary: rgba(60, 60, 67, 0.45);
+      --blue: #007aff;
+      --blue-pressed: #0062cc;
+      --green: #34c759;
+      --red: #ff3b30;
+      --radius-lg: 14px;
+      --radius-pill: 980px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Text",
+        "SF Pro Display",
+        "Helvetica Neue",
+        sans-serif;
+      font-size: 17px;
+      line-height: 1.35;
+      letter-spacing: -0.022em;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1.25rem;
+      padding-top: max(0.75rem, env(safe-area-inset-top));
+      background: rgba(255, 255, 255, 0.72);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .topbar-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.024em;
+    }
+
+    .timer-block {
+      text-align: right;
+      min-width: 4.5rem;
+    }
+
+    .timer-block .timer-caption {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 1px;
+    }
+
+    .timer-block .timer-value {
+      font-size: 20px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .timer-block.inactivo .timer-value {
+      color: var(--text-tertiary);
+    }
+
+    main {
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 2.5rem;
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .sheet {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.25rem 1.35rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .sheet + .sheet {
+      margin-top: 1rem;
+    }
+
+    .inicio .lead {
+      margin: 0 0 0.75rem;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .hint {
+      margin: 0 0 1.25rem;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text-tertiary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.022em;
+      padding: 0.65rem 1.35rem;
+      border: none;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-pressed);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.38;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    #panel-examen {
+      margin-top: 1rem;
+    }
+
+    #panel-examen[hidden] {
+      display: none !important;
+    }
+
+    fieldset {
+      margin: 0 0 0.75rem;
+      padding: 0;
+      border: none;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    fieldset:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .enunciado {
+      padding: 0.95rem 1rem 0.85rem;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.022em;
+      line-height: 1.35;
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .options {
+      padding: 0 0 0.35rem;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 0;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      font-size: 17px;
+      color: var(--text);
+      border-top: 0.5px solid var(--separator);
+    }
+
+    label.opt-skip {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    label:first-of-type {
+      border-top: none;
+    }
+
+    label input {
+      margin: 0;
+      width: 1.15rem;
+      height: 1.15rem;
+      accent-color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .acciones {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .acciones .hint {
+      margin: 0;
+    }
+
+    #panel-inicio[hidden],
+    #panel-resultados[hidden] {
+      display: none !important;
+    }
+
+    .result-block h2 {
+      margin: 0 0 0.35rem;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.026em;
+    }
+
+    .result-block .puntos {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.35rem;
+      line-height: 1.15;
+    }
+
+    .result-block .detalle {
+      margin: 0 0 1.5rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .result-block h3 {
+      margin: 0 0 0.5rem;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-tertiary);
+    }
+
+    .result-block h3 + .result-muted {
+      margin-top: -0.25rem;
+    }
+
+    .result-muted {
+      margin: 0 0 1rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .err-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .err-list li {
+      padding: 0.85rem 1rem;
+      background: rgba(255, 59, 48, 0.06);
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      border: 0.5px solid rgba(255, 59, 48, 0.18);
+    }
+
+    .err-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .err-list li strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .err-list .mini {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    .err-list .explicacion {
+      display: block;
+      margin-top: 0.55rem;
+      padding-top: 0.55rem;
+      border-top: 0.5px solid rgba(255, 59, 48, 0.2);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .omit-list li {
+      background: rgba(60, 60, 67, 0.06);
+      border-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .omit-list .explicacion {
+      border-top-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .bloque-repaso {
+      margin-bottom: 1.25rem;
+    }
+
+    .bloque-repaso:last-child {
+      margin-bottom: 0;
+    }
+
+    .sin-errores {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--green);
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="topbar-title">Examen — 4 preguntas</h1>
+    <div id="timer-block" class="timer-block inactivo" aria-live="polite">
+      <span class="timer-caption">Transcurrido</span>
+      <span id="timer" class="timer-value">0:00</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="panel-inicio" class="sheet inicio">
+      <p class="lead">
+        Pulsa <strong>Empezar</strong> para iniciar el cronómetro y ver las preguntas.
+        Puedes pulsar <strong>Corregir</strong> cuando quieras; las que dejes en «Sin responder» no suman ni restan.
+      </p>
+      <p class="hint">
+        Puntuación (solo sobre las contestadas, excluido «Sin responder»): cada 2 incorrectas restan 1 acierto (la nota puede ser negativa).
+      </p>
+      <button type="button" class="btn btn-primary" id="btn-empezar">Empezar</button>
+    </section>
+
+    <section id="panel-examen" hidden>
+      <form id="form-examen">
+        <!-- Fuente: BOE-A-1978-31229, art. 1.3 CE -->
+        <fieldset data-q="q1">
+          <legend class="visually-hidden">Pregunta 1</legend>
+          <div class="enunciado" id="enun-q1"><strong>1.</strong> Según la Constitución Española, la forma política del Estado español es:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q1">
+            <label><input type="radio" name="q1" value="a" /> a) República parlamentaria.</label>
+            <label><input type="radio" name="q1" value="b" /> b) Monarquía ejecutiva.</label>
+            <label><input type="radio" name="q1" value="c" /> c) Monarquía parlamentaria.</label>
+            <label class="opt-skip"><input type="radio" name="q1" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: BOE-A-2000-544, art. 1.1 LO 4/2000 -->
+        <fieldset data-q="q2">
+          <legend class="visually-hidden">Pregunta 2</legend>
+          <div class="enunciado" id="enun-q2"><strong>2.</strong> A efectos de la Ley Orgánica 4/2000, sobre derechos y libertades de los extranjeros en España y su integración social, se consideran extranjeros:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q2">
+            <label><input type="radio" name="q2" value="a" /> a) A los que carezcan de la nacionalidad española.</label>
+            <label><input type="radio" name="q2" value="b" /> b) Únicamente a los nacionales de Estados que no pertenecen a la Unión Europea.</label>
+            <label><input type="radio" name="q2" value="c" /> c) A quienes carezcan de documentación que acredite su identidad en territorio español.</label>
+            <label class="opt-skip"><input type="radio" name="q2" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: BOE-A-1995-25444, art. 5 CP -->
+        <fieldset data-q="q3">
+          <legend class="visually-hidden">Pregunta 3</legend>
+          <div class="enunciado" id="enun-q3"><strong>3.</strong> Conforme al artículo 5 del Código Penal:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q3">
+            <label><input type="radio" name="q3" value="a" /> a) No hay pena sin dolo.</label>
+            <label><input type="radio" name="q3" value="b" /> b) No hay pena sin dolo o imprudencia.</label>
+            <label><input type="radio" name="q3" value="c" /> c) No hay pena sin que medie intención de obtener lucro.</label>
+            <label class="opt-skip"><input type="radio" name="q3" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: BOE-A-2015-11719, art. 2.5 EBEP -->
+        <fieldset data-q="q4">
+          <legend class="visually-hidden">Pregunta 4</legend>
+          <div class="enunciado" id="enun-q4"><strong>4.</strong> Respecto del personal de las Administraciones Públicas no incluido en el ámbito de aplicación del texto refundido del Estatuto Básico del Empleado Público:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q4">
+            <label><input type="radio" name="q4" value="a" /> a) Ningún precepto de dicho Estatuto puede aplicársele en ningún caso.</label>
+            <label><input type="radio" name="q4" value="b" /> b) El Estatuto tiene carácter supletorio.</label>
+            <label><input type="radio" name="q4" value="c" /> c) Solo le es de aplicación el capítulo II del título III del Estatuto.</label>
+            <label class="opt-skip"><input type="radio" name="q4" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <div class="acciones">
+          <button type="submit" class="btn btn-primary" id="btn-corregir" disabled>Corregir</button>
+          <p class="hint" id="hint-completo">
+            Las preguntas no son obligatorias. «Sin responder» queda fuera de la nota.
+          </p>
+        </div>
+      </form>
+    </section>
+
+    <section id="panel-resultados" class="sheet result-block" hidden>
+      <h2>Resultado</h2>
+      <p class="puntos" id="out-puntos"></p>
+      <p class="detalle" id="out-detalle"></p>
+      <div class="bloque-repaso" id="bloque-fallidas">
+        <h3>Fallidas</h3>
+        <p class="result-muted" id="out-msg-fallidas" hidden></p>
+        <ul class="err-list" id="out-errores"></ul>
+      </div>
+      <div class="bloque-repaso" id="bloque-omitidas" hidden>
+        <h3>Sin responder</h3>
+        <ul class="err-list omit-list" id="out-omitidas"></ul>
+      </div>
+      <p class="sin-errores" id="out-sin-errores" hidden></p>
+    </section>
+  </main>
+
+  <script>
+    const SKIP = "_skip";
+    const CORRECTAS = { q1: "c", q2: "a", q3: "b", q4: "b" };
+    const EXPLICACIONES = {
+      q1: "El artículo 1.3 de la Constitución Española (leyes/BOE-A-1978-31229.md) dispone que la forma política del Estado español es la Monarquía parlamentaria.",
+      q2: "El artículo 1.1 de la LO 4/2000 (leyes/BOE-A-2000-544.md) establece que se consideran extranjeros a los que carezcan de la nacionalidad española; la letra c) confunde con el deber de documentación del art. 4, no con la noción de extranjero.",
+      q3: "El artículo 5 del Código Penal (leyes/BOE-A-1995-25444.md) establece literalmente que no hay pena sin dolo o imprudencia; la a) omite la imprudencia.",
+      q4: "El artículo 2.5 del EBEP en el texto refundido (leyes/BOE-A-2015-11719.md) prevé que el Estatuto tiene carácter supletorio para el personal no incluido en su ámbito de aplicación.",
+    };
+    const IDS = Object.keys(CORRECTAS);
+
+    const elTimer = document.getElementById("timer");
+    const elTimerBlock = document.getElementById("timer-block");
+    const panelInicio = document.getElementById("panel-inicio");
+    const panelExamen = document.getElementById("panel-examen");
+    const panelResultados = document.getElementById("panel-resultados");
+    const form = document.getElementById("form-examen");
+    const btnEmpezar = document.getElementById("btn-empezar");
+    const btnCorregir = document.getElementById("btn-corregir");
+    const outPuntos = document.getElementById("out-puntos");
+    const outDetalle = document.getElementById("out-detalle");
+    const outErrores = document.getElementById("out-errores");
+    const outMsgFallidas = document.getElementById("out-msg-fallidas");
+    const bloqueOmitidas = document.getElementById("bloque-omitidas");
+    const outOmitidas = document.getElementById("out-omitidas");
+    const outSinErrores = document.getElementById("out-sin-errores");
+
+    let intervalId = null;
+    let segundosTranscurridos = 0;
+    let examenIniciado = false;
+    let cronometroParado = false;
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function formatTranscurrido(totalSeg) {
+      const h = Math.floor(totalSeg / 3600);
+      const m = Math.floor((totalSeg % 3600) / 60);
+      const s = totalSeg % 60;
+      if (h > 0) {
+        return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
+      return m + ":" + String(s).padStart(2, "0");
+    }
+
+    function tickCronometro() {
+      if (cronometroParado) return;
+      segundosTranscurridos += 1;
+      elTimer.textContent = formatTranscurrido(segundosTranscurridos);
+    }
+
+    function textoEnunciado(id) {
+      const fs = form.querySelector('fieldset[data-q="' + id + '"]');
+      const el = fs && fs.querySelector(".enunciado");
+      return el ? el.textContent.trim() : id;
+    }
+
+    function etiquetaOpcion(id, valor) {
+      if (valor === SKIP) return "Sin responder";
+      const inp = form.querySelector('input[name="' + id + '"][value="' + valor + '"]');
+      if (!inp) return valor;
+      const lab = inp.closest("label");
+      return lab ? lab.textContent.trim() : valor;
+    }
+
+    btnEmpezar.addEventListener("click", function () {
+      if (examenIniciado) return;
+      examenIniciado = true;
+      cronometroParado = false;
+      segundosTranscurridos = 0;
+      panelInicio.hidden = true;
+      panelExamen.hidden = false;
+      panelResultados.hidden = true;
+      elTimerBlock.classList.remove("inactivo");
+      elTimer.textContent = "0:00";
+      btnCorregir.disabled = false;
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(tickCronometro, 1000);
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      let aciertos = 0;
+      let fallos = 0;
+      let contestadas = 0;
+      const errores = [];
+      const omitidas = [];
+
+      for (const id of IDS) {
+        const elegido = fd.get(id);
+        const ok = CORRECTAS[id];
+        const exp = EXPLICACIONES[id] || "";
+
+        if (!elegido || elegido === SKIP) {
+          omitidas.push({ id, exp });
+          continue;
+        }
+
+        contestadas += 1;
+        if (elegido === ok) {
+          aciertos += 1;
+        } else {
+          fallos += 1;
+          errores.push({
+            id,
+            elegido: String(elegido),
+            correcta: ok,
+            exp,
+          });
+        }
+      }
+
+      const penal = Math.floor(fallos / 2);
+      const puntuacion = aciertos - penal;
+
+      cronometroParado = true;
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+
+      panelResultados.hidden = false;
+      outPuntos.textContent = String(puntuacion);
+      outDetalle.textContent =
+        "Contestadas: " +
+        contestadas +
+        " · Sin responder: " +
+        omitidas.length +
+        " · Aciertos: " +
+        aciertos +
+        " · Fallos: " +
+        fallos +
+        " · Penalización: −" +
+        penal +
+        " · Tiempo: " +
+        formatTranscurrido(segundosTranscurridos);
+
+      outErrores.innerHTML = "";
+      outMsgFallidas.hidden = true;
+      outMsgFallidas.textContent = "";
+
+      if (errores.length === 0) {
+        outMsgFallidas.hidden = false;
+        outMsgFallidas.textContent =
+          contestadas === 0
+            ? "No marcaste ninguna respuesta distinta de «Sin responder»."
+            : "Ninguna de las respuestas contestadas es incorrecta.";
+      } else {
+        for (const err of errores) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(err.id)) +
+            "</strong>" +
+            '<span class="mini">Tu respuesta: ' +
+            esc(etiquetaOpcion(err.id, err.elegido)) +
+            " · Correcta: " +
+            esc(etiquetaOpcion(err.id, err.correcta)) +
+            "</span>" +
+            '<span class="explicacion">' +
+            esc(err.exp) +
+            "</span>";
+          outErrores.appendChild(li);
+        }
+      }
+
+      outOmitidas.innerHTML = "";
+      if (omitidas.length === 0) {
+        bloqueOmitidas.hidden = true;
+      } else {
+        bloqueOmitidas.hidden = false;
+        for (const om of omitidas) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(om.id)) +
+            "</strong>" +
+            '<span class="mini">No elegiste a), b) ni c).</span>' +
+            '<span class="explicacion">Respuesta acertada habría sido: ' +
+            esc(etiquetaOpcion(om.id, CORRECTAS[om.id])) +
+            ". " +
+            esc(om.exp) +
+            "</span>";
+          outOmitidas.appendChild(li);
+        }
+      }
+
+      const perfectoContestadas = contestadas > 0 && fallos === 0;
+      const nadaContestado = contestadas === 0;
+      if (perfectoContestadas && errores.length === 0 && !nadaContestado) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length === 0) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length > 0 && perfectoContestadas) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Sin fallos en lo que respondiste; revisa las omitidas arriba.";
+      } else {
+        outSinErrores.hidden = true;
+      }
+
+      btnCorregir.disabled = true;
+      elTimerBlock.classList.add("inactivo");
+      form.querySelectorAll("input").forEach(function (inp) {
+        inp.disabled = true;
+      });
+    });
+  </script>
+</body>
+</html>

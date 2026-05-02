@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Test Código Penal - 100 preguntas</title>
+  <style>
+    :root {
+      --bg: #f2f2f7;
+      --surface: #ffffff;
+      --separator: rgba(60, 60, 67, 0.12);
+      --text: #1c1c1e;
+      --text-secondary: rgba(60, 60, 67, 0.6);
+      --text-tertiary: rgba(60, 60, 67, 0.45);
+      --blue: #007aff;
+      --blue-pressed: #0062cc;
+      --green: #34c759;
+      --red: #ff3b30;
+      --radius-lg: 14px;
+      --radius-pill: 980px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Text",
+        "SF Pro Display",
+        "Helvetica Neue",
+        sans-serif;
+      font-size: 17px;
+      line-height: 1.35;
+      letter-spacing: -0.022em;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1.25rem;
+      padding-top: max(0.75rem, env(safe-area-inset-top));
+      background: rgba(255, 255, 255, 0.72);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .topbar-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.024em;
+    }
+
+    .timer-block {
+      text-align: right;
+      min-width: 4.5rem;
+    }
+
+    .timer-block .timer-caption {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 1px;
+    }
+
+    .timer-block .timer-value {
+      font-size: 20px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .timer-block.inactivo .timer-value {
+      color: var(--text-tertiary);
+    }
+
+    main {
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 2.5rem;
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .sheet {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.25rem 1.35rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .sheet + .sheet {
+      margin-top: 1rem;
+    }
+
+    .inicio .lead {
+      margin: 0 0 0.75rem;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .hint {
+      margin: 0 0 1.25rem;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text-tertiary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.022em;
+      padding: 0.65rem 1.35rem;
+      border: none;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-pressed);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.38;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    #panel-examen {
+      margin-top: 1rem;
+    }
+
+    #panel-examen[hidden] {
+      display: none !important;
+    }
+
+    fieldset {
+      margin: 0 0 0.75rem;
+      padding: 0;
+      border: none;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    fieldset:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .enunciado {
+      padding: 0.95rem 1rem 0.85rem;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.022em;
+      line-height: 1.35;
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .options {
+      padding: 0 0 0.35rem;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 0;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      font-size: 17px;
+      color: var(--text);
+      border-top: 0.5px solid var(--separator);
+    }
+
+    label.opt-skip {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    label:first-of-type {
+      border-top: none;
+    }
+
+    label input {
+      margin: 0;
+      width: 1.15rem;
+      height: 1.15rem;
+      accent-color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .acciones {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .acciones .hint {
+      margin: 0;
+    }
+
+    #panel-inicio[hidden],
+    #panel-resultados[hidden] {
+      display: none !important;
+    }
+
+    .result-block h2 {
+      margin: 0 0 0.35rem;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.026em;
+    }
+
+    .result-block .puntos {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.35rem;
+      line-height: 1.15;
+    }
+
+    .result-block .detalle {
+      margin: 0 0 1.5rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .result-block h3 {
+      margin: 0 0 0.5rem;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-tertiary);
+    }
+
+    .result-block h3 + .result-muted {
+      margin-top: -0.25rem;
+    }
+
+    .result-muted {
+      margin: 0 0 1rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .err-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .err-list li {
+      padding: 0.85rem 1rem;
+      background: rgba(255, 59, 48, 0.06);
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      border: 0.5px solid rgba(255, 59, 48, 0.18);
+    }
+
+    .err-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .err-list li strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .err-list .mini {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    .err-list .explicacion {
+      display: block;
+      margin-top: 0.55rem;
+      padding-top: 0.55rem;
+      border-top: 0.5px solid rgba(255, 59, 48, 0.2);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .omit-list li {
+      background: rgba(60, 60, 67, 0.06);
+      border-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .omit-list .explicacion {
+      border-top-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .bloque-repaso {
+      margin-bottom: 1.25rem;
+    }
+
+    .bloque-repaso:last-child {
+      margin-bottom: 0;
+    }
+
+    .sin-errores {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--green);
+    }
+    </style>
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="topbar-title">Test Código Penal - 100 preguntas</h1>
+    <div id="timer-block" class="timer-block inactivo" aria-live="polite">
+      <span class="timer-caption">Transcurrido</span>
+      <span id="timer" class="timer-value">0:00</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="panel-inicio" class="sheet inicio">
+      <p class="lead">
+        Pulsa <strong>Empezar</strong> para iniciar el cronómetro y ver las 100 preguntas.
+        Puedes pulsar <strong>Corregir</strong> cuando quieras; las que dejes en «Sin responder» no suman ni restan.
+      </p>
+      <p class="hint">
+        Puntuación (solo sobre las contestadas, excluido «Sin responder»): cada 2 incorrectas restan 1 acierto (la nota puede ser negativa).
+      </p>
+      <button type="button" class="btn btn-primary" id="btn-empezar">Empezar</button>
+    </section>
+
+    <section id="panel-examen" hidden>
+      <form id="form-examen">
+        <!-- Fuente: Código Penal, art. 13 -->
+        <fieldset data-q="q1">
+          <legend class="visually-hidden">Pregunta 1</legend>
+          <div class="enunciado" id="enun-q1"><strong>1.</strong> Según el artículo 13 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q1">
+            <label><input type="radio" name="q1" value="a" /> a) Son delitos leves las infracciones que la Ley castiga con pena grave.</label>
+            <label><input type="radio" name="q1" value="b" /> b) Son delitos graves las infracciones que la Ley castiga con pena grave.</label>
+            <label><input type="radio" name="q1" value="c" /> c) Son delitos graves las infracciones que la Ley castiga con pena leve.</label>
+            <label class="opt-skip"><input type="radio" name="q1" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 21 -->
+        <fieldset data-q="q2">
+          <legend class="visually-hidden">Pregunta 2</legend>
+          <div class="enunciado" id="enun-q2"><strong>2.</strong> Según el artículo 21 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q2">
+            <label><input type="radio" name="q2" value="a" /> a) La de actuar el culpable a causa de su leve adicción a las sustancias mencionadas en el número 2.º del artículo anterior.</label>
+            <label><input type="radio" name="q2" value="b" /> b) La de actuar el culpable a causa de su grave adicción a las sustancias mencionadas en el número 3.º del artículo anterior.</label>
+            <label><input type="radio" name="q2" value="c" /> c) La de actuar el culpable a causa de su grave adicción a las sustancias mencionadas en el número 2.º del artículo anterior.</label>
+            <label class="opt-skip"><input type="radio" name="q2" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 36 -->
+        <fieldset data-q="q3">
+          <legend class="visually-hidden">Pregunta 3</legend>
+          <div class="enunciado" id="enun-q3"><strong>3.</strong> Según el artículo 36 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q3">
+            <label><input type="radio" name="q3" value="a" /> a) La pena de prisión tendrá una duración mínima de tres meses y máxima de veinte años, salvo lo que excepcionalmente dispongan otros preceptos del presente Código.</label>
+            <label><input type="radio" name="q3" value="b" /> b) La pena de multa tendrá una duración mínima de tres meses y máxima de veinte años, salvo lo que excepcionalmente dispongan otros preceptos del presente Código.</label>
+            <label><input type="radio" name="q3" value="c" /> c) La pena de prisión tendrá una duración mínima de tres meses y máxima de treinta años, salvo lo que excepcionalmente dispongan otros preceptos del presente Código.</label>
+            <label class="opt-skip"><input type="radio" name="q3" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 50 -->
+        <fieldset data-q="q4">
+          <legend class="visually-hidden">Pregunta 4</legend>
+          <div class="enunciado" id="enun-q4"><strong>4.</strong> Según el artículo 50 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q4">
+            <label><input type="radio" name="q4" value="a" /> a) Las penas de multa imponibles a personas jurídicas tendrán una extensión máxima de seis años.</label>
+            <label><input type="radio" name="q4" value="b" /> b) Las penas de multa imponibles a personas jurídicas tendrán una extensión máxima de cinco años.</label>
+            <label><input type="radio" name="q4" value="c" /> c) Las penas de multa imponibles a personas físicas tendrán una extensión máxima de cinco años.</label>
+            <label class="opt-skip"><input type="radio" name="q4" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 55 -->
+        <fieldset data-q="q5">
+          <legend class="visually-hidden">Pregunta 5</legend>
+          <div class="enunciado" id="enun-q5"><strong>5.</strong> Según el artículo 55 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q5">
+            <label><input type="radio" name="q5" value="a" /> a) La pena de multa igual o superior a diez años llevará consigo la inhabilitación absoluta durante el tiempo de la condena, salvo que ésta ya estuviere prevista como pena principal para el supuesto de que se trate.</label>
+            <label><input type="radio" name="q5" value="b" /> b) La pena de prisión igual o superior a doce años llevará consigo la inhabilitación absoluta durante el tiempo de la condena, salvo que ésta ya estuviere prevista como pena principal para el supuesto de que se trate.</label>
+            <label><input type="radio" name="q5" value="c" /> c) La pena de prisión igual o superior a diez años llevará consigo la inhabilitación absoluta durante el tiempo de la condena, salvo que ésta ya estuviere prevista como pena principal para el supuesto de que se trate.</label>
+            <label class="opt-skip"><input type="radio" name="q5" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 69 -->
+        <fieldset data-q="q6">
+          <legend class="visually-hidden">Pregunta 6</legend>
+          <div class="enunciado" id="enun-q6"><strong>6.</strong> Según el artículo 69 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q6">
+            <label><input type="radio" name="q6" value="a" /> a) Al mayor de dieciocho años y menor de veintiuno que cometa un hecho delictivo, podrán aplicársele las disposiciones de la ley que regule la responsabilidad penal del menor en los casos y con los requisitos que ésta disponga.</label>
+            <label><input type="radio" name="q6" value="b" /> b) Al mayor de dieciocho años y menor de veintiuno que cometa un hecho delictivo, deberán aplicársele las disposiciones de la ley que regule la responsabilidad penal del menor en los casos y con los requisitos que ésta disponga.</label>
+            <label><input type="radio" name="q6" value="c" /> c) Al mayor de veinticuatro años y menor de veintiuno que cometa un hecho delictivo, podrán aplicársele las disposiciones de la ley que regule la responsabilidad penal del menor en los casos y con los requisitos que ésta disponga.</label>
+            <label class="opt-skip"><input type="radio" name="q6" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 81 -->
+        <fieldset data-q="q7">
+          <legend class="visually-hidden">Pregunta 7</legend>
+          <div class="enunciado" id="enun-q7"><strong>7.</strong> Según el artículo 81 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q7">
+            <label><input type="radio" name="q7" value="a" /> a) En el caso de que la suspensión hubiera sido acordada de conformidad con lo dispuesto en el apartado 5 del artículo anterior, el plazo de suspensión será de cuatro a cinco años.</label>
+            <label><input type="radio" name="q7" value="b" /> b) En el caso de que la suspensión hubiera sido acordada de conformidad con lo dispuesto en el apartado 5 del artículo anterior, el plazo de suspensión será de tres a cinco años.</label>
+            <label><input type="radio" name="q7" value="c" /> c) En el caso de que la suspensión hubiera sido acordada de conformidad con lo dispuesto en el apartado 5 del artículo anterior, el plazo de suspensión será de tres a seis años.</label>
+            <label class="opt-skip"><input type="radio" name="q7" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 89 -->
+        <fieldset data-q="q8">
+          <legend class="visually-hidden">Pregunta 8</legend>
+          <div class="enunciado" id="enun-q8"><strong>8.</strong> Según el artículo 89 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q8">
+            <label><input type="radio" name="q8" value="a" /> a) El extranjero no deberá regresar a España en un plazo de cinco a diez años, contados desde la fecha de su expulsión, atendidas la duración de la pena sustituida y las circunstancias personales del penado.</label>
+            <label><input type="radio" name="q8" value="b" /> b) El extranjero no podrá regresar a España en un plazo de cinco a doce años, contados desde la fecha de su expulsión, atendidas la duración de la pena sustituida y las circunstancias personales del penado.</label>
+            <label><input type="radio" name="q8" value="c" /> c) El extranjero no podrá regresar a España en un plazo de cinco a diez años, contados desde la fecha de su expulsión, atendidas la duración de la pena sustituida y las circunstancias personales del penado.</label>
+            <label class="opt-skip"><input type="radio" name="q8" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 90 -->
+        <fieldset data-q="q9">
+          <legend class="visually-hidden">Pregunta 9</legend>
+          <div class="enunciado" id="enun-q9"><strong>9.</strong> Según el artículo 90 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q9">
+            <label><input type="radio" name="q9" value="a" /> a) Los apartados 2 y 3 no serán aplicables a las personas condenadas por la comisión de alguno de los delitos regulados en el Capítulo VII del Título XXII del Libro II de este Código o por delitos cometidos en el seno de organizaciones criminales.</label>
+            <label><input type="radio" name="q9" value="b" /> b) Los apartados 3 y 3 no serán aplicables a las personas condenadas por la comisión de alguno de los delitos regulados en el Capítulo VII del Título XXII del Libro II de este Código o por delitos cometidos en el seno de organizaciones criminales.</label>
+            <label><input type="radio" name="q9" value="c" /> c) Los apartados 2 y 3 serán aplicables a las personas condenadas por la comisión de alguno de los delitos regulados en el Capítulo VII del Título XXII del Libro II de este Código o por delitos cometidos en el seno de organizaciones criminales.</label>
+            <label class="opt-skip"><input type="radio" name="q9" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 101 -->
+        <fieldset data-q="q10">
+          <legend class="visually-hidden">Pregunta 10</legend>
+          <div class="enunciado" id="enun-q10"><strong>10.</strong> Según el artículo 101 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q10">
+            <label><input type="radio" name="q10" value="a" /> a) El internamiento podrá exceder del tiempo que habría durado la pena privativa de libertad, si hubiera sido declarado responsable el sujeto, y a tal efecto el Juez o Tribunal fijará en la sentencia ese límite máximo.</label>
+            <label><input type="radio" name="q10" value="b" /> b) El internamiento no podrá exceder del tiempo que habría durado la pena privativa de libertad, si hubiera sido declarado responsable el sujeto, y a tal efecto el Juez o Tribunal fijará en la sentencia ese límite máximo.</label>
+            <label><input type="radio" name="q10" value="c" /> c) El internamiento no deberá exceder del tiempo que habría durado la pena privativa de libertad, si hubiera sido declarado responsable el sujeto, y a tal efecto el Juez o Tribunal fijará en la sentencia ese límite máximo.</label>
+            <label class="opt-skip"><input type="radio" name="q10" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 103 -->
+        <fieldset data-q="q11">
+          <legend class="visually-hidden">Pregunta 11</legend>
+          <div class="enunciado" id="enun-q11"><strong>11.</strong> Según el artículo 103 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q11">
+            <label><input type="radio" name="q11" value="a" /> a) El internamiento no deberá exceder del tiempo que habría durado la pena privativa de libertad, si el sujeto hubiera sido declarado responsable y, a tal efecto, el Juez o Tribunal fijará en la sentencia ese límite máximo.</label>
+            <label><input type="radio" name="q11" value="b" /> b) El internamiento podrá exceder del tiempo que habría durado la pena privativa de libertad, si el sujeto hubiera sido declarado responsable y, a tal efecto, el Juez o Tribunal fijará en la sentencia ese límite máximo.</label>
+            <label><input type="radio" name="q11" value="c" /> c) El internamiento no podrá exceder del tiempo que habría durado la pena privativa de libertad, si el sujeto hubiera sido declarado responsable y, a tal efecto, el Juez o Tribunal fijará en la sentencia ese límite máximo.</label>
+            <label class="opt-skip"><input type="radio" name="q11" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 108 -->
+        <fieldset data-q="q12">
+          <legend class="visually-hidden">Pregunta 12</legend>
+          <div class="enunciado" id="enun-q12"><strong>12.</strong> Según el artículo 108 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q12">
+            <label><input type="radio" name="q12" value="a" /> a) El extranjero no podrá regresar a España en un plazo de 10 años, contados desde la fecha de su expulsión.</label>
+            <label><input type="radio" name="q12" value="b" /> b) El extranjero no deberá regresar a España en un plazo de 10 años, contados desde la fecha de su expulsión.</label>
+            <label><input type="radio" name="q12" value="c" /> c) El extranjero no podrá regresar a España en un plazo de 11 años, contados desde la fecha de su expulsión.</label>
+            <label class="opt-skip"><input type="radio" name="q12" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 131 -->
+        <fieldset data-q="q13">
+          <legend class="visually-hidden">Pregunta 13</legend>
+          <div class="enunciado" id="enun-q13"><strong>13.</strong> Según el artículo 131 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q13">
+            <label><input type="radio" name="q13" value="a" /> a) Los delitos prescriben: A los treinta años, cuando la pena máxima señalada al delito sea prisión de quince o más años.</label>
+            <label><input type="radio" name="q13" value="b" /> b) Los delitos prescriben: A los veinte años, cuando la pena máxima señalada al delito sea prisión de quince o más años.</label>
+            <label><input type="radio" name="q13" value="c" /> c) Los delitos prescriben: A los veinte años, cuando la pena máxima señalada al delito sea prisión de veinte o más años.</label>
+            <label class="opt-skip"><input type="radio" name="q13" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 133 -->
+        <fieldset data-q="q14">
+          <legend class="visually-hidden">Pregunta 14</legend>
+          <div class="enunciado" id="enun-q14"><strong>14.</strong> Según el artículo 133 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q14">
+            <label><input type="radio" name="q14" value="a" /> a) A los 15, las de inhabilitación por más de siete años y que no excedan de 10, y las de prisión por más de cinco años y que no excedan de 10.</label>
+            <label><input type="radio" name="q14" value="b" /> b) A los 15, las de inhabilitación por más de seis años y que no excedan de 10, y las de prisión por más de seis años y que no excedan de 10.</label>
+            <label><input type="radio" name="q14" value="c" /> c) A los 15, las de inhabilitación por más de seis años y que no excedan de 10, y las de prisión por más de cinco años y que no excedan de 10.</label>
+            <label class="opt-skip"><input type="radio" name="q14" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 139 -->
+        <fieldset data-q="q15">
+          <legend class="visually-hidden">Pregunta 15</legend>
+          <div class="enunciado" id="enun-q15"><strong>15.</strong> Según el artículo 139 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q15">
+            <label><input type="radio" name="q15" value="a" /> a) Será castigado con la pena de prisión de quince a veinticinco años, como reo de asesinato, el que matare a otro concurriendo alguna de las circunstancias siguientes: 1.ª Con alevosía.</label>
+            <label><input type="radio" name="q15" value="b" /> b) Será castigado con la pena de multa de quince a veinticinco años, como reo de asesinato, el que matare a otro concurriendo alguna de las circunstancias siguientes: 1.ª Con alevosía.</label>
+            <label><input type="radio" name="q15" value="c" /> c) Será castigado con la pena de prisión de quince a treinta años, como reo de asesinato, el que matare a otro concurriendo alguna de las circunstancias siguientes: 1.ª Con alevosía.</label>
+            <label class="opt-skip"><input type="radio" name="q15" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 142 -->
+        <fieldset data-q="q16">
+          <legend class="visually-hidden">Pregunta 16</legend>
+          <div class="enunciado" id="enun-q16"><strong>16.</strong> Según el artículo 142 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q16">
+            <label><input type="radio" name="q16" value="a" /> a) Si el homicidio se hubiera cometido por imprudencia profesional, se impondrá además la pena de inhabilitación especial para el ejercicio de la profesión, oficio o cargo por un periodo de cuatro a seis años.</label>
+            <label><input type="radio" name="q16" value="b" /> b) Si el homicidio se hubiera cometido por imprudencia profesional, se impondrá además la pena de inhabilitación especial para el ejercicio de la profesión, oficio o cargo por un periodo de tres a seis años.</label>
+            <label><input type="radio" name="q16" value="c" /> c) Si el homicidio se hubiera cometido por imprudencia profesional, se impondrá además la pena de inhabilitación especial para el ejercicio de la profesión, oficio o cargo por un periodo de tres a siete años.</label>
+            <label class="opt-skip"><input type="radio" name="q16" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 143 -->
+        <fieldset data-q="q17">
+          <legend class="visually-hidden">Pregunta 17</legend>
+          <div class="enunciado" id="enun-q17"><strong>17.</strong> Según el artículo 143 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q17">
+            <label><input type="radio" name="q17" value="a" /> a) El que induzca al suicidio de otro será castigado con la pena de multa de cuatro a ocho años.</label>
+            <label><input type="radio" name="q17" value="b" /> b) El que induzca al suicidio de otro será castigado con la pena de prisión de cuatro a nueve años.</label>
+            <label><input type="radio" name="q17" value="c" /> c) El que induzca al suicidio de otro será castigado con la pena de prisión de cuatro a ocho años.</label>
+            <label class="opt-skip"><input type="radio" name="q17" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 145 -->
+        <fieldset data-q="q18">
+          <legend class="visually-hidden">Pregunta 18</legend>
+          <div class="enunciado" id="enun-q18"><strong>18.</strong> Según el artículo 145 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q18">
+            <label><input type="radio" name="q18" value="a" /> a) La mujer que produjere su aborto o consintiere que otra persona se lo cause, fuera de los casos permitidos por la ley, será castigada con la pena de multa de seis a veinticuatro meses.</label>
+            <label><input type="radio" name="q18" value="b" /> b) La mujer que produjere su aborto o consintiere que otra persona se lo cause, fuera de los casos permitidos por la ley, será castigada con la pena de prisión de seis a veinticuatro meses.</label>
+            <label><input type="radio" name="q18" value="c" /> c) La mujer que produjere su aborto o consintiere que otra persona se lo cause, fuera de los casos permitidos por la ley, será castigada con la pena de multa de siete a veinticuatro meses.</label>
+            <label class="opt-skip"><input type="radio" name="q18" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 149 -->
+        <fieldset data-q="q19">
+          <legend class="visually-hidden">Pregunta 19</legend>
+          <div class="enunciado" id="enun-q19"><strong>19.</strong> Según el artículo 149 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q19">
+            <label><input type="radio" name="q19" value="a" /> a) El que causara a otro una mutilación genital en cualquiera de sus manifestaciones será castigado con la pena de prisión de siete a 12 años.</label>
+            <label><input type="radio" name="q19" value="b" /> b) El que causara a otro una mutilación genital en cualquiera de sus manifestaciones será castigado con la pena de prisión de seis a 12 años.</label>
+            <label><input type="radio" name="q19" value="c" /> c) El que causara a otro una mutilación genital en cualquiera de sus manifestaciones será castigado con la pena de multa de seis a 12 años.</label>
+            <label class="opt-skip"><input type="radio" name="q19" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 152 -->
+        <fieldset data-q="q20">
+          <legend class="visually-hidden">Pregunta 20</legend>
+          <div class="enunciado" id="enun-q20"><strong>20.</strong> Según el artículo 152 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q20">
+            <label><input type="radio" name="q20" value="a" /> a) Con la pena de multa de seis meses a dos años, si se tratare de las lesiones del artículo 150.</label>
+            <label><input type="radio" name="q20" value="b" /> b) Con la pena de prisión de siete meses a dos años, si se tratare de las lesiones del artículo 150.</label>
+            <label><input type="radio" name="q20" value="c" /> c) Con la pena de prisión de seis meses a dos años, si se tratare de las lesiones del artículo 150.</label>
+            <label class="opt-skip"><input type="radio" name="q20" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 153 -->
+        <fieldset data-q="q21">
+          <legend class="visually-hidden">Pregunta 21</legend>
+          <div class="enunciado" id="enun-q21"><strong>21.</strong> Según el artículo 153 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q21">
+            <label><input type="radio" name="q21" value="a" /> a) No obstante lo previsto en los apartados anteriores, el Juez o Tribunal, razonándolo en sentencia, en atención a las circunstancias personales del autor y las concurrentes en la realización del hecho, podrá imponer la pena inferior en grado.</label>
+            <label><input type="radio" name="q21" value="b" /> b) No obstante lo previsto en los apartados anteriores, el Juez o Tribunal, razonándolo en sentencia, en atención a las circunstancias personales del autor y las concurrentes en la realización del hecho, podrá imponer la pena superior en grado.</label>
+            <label><input type="radio" name="q21" value="c" /> c) No obstante lo previsto en los apartados anteriores, el Juez o Tribunal, razonándolo en sentencia, en atención a las circunstancias personales del autor y las concurrentes en la realización del hecho, deberá imponer la pena inferior en grado.</label>
+            <label class="opt-skip"><input type="radio" name="q21" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 156 bis -->
+        <fieldset data-q="q22">
+          <legend class="visually-hidden">Pregunta 22</legend>
+          <div class="enunciado" id="enun-q22"><strong>22.</strong> Según el artículo 156 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q22">
+            <label><input type="radio" name="q22" value="a" /> a) Cuando se tratare de los jefes, administradores o encargados de dichas organizaciones o grupos, se les aplicará la pena en su mitad inferior, que podrá elevarse a la inmediatamente superior en grado.</label>
+            <label><input type="radio" name="q22" value="b" /> b) Cuando se tratare de los jefes, administradores o encargados de dichas organizaciones o grupos, se les aplicará la pena en su mitad superior, que podrá elevarse a la inmediatamente superior en grado.</label>
+            <label><input type="radio" name="q22" value="c" /> c) Cuando se tratare de los jefes, administradores o encargados de dichas organizaciones o grupos, se les aplicará la pena en su mitad superior, que podrá elevarse a la inmediatamente inferior en grado.</label>
+            <label class="opt-skip"><input type="radio" name="q22" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 159 -->
+        <fieldset data-q="q23">
+          <legend class="visually-hidden">Pregunta 23</legend>
+          <div class="enunciado" id="enun-q23"><strong>23.</strong> Según el artículo 159 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q23">
+            <label><input type="radio" name="q23" value="a" /> a) Si la alteración del genotipo fuere realizada por imprudencia leve, la pena será de multa de seis a quince meses e inhabilitación especial para empleo o cargo público, profesión u oficio de uno a tres años.</label>
+            <label><input type="radio" name="q23" value="b" /> b) Si la alteración del genotipo fuere realizada por imprudencia grave, la pena será de multa de seis a veinte meses e inhabilitación especial para empleo o cargo público, profesión u oficio de uno a tres años.</label>
+            <label><input type="radio" name="q23" value="c" /> c) Si la alteración del genotipo fuere realizada por imprudencia grave, la pena será de multa de seis a quince meses e inhabilitación especial para empleo o cargo público, profesión u oficio de uno a tres años.</label>
+            <label class="opt-skip"><input type="radio" name="q23" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 163 -->
+        <fieldset data-q="q24">
+          <legend class="visually-hidden">Pregunta 24</legend>
+          <div class="enunciado" id="enun-q24"><strong>24.</strong> Según el artículo 163 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q24">
+            <label><input type="radio" name="q24" value="a" /> a) Si el culpable diera libertad al encerrado o detenido dentro de los tres primeros días de su detención, sin haber logrado el objeto que se había propuesto, se impondrá la pena inferior en grado.</label>
+            <label><input type="radio" name="q24" value="b" /> b) Si el culpable diera libertad al encerrado o detenido dentro de los tres primeros días de su detención, sin haber logrado el objeto que se había propuesto, se impondrá la pena superior en grado.</label>
+            <label><input type="radio" name="q24" value="c" /> c) Si el culpable diera libertad al encerrado o detenido dentro de los cuatro primeros días de su detención, sin haber logrado el objeto que se había propuesto, se impondrá la pena inferior en grado.</label>
+            <label class="opt-skip"><input type="radio" name="q24" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 164 -->
+        <fieldset data-q="q25">
+          <legend class="visually-hidden">Pregunta 25</legend>
+          <div class="enunciado" id="enun-q25"><strong>25.</strong> Según el artículo 164 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q25">
+            <label><input type="radio" name="q25" value="a" /> a) El secuestro de una persona exigiendo alguna condición para ponerla en libertad, será castigado con la pena de prisión de seis a doce años.</label>
+            <label><input type="radio" name="q25" value="b" /> b) El secuestro de una persona exigiendo alguna condición para ponerla en libertad, será castigado con la pena de prisión de seis a diez años.</label>
+            <label><input type="radio" name="q25" value="c" /> c) El secuestro de una persona exigiendo alguna condición para ponerla en libertad, será castigado con la pena de multa de seis a diez años.</label>
+            <label class="opt-skip"><input type="radio" name="q25" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 169 -->
+        <fieldset data-q="q26">
+          <legend class="visually-hidden">Pregunta 26</legend>
+          <div class="enunciado" id="enun-q26"><strong>26.</strong> Según el artículo 169 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q26">
+            <label><input type="radio" name="q26" value="a" /> a) De no conseguirlo, se impondrá la pena de multa de seis meses a tres años.</label>
+            <label><input type="radio" name="q26" value="b" /> b) De no conseguirlo, se impondrá la pena de prisión de siete meses a tres años.</label>
+            <label><input type="radio" name="q26" value="c" /> c) De no conseguirlo, se impondrá la pena de prisión de seis meses a tres años.</label>
+            <label class="opt-skip"><input type="radio" name="q26" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 171 -->
+        <fieldset data-q="q27">
+          <legend class="visually-hidden">Pregunta 27</legend>
+          <div class="enunciado" id="enun-q27"><strong>27.</strong> Según el artículo 171 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q27">
+            <label><input type="radio" name="q27" value="a" /> a) Igual pena se impondrá al que de modo leve amenace a una persona especialmente vulnerable que conviva con el autor.</label>
+            <label><input type="radio" name="q27" value="b" /> b) Igual pena se impondrá al que de modo grave amenace a una persona especialmente vulnerable que conviva con el autor.</label>
+            <label><input type="radio" name="q27" value="c" /> c) Igual pena se impondrá al que de modo leve amenace a una persona especialmente vulnerable que conviva con el cómplice.</label>
+            <label class="opt-skip"><input type="radio" name="q27" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 172 -->
+        <fieldset data-q="q28">
+          <legend class="visually-hidden">Pregunta 28</legend>
+          <div class="enunciado" id="enun-q28"><strong>28.</strong> Según el artículo 172 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q28">
+            <label><input type="radio" name="q28" value="a" /> a) No obstante lo previsto en los párrafos anteriores, el Juez o Tribunal, razonándolo en sentencia, en atención a las circunstancias personales del autor y a las concurrentes en la realización del hecho, deberá imponer la pena inferior en grado.</label>
+            <label><input type="radio" name="q28" value="b" /> b) No obstante lo previsto en los párrafos anteriores, el Juez o Tribunal, razonándolo en sentencia, en atención a las circunstancias personales del autor y a las concurrentes en la realización del hecho, podrá imponer la pena inferior en grado.</label>
+            <label><input type="radio" name="q28" value="c" /> c) No obstante lo previsto en los párrafos anteriores, el Juez o Tribunal, razonándolo en sentencia, en atención a las circunstancias personales del autor y a las concurrentes en la realización del hecho, podrá imponer la pena superior en grado.</label>
+            <label class="opt-skip"><input type="radio" name="q28" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 172 ter -->
+        <fieldset data-q="q29">
+          <legend class="visually-hidden">Pregunta 29</legend>
+          <div class="enunciado" id="enun-q29"><strong>29.</strong> Según el artículo 172 ter del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q29">
+            <label><input type="radio" name="q29" value="a" /> a) En este caso no será necesaria la denuncia a que se refiere el apartado 5 de este artículo.</label>
+            <label><input type="radio" name="q29" value="b" /> b) En este caso será necesaria la denuncia a que se refiere el apartado 4 de este artículo.</label>
+            <label><input type="radio" name="q29" value="c" /> c) En este caso no será necesaria la denuncia a que se refiere el apartado 4 de este artículo.</label>
+            <label class="opt-skip"><input type="radio" name="q29" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 173 -->
+        <fieldset data-q="q30">
+          <legend class="visually-hidden">Pregunta 30</legend>
+          <div class="enunciado" id="enun-q30"><strong>30.</strong> Según el artículo 173 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q30">
+            <label><input type="radio" name="q30" value="a" /> a) Cuando de acuerdo con lo establecido en el artículo 31 bis, una persona jurídica sea responsable de los delitos comprendidos en los párrafos anteriores, se le impondrá la pena de multa de seis meses a dos años.</label>
+            <label><input type="radio" name="q30" value="b" /> b) Cuando de acuerdo con lo establecido en el artículo 31 bis, una persona física sea responsable de los delitos comprendidos en los párrafos anteriores, se le impondrá la pena de multa de seis meses a dos años.</label>
+            <label><input type="radio" name="q30" value="c" /> c) Cuando de acuerdo con lo establecido en el artículo 31 bis, una persona jurídica sea responsable de los delitos comprendidos en los párrafos anteriores, se le impondrá la pena de prisión de seis meses a dos años.</label>
+            <label class="opt-skip"><input type="radio" name="q30" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 177 bis -->
+        <fieldset data-q="q31">
+          <legend class="visually-hidden">Pregunta 31</legend>
+          <div class="enunciado" id="enun-q31"><strong>31.</strong> Según el artículo 177 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q31">
+            <label><input type="radio" name="q31" value="a" /> a) Se impondrá la pena inferior en grado a la prevista en el apartado 1 de este artículo e inhabilitación absoluta de seis a doce años a los que realicen los hechos prevaliéndose de su condición de autoridad, agente de ésta o funcionario público.</label>
+            <label><input type="radio" name="q31" value="b" /> b) Se impondrá la pena superior en grado a la prevista en el apartado 1 de este artículo e inhabilitación absoluta de seis a doce años a los que realicen los hechos prevaliéndose de su condición de autoridad, agente de ésta o funcionario público.</label>
+            <label><input type="radio" name="q31" value="c" /> c) Se impondrá la pena superior en grado a la prevista en el apartado 1 de este artículo e inhabilitación absoluta de seis a quince años a los que realicen los hechos prevaliéndose de su condición de autoridad, agente de ésta o funcionario público.</label>
+            <label class="opt-skip"><input type="radio" name="q31" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 177 bis -->
+        <fieldset data-q="q32">
+          <legend class="visually-hidden">Pregunta 32</legend>
+          <div class="enunciado" id="enun-q32"><strong>32.</strong> Según el artículo 177 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q32">
+            <label><input type="radio" name="q32" value="a" /> a) Cuando se trate de los jefes, administradores o encargados de dichas organizaciones o asociaciones, se les aplicará la pena en su mitad superior, que podrá elevarse a la inmediatamente inferior en grado.</label>
+            <label><input type="radio" name="q32" value="b" /> b) Cuando se trate de los jefes, administradores o encargados de dichas organizaciones o asociaciones, se les aplicará la pena en su mitad inferior, que podrá elevarse a la inmediatamente superior en grado.</label>
+            <label><input type="radio" name="q32" value="c" /> c) Cuando se trate de los jefes, administradores o encargados de dichas organizaciones o asociaciones, se les aplicará la pena en su mitad superior, que podrá elevarse a la inmediatamente superior en grado.</label>
+            <label class="opt-skip"><input type="radio" name="q32" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 180 -->
+        <fieldset data-q="q33">
+          <legend class="visually-hidden">Pregunta 33</legend>
+          <div class="enunciado" id="enun-q33"><strong>33.</strong> Según el artículo 180 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q33">
+            <label><input type="radio" name="q33" value="a" /> a) Si concurrieren dos o más de las anteriores circunstancias, las penas respectivamente previstas en el apartado 1 de este artículo se impondrán en su mitad superior.</label>
+            <label><input type="radio" name="q33" value="b" /> b) Si concurrieren dos o más de las anteriores circunstancias, las penas respectivamente previstas en el apartado 1 de este artículo se impondrán en su mitad inferior.</label>
+            <label><input type="radio" name="q33" value="c" /> c) Si concurrieren dos o más de las anteriores circunstancias, las penas respectivamente previstas en el apartado 2 de este artículo se impondrán en su mitad superior.</label>
+            <label class="opt-skip"><input type="radio" name="q33" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 181 -->
+        <fieldset data-q="q34">
+          <legend class="visually-hidden">Pregunta 34</legend>
+          <div class="enunciado" id="enun-q34"><strong>34.</strong> Según el artículo 181 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q34">
+            <label><input type="radio" name="q34" value="a" /> a) En todos los casos previstos en este artículo, cuando el culpable se hubiera prevalido de su condición de autoridad, agente de esta o funcionario público, se impondrá, además, la pena de inhabilitación absoluta de siete a doce años.</label>
+            <label><input type="radio" name="q34" value="b" /> b) En todos los casos previstos en este artículo, cuando el culpable se hubiera prevalido de su condición de autoridad, agente de esta o funcionario público, se impondrá, además, la pena de inhabilitación absoluta de seis a doce años.</label>
+            <label><input type="radio" name="q34" value="c" /> c) En todos los casos previstos en este artículo, cuando el culpable se hubiera prevalido de su condición de autoridad, agente de esta o funcionario público, se impondrá, además, la pena de inhabilitación absoluta de seis a quince años.</label>
+            <label class="opt-skip"><input type="radio" name="q34" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 187 -->
+        <fieldset data-q="q35">
+          <legend class="visually-hidden">Pregunta 35</legend>
+          <div class="enunciado" id="enun-q35"><strong>35.</strong> Según el artículo 187 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q35">
+            <label><input type="radio" name="q35" value="a" /> a) Se impondrá la pena de multa de dos a cuatro años y multa de doce a veinticuatro meses a quien se lucre explotando la prostitución de otra persona, aun con el consentimiento de la misma.</label>
+            <label><input type="radio" name="q35" value="b" /> b) Se impondrá la pena de prisión de dos a cuatro años y multa de quince a veinticuatro meses a quien se lucre explotando la prostitución de otra persona, aun con el consentimiento de la misma.</label>
+            <label><input type="radio" name="q35" value="c" /> c) Se impondrá la pena de prisión de dos a cuatro años y multa de doce a veinticuatro meses a quien se lucre explotando la prostitución de otra persona, aun con el consentimiento de la misma.</label>
+            <label class="opt-skip"><input type="radio" name="q35" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 195 -->
+        <fieldset data-q="q36">
+          <legend class="visually-hidden">Pregunta 36</legend>
+          <div class="enunciado" id="enun-q36"><strong>36.</strong> Según el artículo 195 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q36">
+            <label><input type="radio" name="q36" value="a" /> a) El que no socorriere a una persona que se halle desamparada y en peligro manifiesto y grave, cuando pudiere hacerlo sin riesgo propio ni de terceros, será castigado con la pena de multa de tres a doce meses.</label>
+            <label><input type="radio" name="q36" value="b" /> b) El que no socorriere a una persona que se halle desamparada y en peligro manifiesto y leve, cuando pudiere hacerlo sin riesgo propio ni de terceros, será castigado con la pena de multa de tres a doce meses.</label>
+            <label><input type="radio" name="q36" value="c" /> c) El que no socorriere a una persona que se halle desamparada y en peligro manifiesto y grave, cuando pudiere hacerlo sin riesgo propio ni de terceros, será castigado con la pena de prisión de tres a doce meses.</label>
+            <label class="opt-skip"><input type="radio" name="q36" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 197 -->
+        <fieldset data-q="q37">
+          <legend class="visually-hidden">Pregunta 37</legend>
+          <div class="enunciado" id="enun-q37"><strong>37.</strong> Según el artículo 197 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q37">
+            <label><input type="radio" name="q37" value="a" /> a) Si los hechos se realizan con fines lucrativos, se impondrán las penas respectivamente previstas en los apartados 2 al 4 de este artículo en su mitad superior.</label>
+            <label><input type="radio" name="q37" value="b" /> b) Si los hechos se realizan con fines lucrativos, se impondrán las penas respectivamente previstas en los apartados 1 al 4 de este artículo en su mitad superior.</label>
+            <label><input type="radio" name="q37" value="c" /> c) Si los hechos se realizan con fines lucrativos, se impondrán las penas respectivamente previstas en los apartados 1 al 4 de este artículo en su mitad inferior.</label>
+            <label class="opt-skip"><input type="radio" name="q37" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 199 -->
+        <fieldset data-q="q38">
+          <legend class="visually-hidden">Pregunta 38</legend>
+          <div class="enunciado" id="enun-q38"><strong>38.</strong> Según el artículo 199 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q38">
+            <label><input type="radio" name="q38" value="a" /> a) El que revelare secretos ajenos, de los que tenga conocimiento por razón de su oficio o sus relaciones laborales, será castigado con la pena de prisión de uno a tres años y multa de seis a quince meses.</label>
+            <label><input type="radio" name="q38" value="b" /> b) El que revelare secretos ajenos, de los que tenga conocimiento por razón de su oficio o sus relaciones laborales, será castigado con la pena de multa de uno a tres años y multa de seis a doce meses.</label>
+            <label><input type="radio" name="q38" value="c" /> c) El que revelare secretos ajenos, de los que tenga conocimiento por razón de su oficio o sus relaciones laborales, será castigado con la pena de prisión de uno a tres años y multa de seis a doce meses.</label>
+            <label class="opt-skip"><input type="radio" name="q38" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 208 -->
+        <fieldset data-q="q39">
+          <legend class="visually-hidden">Pregunta 39</legend>
+          <div class="enunciado" id="enun-q39"><strong>39.</strong> Según el artículo 208 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q39">
+            <label><input type="radio" name="q39" value="a" /> a) Solamente serán constitutivas de delito las injurias que, por su naturaleza, efectos y circunstancias, sean tenidas en el concepto público por graves, sin perjuicio de lo dispuesto en el apartado 4 del artículo 173.</label>
+            <label><input type="radio" name="q39" value="b" /> b) Solamente serán constitutivas de delito las injurias que, por su naturaleza, efectos y circunstancias, sean tenidas en el concepto público por leves, sin perjuicio de lo dispuesto en el apartado 4 del artículo 173.</label>
+            <label><input type="radio" name="q39" value="c" /> c) Solamente serán constitutivas de delito las injurias que, por su naturaleza, efectos y circunstancias, sean tenidas en el concepto público por graves, sin perjuicio de lo dispuesto en el apartado 5 del artículo 173.</label>
+            <label class="opt-skip"><input type="radio" name="q39" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 220 -->
+        <fieldset data-q="q40">
+          <legend class="visually-hidden">Pregunta 40</legend>
+          <div class="enunciado" id="enun-q40"><strong>40.</strong> Según el artículo 220 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q40">
+            <label><input type="radio" name="q40" value="a" /> a) Las sustituciones de un niño por otro que se produjeren en centros sanitarios o socio-sanitarios por imprudencia grave de los responsables de su identificación y custodia, serán castigadas con la pena de multa de seis meses a un año.</label>
+            <label><input type="radio" name="q40" value="b" /> b) Las sustituciones de un niño por otro que se produjeren en centros sanitarios o socio-sanitarios por imprudencia grave de los responsables de su identificación y custodia, serán castigadas con la pena de prisión de seis meses a un año.</label>
+            <label><input type="radio" name="q40" value="c" /> c) Las sustituciones de un niño por otro que se produjeren en centros sanitarios o socio-sanitarios por imprudencia leve de los responsables de su identificación y custodia, serán castigadas con la pena de prisión de seis meses a un año.</label>
+            <label class="opt-skip"><input type="radio" name="q40" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 225 bis -->
+        <fieldset data-q="q41">
+          <legend class="visually-hidden">Pregunta 41</legend>
+          <div class="enunciado" id="enun-q41"><strong>41.</strong> Según el artículo 225 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q41">
+            <label><input type="radio" name="q41" value="a" /> a) Si la restitución la hiciere, sin la comunicación a que se refiere el párrafo anterior, dentro de los quince días siguientes a la sustracción, le será impuesta la pena de multa de seis meses a dos años.</label>
+            <label><input type="radio" name="q41" value="b" /> b) Si la restitución la hiciere, sin la comunicación a que se refiere el párrafo anterior, dentro de los veinte días siguientes a la sustracción, le será impuesta la pena de prisión de seis meses a dos años.</label>
+            <label><input type="radio" name="q41" value="c" /> c) Si la restitución la hiciere, sin la comunicación a que se refiere el párrafo anterior, dentro de los quince días siguientes a la sustracción, le será impuesta la pena de prisión de seis meses a dos años.</label>
+            <label class="opt-skip"><input type="radio" name="q41" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 232 -->
+        <fieldset data-q="q42">
+          <legend class="visually-hidden">Pregunta 42</legend>
+          <div class="enunciado" id="enun-q42"><strong>42.</strong> Según el artículo 232 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q42">
+            <label><input type="radio" name="q42" value="a" /> a) Los que utilizaren o prestaren a menores de edad o personas con discapacidad necesitadas de especial protección para la práctica de la mendicidad, incluso si ésta es encubierta, serán castigados con la pena de prisión de seis meses a un año.</label>
+            <label><input type="radio" name="q42" value="b" /> b) Los que utilizaren o prestaren a menores de edad o personas con discapacidad necesitadas de especial protección para la práctica de la mendicidad, incluso si ésta es encubierta, serán castigados con la pena de multa de seis meses a un año.</label>
+            <label><input type="radio" name="q42" value="c" /> c) Los que utilizaren o prestaren a menores de edad o personas con discapacidad necesitadas de especial protección para la práctica de la mendicidad, incluso si ésta es encubierta, serán castigados con la pena de prisión de siete meses a un año.</label>
+            <label class="opt-skip"><input type="radio" name="q42" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 236 -->
+        <fieldset data-q="q43">
+          <legend class="visually-hidden">Pregunta 43</legend>
+          <div class="enunciado" id="enun-q43"><strong>43.</strong> Según el artículo 236 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q43">
+            <label><input type="radio" name="q43" value="a" /> a) Será castigado con multa de cuatro a doce meses el que, siendo dueño de una cosa mueble o actuando con el consentimiento de éste, la sustrajere de quien la tenga legítimamente en su poder, con perjuicio del mismo o de un tercero.</label>
+            <label><input type="radio" name="q43" value="b" /> b) Será castigado con multa de tres a doce meses el que, siendo dueño de una cosa mueble o actuando con el consentimiento de éste, la sustrajere de quien la tenga legítimamente en su poder, con perjuicio del mismo o de un tercero.</label>
+            <label><input type="radio" name="q43" value="c" /> c) Será castigado con multa de tres a quince meses el que, siendo dueño de una cosa mueble o actuando con el consentimiento de éste, la sustrajere de quien la tenga legítimamente en su poder, con perjuicio del mismo o de un tercero.</label>
+            <label class="opt-skip"><input type="radio" name="q43" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 241 -->
+        <fieldset data-q="q44">
+          <legend class="visually-hidden">Pregunta 44</legend>
+          <div class="enunciado" id="enun-q44"><strong>44.</strong> Según el artículo 241 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q44">
+            <label><input type="radio" name="q44" value="a" /> a) El robo cometido en casa habitada, edificio o local abiertos al público, o en cualquiera de sus dependencias, se castigará con una pena de multa de dos a cinco años.</label>
+            <label><input type="radio" name="q44" value="b" /> b) El robo cometido en casa habitada, edificio o local abiertos al público, o en cualquiera de sus dependencias, se castigará con una pena de prisión de dos a seis años.</label>
+            <label><input type="radio" name="q44" value="c" /> c) El robo cometido en casa habitada, edificio o local abiertos al público, o en cualquiera de sus dependencias, se castigará con una pena de prisión de dos a cinco años.</label>
+            <label class="opt-skip"><input type="radio" name="q44" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 242 -->
+        <fieldset data-q="q45">
+          <legend class="visually-hidden">Pregunta 45</legend>
+          <div class="enunciado" id="enun-q45"><strong>45.</strong> Según el artículo 242 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q45">
+            <label><input type="radio" name="q45" value="a" /> a) En atención a la menor entidad de la violencia o intimidación ejercidas y valorando además las restantes circunstancias del hecho, podrá imponerse la pena inferior en grado a la prevista en los apartados anteriores.</label>
+            <label><input type="radio" name="q45" value="b" /> b) En atención a la menor entidad de la violencia o intimidación ejercidas y valorando además las restantes circunstancias del hecho, podrá imponerse la pena superior en grado a la prevista en los apartados anteriores.</label>
+            <label><input type="radio" name="q45" value="c" /> c) En atención a la menor entidad de la violencia o intimidación ejercidas y valorando además las restantes circunstancias del hecho, deberá imponerse la pena inferior en grado a la prevista en los apartados anteriores.</label>
+            <label class="opt-skip"><input type="radio" name="q45" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 247 -->
+        <fieldset data-q="q46">
+          <legend class="visually-hidden">Pregunta 46</legend>
+          <div class="enunciado" id="enun-q46"><strong>46.</strong> Según el artículo 247 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q46">
+            <label><input type="radio" name="q46" value="a" /> a) El que, sin hallarse autorizado, distrajere las aguas de uso público o privativo de su curso, o de su embalse natural o artificial, será castigado con la pena de prisión de tres a seis meses.</label>
+            <label><input type="radio" name="q46" value="b" /> b) El que, sin hallarse autorizado, distrajere las aguas de uso público o privativo de su curso, o de su embalse natural o artificial, será castigado con la pena de multa de tres a seis meses.</label>
+            <label><input type="radio" name="q46" value="c" /> c) El que, sin hallarse autorizado, distrajere las aguas de uso público o privativo de su curso, o de su embalse natural o artificial, será castigado con la pena de multa de tres a siete meses.</label>
+            <label class="opt-skip"><input type="radio" name="q46" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 250 -->
+        <fieldset data-q="q47">
+          <legend class="visually-hidden">Pregunta 47</legend>
+          <div class="enunciado" id="enun-q47"><strong>47.</strong> Según el artículo 250 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q47">
+            <label><input type="radio" name="q47" value="a" /> a) Si concurrieran las circunstancias incluidas en los numerales 4.º, 5.º, 6.º o 7.º con la del numeral 1.º del apartado anterior, se impondrán las penas de prisión de cuatro a ocho años y multa de quince a veinticuatro meses.</label>
+            <label><input type="radio" name="q47" value="b" /> b) Si concurrieran las circunstancias incluidas en los numerales 4.º, 5.º, 6.º o 7.º con la del numeral 1.º del apartado anterior, se impondrán las penas de prisión de cuatro a nueve años y multa de doce a veinticuatro meses.</label>
+            <label><input type="radio" name="q47" value="c" /> c) Si concurrieran las circunstancias incluidas en los numerales 4.º, 5.º, 6.º o 7.º con la del numeral 1.º del apartado anterior, se impondrán las penas de prisión de cuatro a ocho años y multa de doce a veinticuatro meses.</label>
+            <label class="opt-skip"><input type="radio" name="q47" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 254 -->
+        <fieldset data-q="q48">
+          <legend class="visually-hidden">Pregunta 48</legend>
+          <div class="enunciado" id="enun-q48"><strong>48.</strong> Según el artículo 254 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q48">
+            <label><input type="radio" name="q48" value="a" /> a) Si la cuantía de lo apropiado no excediere de 400 euros, se impondrá una pena de multa de uno a dos meses.</label>
+            <label><input type="radio" name="q48" value="b" /> b) Si la cuantía de lo apropiado no excediere de 400 euros, se impondrá una pena de multa de uno a tres meses.</label>
+            <label><input type="radio" name="q48" value="c" /> c) Si la cuantía de lo apropiado no excediere de 400 euros, se impondrá una pena de prisión de uno a dos meses.</label>
+            <label class="opt-skip"><input type="radio" name="q48" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 257 -->
+        <fieldset data-q="q49">
+          <legend class="visually-hidden">Pregunta 49</legend>
+          <div class="enunciado" id="enun-q49"><strong>49.</strong> Según el artículo 257 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q49">
+            <label><input type="radio" name="q49" value="a" /> a) Será castigado con las penas de prisión de uno a cinco años y multa de doce a veinticuatro meses: 1.º El que se alce con sus bienes en perjuicio de sus acreedores.</label>
+            <label><input type="radio" name="q49" value="b" /> b) Será castigado con las penas de prisión de uno a cuatro años y multa de doce a veinticuatro meses: 1.º El que se alce con sus bienes en perjuicio de sus acreedores.</label>
+            <label><input type="radio" name="q49" value="c" /> c) Será castigado con las penas de prisión de uno a cuatro años y multa de quince a veinticuatro meses: 1.º El que se alce con sus bienes en perjuicio de sus acreedores.</label>
+            <label class="opt-skip"><input type="radio" name="q49" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 261 -->
+        <fieldset data-q="q50">
+          <legend class="visually-hidden">Pregunta 50</legend>
+          <div class="enunciado" id="enun-q50"><strong>50.</strong> Según el artículo 261 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q50">
+            <label><input type="radio" name="q50" value="a" /> a) El que en procedimiento concursal presentare, a sabiendas, datos falsos relativos al estado contable, con el fin de lograr indebidamente la declaración de aquel, será castigado con la pena de prisión de uno a tres años y multa de seis a 12 meses.</label>
+            <label><input type="radio" name="q50" value="b" /> b) El que en procedimiento concursal presentare, a sabiendas, datos falsos relativos al estado contable, con el fin de lograr indebidamente la declaración de aquel, será castigado con la pena de multa de uno a dos años y multa de seis a 12 meses.</label>
+            <label><input type="radio" name="q50" value="c" /> c) El que en procedimiento concursal presentare, a sabiendas, datos falsos relativos al estado contable, con el fin de lograr indebidamente la declaración de aquel, será castigado con la pena de prisión de uno a dos años y multa de seis a 12 meses.</label>
+            <label class="opt-skip"><input type="radio" name="q50" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 264 bis -->
+        <fieldset data-q="q51">
+          <legend class="visually-hidden">Pregunta 51</legend>
+          <div class="enunciado" id="enun-q51"><strong>51.</strong> Según el artículo 264 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q51">
+            <label><input type="radio" name="q51" value="a" /> a) Si los hechos hubieran perjudicado de forma relevante la actividad normal de una empresa, negocio o de una Administración pública, se impondrá la pena en su mitad superior, pudiéndose alcanzar la pena superior en grado.</label>
+            <label><input type="radio" name="q51" value="b" /> b) Si los hechos hubieran perjudicado de forma relevante la actividad normal de una empresa, negocio o de una Administración pública, se impondrá la pena en su mitad superior, pudiéndose alcanzar la pena inferior en grado.</label>
+            <label><input type="radio" name="q51" value="c" /> c) Si los hechos hubieran perjudicado de forma relevante la actividad normal de una empresa, negocio o de una Administración pública, se impondrá la pena en su mitad inferior, pudiéndose alcanzar la pena superior en grado.</label>
+            <label class="opt-skip"><input type="radio" name="q51" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 270 -->
+        <fieldset data-q="q52">
+          <legend class="visually-hidden">Pregunta 52</legend>
+          <div class="enunciado" id="enun-q52"><strong>52.</strong> Según el artículo 270 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q52">
+            <label><input type="radio" name="q52" value="a" /> a) En los supuestos a que se refiere el apartado 1, la distribución o comercialización ambulante o meramente ocasional se castigará con una pena de prisión de siete meses a dos años.</label>
+            <label><input type="radio" name="q52" value="b" /> b) En los supuestos a que se refiere el apartado 1, la distribución o comercialización ambulante o meramente ocasional se castigará con una pena de prisión de seis meses a dos años.</label>
+            <label><input type="radio" name="q52" value="c" /> c) En los supuestos a que se refiere el apartado 1, la distribución o comercialización ambulante o meramente ocasional se castigará con una pena de multa de seis meses a dos años.</label>
+            <label class="opt-skip"><input type="radio" name="q52" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 281 -->
+        <fieldset data-q="q53">
+          <legend class="visually-hidden">Pregunta 53</legend>
+          <div class="enunciado" id="enun-q53"><strong>53.</strong> Según el artículo 281 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q53">
+            <label><input type="radio" name="q53" value="a" /> a) Se impondrá la pena superior en grado si el hecho se realiza en situaciones de leve necesidad o catastróficas.</label>
+            <label><input type="radio" name="q53" value="b" /> b) Se impondrá la pena inferior en grado si el hecho se realiza en situaciones de grave necesidad o catastróficas.</label>
+            <label><input type="radio" name="q53" value="c" /> c) Se impondrá la pena superior en grado si el hecho se realiza en situaciones de grave necesidad o catastróficas.</label>
+            <label class="opt-skip"><input type="radio" name="q53" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 286 bis -->
+        <fieldset data-q="q54">
+          <legend class="visually-hidden">Pregunta 54</legend>
+          <div class="enunciado" id="enun-q54"><strong>54.</strong> Según el artículo 286 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q54">
+            <label><input type="radio" name="q54" value="a" /> a) Los jueces y tribunales, en atención a la cuantía del beneficio o al valor de la ventaja, y a la trascendencia de las funciones del culpable, podrán imponer la pena inferior en grado y reducir la de multa a su prudente arbitrio.</label>
+            <label><input type="radio" name="q54" value="b" /> b) Los jueces y tribunales, en atención a la cuantía del beneficio o al valor de la ventaja, y a la trascendencia de las funciones del culpable, podrán imponer la pena superior en grado y reducir la de multa a su prudente arbitrio.</label>
+            <label><input type="radio" name="q54" value="c" /> c) Los jueces y tribunales, en atención a la cuantía del beneficio o al valor de la ventaja, y a la trascendencia de las funciones del culpable, deberán imponer la pena inferior en grado y reducir la de multa a su prudente arbitrio.</label>
+            <label class="opt-skip"><input type="radio" name="q54" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 301 -->
+        <fieldset data-q="q55">
+          <legend class="visually-hidden">Pregunta 55</legend>
+          <div class="enunciado" id="enun-q55"><strong>55.</strong> Según el artículo 301 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q55">
+            <label><input type="radio" name="q55" value="a" /> a) La pena se impondrá en su mitad superior cuando los bienes tengan su origen en alguno de los delitos relacionados con el tráfico de drogas tóxicas, estupefacientes o sustancias psicotrópicas descritos en los artículos 368 a 371 de este Código.</label>
+            <label><input type="radio" name="q55" value="b" /> b) La pena se impondrá en su mitad superior cuando los bienes tengan su origen en alguno de los delitos relacionados con el tráfico de drogas tóxicas, estupefacientes o sustancias psicotrópicas descritos en los artículos 368 a 372 de este Código.</label>
+            <label><input type="radio" name="q55" value="c" /> c) La pena se impondrá en su mitad inferior cuando los bienes tengan su origen en alguno de los delitos relacionados con el tráfico de drogas tóxicas, estupefacientes o sustancias psicotrópicas descritos en los artículos 368 a 372 de este Código.</label>
+            <label class="opt-skip"><input type="radio" name="q55" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 304 -->
+        <fieldset data-q="q56">
+          <legend class="visually-hidden">Pregunta 56</legend>
+          <div class="enunciado" id="enun-q56"><strong>56.</strong> Según el artículo 304 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q56">
+            <label><input type="radio" name="q56" value="a" /> a) La provocación, la conspiración y la proposición para cometer los delitos previstos en los artículos 301 a 303 se castigará, respectivamente, con la pena inferior en uno o tres grados.</label>
+            <label><input type="radio" name="q56" value="b" /> b) La provocación, la conspiración y la proposición para cometer los delitos previstos en los artículos 301 a 302 se castigará, respectivamente, con la pena inferior en uno o dos grados.</label>
+            <label><input type="radio" name="q56" value="c" /> c) La provocación, la conspiración y la proposición para cometer los delitos previstos en los artículos 301 a 303 se castigará, respectivamente, con la pena inferior en uno o dos grados.</label>
+            <label class="opt-skip"><input type="radio" name="q56" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 307 ter -->
+        <fieldset data-q="q57">
+          <legend class="visually-hidden">Pregunta 57</legend>
+          <div class="enunciado" id="enun-q57"><strong>57.</strong> Según el artículo 307 ter del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q57">
+            <label><input type="radio" name="q57" value="a" /> a) Además de las penas señaladas, se impondrá al responsable la pérdida de la posibilidad de obtener subvenciones y del derecho a gozar de los beneficios o incentivos fiscales o de la Seguridad Social durante el período de tres a seis años.</label>
+            <label><input type="radio" name="q57" value="b" /> b) Además de las penas señaladas, se impondrá al responsable la pérdida de la posibilidad de obtener subvenciones y del derecho a gozar de los beneficios o incentivos fiscales o de la Seguridad Social durante el período de tres a siete años.</label>
+            <label><input type="radio" name="q57" value="c" /> c) Además de las penas señaladas, se impondrá al responsable la pérdida de la posibilidad de obtener subvenciones y del derecho a gozar de los beneficios o incentivos fiscales o de la Seguridad Social durante el período de cuatro a seis años.</label>
+            <label class="opt-skip"><input type="radio" name="q57" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 317 -->
+        <fieldset data-q="q58">
+          <legend class="visually-hidden">Pregunta 58</legend>
+          <div class="enunciado" id="enun-q58"><strong>58.</strong> Según el artículo 317 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q58">
+            <label><input type="radio" name="q58" value="a" /> a) Cuando el delito a que se refiere el artículo anterior se cometa por imprudencia grave, será castigado con la pena superior en grado.</label>
+            <label><input type="radio" name="q58" value="b" /> b) Cuando el delito a que se refiere el artículo anterior se cometa por imprudencia grave, será castigado con la pena inferior en grado.</label>
+            <label><input type="radio" name="q58" value="c" /> c) Cuando el delito a que se refiere el artículo anterior se cometa por imprudencia leve, será castigado con la pena inferior en grado.</label>
+            <label class="opt-skip"><input type="radio" name="q58" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 323 -->
+        <fieldset data-q="q59">
+          <legend class="visually-hidden">Pregunta 59</legend>
+          <div class="enunciado" id="enun-q59"><strong>59.</strong> Según el artículo 323 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q59">
+            <label><input type="radio" name="q59" value="a" /> a) En todos estos casos, los jueces o tribunales deberán ordenar, a cargo del autor del daño, la adopción de medidas encaminadas a restaurar, en lo posible, el bien dañado.</label>
+            <label><input type="radio" name="q59" value="b" /> b) En todos estos casos, los jueces o tribunales podrán ordenar, a cargo del cómplice del daño, la adopción de medidas encaminadas a restaurar, en lo posible, el bien dañado.</label>
+            <label><input type="radio" name="q59" value="c" /> c) En todos estos casos, los jueces o tribunales podrán ordenar, a cargo del autor del daño, la adopción de medidas encaminadas a restaurar, en lo posible, el bien dañado.</label>
+            <label class="opt-skip"><input type="radio" name="q59" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 332 -->
+        <fieldset data-q="q60">
+          <legend class="visually-hidden">Pregunta 60</legend>
+          <div class="enunciado" id="enun-q60"><strong>60.</strong> Según el artículo 332 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q60">
+            <label><input type="radio" name="q60" value="a" /> a) Si los hechos se hubieran cometido por imprudencia grave, se impondrá una pena de prisión de tres meses a un año o multa de cuatro a ocho meses, e inhabilitación especial para profesión u oficio por tiempo de tres meses a dos años.</label>
+            <label><input type="radio" name="q60" value="b" /> b) Si los hechos se hubieran cometido por imprudencia leve, se impondrá una pena de prisión de tres meses a un año o multa de cuatro a ocho meses, e inhabilitación especial para profesión u oficio por tiempo de tres meses a dos años.</label>
+            <label><input type="radio" name="q60" value="c" /> c) Si los hechos se hubieran cometido por imprudencia grave, se impondrá una pena de multa de tres meses a un año o multa de cuatro a ocho meses, e inhabilitación especial para profesión u oficio por tiempo de tres meses a dos años.</label>
+            <label class="opt-skip"><input type="radio" name="q60" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 340 bis -->
+        <fieldset data-q="q61">
+          <legend class="visually-hidden">Pregunta 61</legend>
+          <div class="enunciado" id="enun-q61"><strong>61.</strong> Según el artículo 340 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q61">
+            <label><input type="radio" name="q61" value="a" /> a) Si el delito se hubiera cometido utilizando armas de fuego, el juez o tribunal podrá imponer motivadamente la pena de privación del derecho a tenencia y porte de armas por un tiempo de dos a seis años.</label>
+            <label><input type="radio" name="q61" value="b" /> b) Si el delito se hubiera cometido utilizando armas de fuego, el juez o tribunal podrá imponer motivadamente la pena de privación del derecho a tenencia y porte de armas por un tiempo de dos a cinco años.</label>
+            <label><input type="radio" name="q61" value="c" /> c) Si el delito se hubiera cometido utilizando armas de fuego, el juez o tribunal deberá imponer motivadamente la pena de privación del derecho a tenencia y porte de armas por un tiempo de dos a cinco años.</label>
+            <label class="opt-skip"><input type="radio" name="q61" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 345 -->
+        <fieldset data-q="q62">
+          <legend class="visually-hidden">Pregunta 62</legend>
+          <div class="enunciado" id="enun-q62"><strong>62.</strong> Según el artículo 345 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q62">
+            <label><input type="radio" name="q62" value="a" /> a) Si los hechos a que se refieren los apartados anteriores se hubieran cometido por imprudencia leve, se impondrá la pena inferior en grado a la señalada en los mismos.</label>
+            <label><input type="radio" name="q62" value="b" /> b) Si los hechos a que se refieren los apartados anteriores se hubieran cometido por imprudencia grave, se impondrá la pena superior en grado a la señalada en los mismos.</label>
+            <label><input type="radio" name="q62" value="c" /> c) Si los hechos a que se refieren los apartados anteriores se hubieran cometido por imprudencia grave, se impondrá la pena inferior en grado a la señalada en los mismos.</label>
+            <label class="opt-skip"><input type="radio" name="q62" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 351 -->
+        <fieldset data-q="q63">
+          <legend class="visually-hidden">Pregunta 63</legend>
+          <div class="enunciado" id="enun-q63"><strong>63.</strong> Según el artículo 351 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q63">
+            <label><input type="radio" name="q63" value="a" /> a) Los Jueces o Tribunales podrán imponer la pena inferior en grado atendidas la menor entidad del peligro causado y las demás circunstancias del hecho.</label>
+            <label><input type="radio" name="q63" value="b" /> b) Los Jueces o Tribunales podrán imponer la pena superior en grado atendidas la menor entidad del peligro causado y las demás circunstancias del hecho.</label>
+            <label><input type="radio" name="q63" value="c" /> c) Los Jueces o Tribunales deberán imponer la pena inferior en grado atendidas la menor entidad del peligro causado y las demás circunstancias del hecho.</label>
+            <label class="opt-skip"><input type="radio" name="q63" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 355 -->
+        <fieldset data-q="q64">
+          <legend class="visually-hidden">Pregunta 64</legend>
+          <div class="enunciado" id="enun-q64"><strong>64.</strong> Según el artículo 355 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q64">
+            <label><input type="radio" name="q64" value="a" /> a) En todos los casos previstos en esta sección, los Jueces o Tribunales podrán acordar que la calificación del suelo en las zonas afectadas por un incendio forestal no pueda modificarse en un plazo de hasta cuarenta años.</label>
+            <label><input type="radio" name="q64" value="b" /> b) En todos los casos previstos en esta sección, los Jueces o Tribunales podrán acordar que la calificación del suelo en las zonas afectadas por un incendio forestal no pueda modificarse en un plazo de hasta treinta años.</label>
+            <label><input type="radio" name="q64" value="c" /> c) En todos los casos previstos en esta sección, los Jueces o Tribunales deberán acordar que la calificación del suelo en las zonas afectadas por un incendio forestal no pueda modificarse en un plazo de hasta treinta años.</label>
+            <label class="opt-skip"><input type="radio" name="q64" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 364 -->
+        <fieldset data-q="q65">
+          <legend class="visually-hidden">Pregunta 65</legend>
+          <div class="enunciado" id="enun-q65"><strong>65.</strong> Según el artículo 364 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q65">
+            <label><input type="radio" name="q65" value="a" /> a) Si el reo fuera el propietario o el responsable de producción de una fábrica de productos alimenticios, se le impondrá, además, la pena de inhabilitación especial para profesión, oficio, industria o comercio de seis a doce años.</label>
+            <label><input type="radio" name="q65" value="b" /> b) Si el reo fuera el propietario o el responsable de producción de una fábrica de productos alimenticios, se le impondrá, además, la pena de inhabilitación especial para profesión, oficio, industria o comercio de siete a diez años.</label>
+            <label><input type="radio" name="q65" value="c" /> c) Si el reo fuera el propietario o el responsable de producción de una fábrica de productos alimenticios, se le impondrá, además, la pena de inhabilitación especial para profesión, oficio, industria o comercio de seis a diez años.</label>
+            <label class="opt-skip"><input type="radio" name="q65" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 372 -->
+        <fieldset data-q="q66">
+          <legend class="visually-hidden">Pregunta 66</legend>
+          <div class="enunciado" id="enun-q66"><strong>66.</strong> Según el artículo 372 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q66">
+            <label><input type="radio" name="q66" value="a" /> a) Se impondrá la pena de inhabilitación absoluta de diez a veinte años cuando los referidos hechos fueren realizados por autoridad o agente de la misma, en el ejercicio de su cargo.</label>
+            <label><input type="radio" name="q66" value="b" /> b) Se impondrá la pena de inhabilitación absoluta de diez a treinta años cuando los referidos hechos fueren realizados por autoridad o agente de la misma, en el ejercicio de su cargo.</label>
+            <label><input type="radio" name="q66" value="c" /> c) Se impondrá la pena de inhabilitación absoluta de doce a veinte años cuando los referidos hechos fueren realizados por autoridad o agente de la misma, en el ejercicio de su cargo.</label>
+            <label class="opt-skip"><input type="radio" name="q66" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 386 -->
+        <fieldset data-q="q67">
+          <legend class="visually-hidden">Pregunta 67</legend>
+          <div class="enunciado" id="enun-q67"><strong>67.</strong> Según el artículo 386 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q67">
+            <label><input type="radio" name="q67" value="a" /> a) Será castigado con la pena de prisión de ocho a quince años y multa del tanto al décuplo del valor aparente de la moneda: 1.º El que altere la moneda o fabrique moneda falsa.</label>
+            <label><input type="radio" name="q67" value="b" /> b) Será castigado con la pena de prisión de ocho a doce años y multa del tanto al décuplo del valor aparente de la moneda: 1.º El que altere la moneda o fabrique moneda falsa.</label>
+            <label><input type="radio" name="q67" value="c" /> c) Será castigado con la pena de multa de ocho a doce años y multa del tanto al décuplo del valor aparente de la moneda: 1.º El que altere la moneda o fabrique moneda falsa.</label>
+            <label class="opt-skip"><input type="radio" name="q67" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 389 -->
+        <fieldset data-q="q68">
+          <legend class="visually-hidden">Pregunta 68</legend>
+          <div class="enunciado" id="enun-q68"><strong>68.</strong> Según el artículo 389 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q68">
+            <label><input type="radio" name="q68" value="a" /> a) El que falsificare o expendiere, en connivencia con el falsificador, sellos de correos o efectos timbrados, o los introdujera en España conociendo su falsedad, será castigado con la pena de multa de seis meses a tres años.</label>
+            <label><input type="radio" name="q68" value="b" /> b) El que falsificare o expendiere, en connivencia con el falsificador, sellos de correos o efectos timbrados, o los introdujera en España conociendo su falsedad, será castigado con la pena de prisión de siete meses a tres años.</label>
+            <label><input type="radio" name="q68" value="c" /> c) El que falsificare o expendiere, en connivencia con el falsificador, sellos de correos o efectos timbrados, o los introdujera en España conociendo su falsedad, será castigado con la pena de prisión de seis meses a tres años.</label>
+            <label class="opt-skip"><input type="radio" name="q68" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 395 -->
+        <fieldset data-q="q69">
+          <legend class="visually-hidden">Pregunta 69</legend>
+          <div class="enunciado" id="enun-q69"><strong>69.</strong> Según el artículo 395 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q69">
+            <label><input type="radio" name="q69" value="a" /> a) El que, para perjudicar a otro, cometiere en documento privado alguna de las falsedades previstas en los tres primeros números del apartado 1 del artículo 390, será castigado con la pena de prisión de seis meses a dos años.</label>
+            <label><input type="radio" name="q69" value="b" /> b) El que, para perjudicar a otro, cometiere en documento privado alguna de las falsedades previstas en los tres primeros números del apartado 1 del artículo 390, será castigado con la pena de multa de seis meses a dos años.</label>
+            <label><input type="radio" name="q69" value="c" /> c) El que, para perjudicar a otro, cometiere en documento privado alguna de las falsedades previstas en los tres primeros números del apartado 1 del artículo 390, será castigado con la pena de prisión de siete meses a dos años.</label>
+            <label class="opt-skip"><input type="radio" name="q69" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 399 bis -->
+        <fieldset data-q="q70">
+          <legend class="visually-hidden">Pregunta 70</legend>
+          <div class="enunciado" id="enun-q70"><strong>70.</strong> Según el artículo 399 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q70">
+            <label><input type="radio" name="q70" value="a" /> a) Cuando de acuerdo con lo establecido en el artículo 31 bis una persona jurídica sea responsable de los anteriores delitos, se le impondrá la pena de prisión de dos a cinco años.</label>
+            <label><input type="radio" name="q70" value="b" /> b) Cuando de acuerdo con lo establecido en el artículo 31 bis una persona jurídica sea responsable de los anteriores delitos, se le impondrá la pena de multa de dos a cinco años.</label>
+            <label><input type="radio" name="q70" value="c" /> c) Cuando de acuerdo con lo establecido en el artículo 31 bis una persona física sea responsable de los anteriores delitos, se le impondrá la pena de multa de dos a cinco años.</label>
+            <label class="opt-skip"><input type="radio" name="q70" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 403 -->
+        <fieldset data-q="q71">
+          <legend class="visually-hidden">Pregunta 71</legend>
+          <div class="enunciado" id="enun-q71"><strong>71.</strong> Según el artículo 403 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q71">
+            <label><input type="radio" name="q71" value="a" /> a) El que ejerciere actos propios de una profesión sin poseer el correspondiente título académico expedido o reconocido en España de acuerdo con la legislación vigente, incurrirá en la pena de prisión de doce a veinticuatro meses.</label>
+            <label><input type="radio" name="q71" value="b" /> b) El que ejerciere actos propios de una profesión sin poseer el correspondiente título académico expedido o reconocido en España de acuerdo con la legislación vigente, incurrirá en la pena de multa de quince a veinticuatro meses.</label>
+            <label><input type="radio" name="q71" value="c" /> c) El que ejerciere actos propios de una profesión sin poseer el correspondiente título académico expedido o reconocido en España de acuerdo con la legislación vigente, incurrirá en la pena de multa de doce a veinticuatro meses.</label>
+            <label class="opt-skip"><input type="radio" name="q71" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 412 -->
+        <fieldset data-q="q72">
+          <legend class="visually-hidden">Pregunta 72</legend>
+          <div class="enunciado" id="enun-q72"><strong>72.</strong> Según el artículo 412 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q72">
+            <label><input type="radio" name="q72" value="a" /> a) Si se tratase de un delito contra la integridad, libertad sexual, salud o libertad de las personas, será castigado con la pena de multa de doce a dieciocho meses y suspensión de empleo o cargo público de uno a tres años.</label>
+            <label><input type="radio" name="q72" value="b" /> b) Si se tratase de un delito contra la integridad, libertad sexual, salud o libertad de las personas, será castigado con la pena de prisión de doce a dieciocho meses y suspensión de empleo o cargo público de uno a tres años.</label>
+            <label><input type="radio" name="q72" value="c" /> c) Si se tratase de un delito contra la integridad, libertad sexual, salud o libertad de las personas, será castigado con la pena de multa de doce a veinticuatro meses y suspensión de empleo o cargo público de uno a tres años.</label>
+            <label class="opt-skip"><input type="radio" name="q72" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 430 -->
+        <fieldset data-q="q73">
+          <legend class="visually-hidden">Pregunta 73</legend>
+          <div class="enunciado" id="enun-q73"><strong>73.</strong> Según el artículo 430 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q73">
+            <label><input type="radio" name="q73" value="a" /> a) Cuando de acuerdo con lo establecido en el artículo 31 bis una persona jurídica sea responsable de los delitos recogidos en este Capítulo, se le impondrá la pena de prisión de seis meses a dos años.</label>
+            <label><input type="radio" name="q73" value="b" /> b) Cuando de acuerdo con lo establecido en el artículo 31 bis una persona jurídica sea responsable de los delitos recogidos en este Capítulo, se le impondrá la pena de multa de seis meses a dos años.</label>
+            <label><input type="radio" name="q73" value="c" /> c) Cuando de acuerdo con lo establecido en el artículo 31 bis una persona física sea responsable de los delitos recogidos en este Capítulo, se le impondrá la pena de multa de seis meses a dos años.</label>
+            <label class="opt-skip"><input type="radio" name="q73" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 446 -->
+        <fieldset data-q="q74">
+          <legend class="visually-hidden">Pregunta 74</legend>
+          <div class="enunciado" id="enun-q74"><strong>74.</strong> Según el artículo 446 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q74">
+            <label><input type="radio" name="q74" value="a" /> a) En ambos casos se impondrá, además, la pena de inhabilitación absoluta por tiempo de diez a treinta años.</label>
+            <label><input type="radio" name="q74" value="b" /> b) En ambos casos se impondrá, además, la pena de inhabilitación absoluta por tiempo de doce a veinte años.</label>
+            <label><input type="radio" name="q74" value="c" /> c) En ambos casos se impondrá, además, la pena de inhabilitación absoluta por tiempo de diez a veinte años.</label>
+            <label class="opt-skip"><input type="radio" name="q74" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 455 -->
+        <fieldset data-q="q75">
+          <legend class="visually-hidden">Pregunta 75</legend>
+          <div class="enunciado" id="enun-q75"><strong>75.</strong> Según el artículo 455 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q75">
+            <label><input type="radio" name="q75" value="a" /> a) El que, para realizar un derecho propio, actuando fuera de las vías legales, empleare violencia, intimidación o fuerza en las cosas, será castigado con la pena de multa de seis a doce meses.</label>
+            <label><input type="radio" name="q75" value="b" /> b) El que, para realizar un derecho propio, actuando fuera de las vías legales, empleare violencia, intimidación o fuerza en las cosas, será castigado con la pena de multa de seis a quince meses.</label>
+            <label><input type="radio" name="q75" value="c" /> c) El que, para realizar un derecho propio, actuando fuera de las vías legales, empleare violencia, intimidación o fuerza en las cosas, será castigado con la pena de prisión de seis a doce meses.</label>
+            <label class="opt-skip"><input type="radio" name="q75" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 458 -->
+        <fieldset data-q="q76">
+          <legend class="visually-hidden">Pregunta 76</legend>
+          <div class="enunciado" id="enun-q76"><strong>76.</strong> Según el artículo 458 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q76">
+            <label><input type="radio" name="q76" value="a" /> a) Si el falso testimonio se diera en contra del reo en causa criminal por delito, las penas serán de prisión de uno a tres años y multa de siete a doce meses.</label>
+            <label><input type="radio" name="q76" value="b" /> b) Si el falso testimonio se diera en contra del reo en causa criminal por delito, las penas serán de prisión de uno a tres años y multa de seis a doce meses.</label>
+            <label><input type="radio" name="q76" value="c" /> c) Si el falso testimonio se diera en contra del reo en causa criminal por delito, las penas serán de prisión de uno a tres años y multa de seis a quince meses.</label>
+            <label class="opt-skip"><input type="radio" name="q76" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 465 -->
+        <fieldset data-q="q77">
+          <legend class="visually-hidden">Pregunta 77</legend>
+          <div class="enunciado" id="enun-q77"><strong>77.</strong> Según el artículo 465 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q77">
+            <label><input type="radio" name="q77" value="a" /> a) Si los hechos descritos en el apartado primero de este artículo fueran realizados por un particular, la pena será de multa de tres a siete meses.</label>
+            <label><input type="radio" name="q77" value="b" /> b) Si los hechos descritos en el apartado primero de este artículo fueran realizados por un particular, la pena será de multa de cuatro a seis meses.</label>
+            <label><input type="radio" name="q77" value="c" /> c) Si los hechos descritos en el apartado primero de este artículo fueran realizados por un particular, la pena será de multa de tres a seis meses.</label>
+            <label class="opt-skip"><input type="radio" name="q77" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 471 bis -->
+        <fieldset data-q="q78">
+          <legend class="visually-hidden">Pregunta 78</legend>
+          <div class="enunciado" id="enun-q78"><strong>78.</strong> Según el artículo 471 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q78">
+            <label><input type="radio" name="q78" value="a" /> a) Si a consecuencia del testimonio se dictara un fallo condenatorio, se impondrá pena de prisión de cuatro a cinco años.</label>
+            <label><input type="radio" name="q78" value="b" /> b) Si a consecuencia del testimonio se dictara un fallo condenatorio, se impondrá pena de multa de cuatro a cinco años.</label>
+            <label><input type="radio" name="q78" value="c" /> c) Si a consecuencia del testimonio se dictara un fallo condenatorio, se impondrá pena de prisión de cuatro a seis años.</label>
+            <label class="opt-skip"><input type="radio" name="q78" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 471 bis -->
+        <fieldset data-q="q79">
+          <legend class="visually-hidden">Pregunta 79</legend>
+          <div class="enunciado" id="enun-q79"><strong>79.</strong> Según el artículo 471 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q79">
+            <label><input type="radio" name="q79" value="a" /> a) El que solicitara o aceptara un soborno en calidad de funcionario de la Corte y en relación con sus funciones oficiales incurrirá en la pena de prisión de dos a seis años y multa del tanto al triplo del valor de la dádiva solicitada o aceptada.</label>
+            <label><input type="radio" name="q79" value="b" /> b) El que solicitara o aceptara un soborno en calidad de funcionario de la Corte y en relación con sus funciones oficiales incurrirá en la pena de prisión de dos a cinco años y multa del tanto al triplo del valor de la dádiva solicitada o aceptada.</label>
+            <label><input type="radio" name="q79" value="c" /> c) El que solicitara o aceptara un soborno en calidad de funcionario de la Corte y en relación con sus funciones oficiales incurrirá en la pena de multa de dos a cinco años y multa del tanto al triplo del valor de la dádiva solicitada o aceptada.</label>
+            <label class="opt-skip"><input type="radio" name="q79" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 480 -->
+        <fieldset data-q="q80">
+          <legend class="visually-hidden">Pregunta 80</legend>
+          <div class="enunciado" id="enun-q80"><strong>80.</strong> Según el artículo 480 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q80">
+            <label><input type="radio" name="q80" value="a" /> a) A los meros ejecutores que depongan las armas antes de haber hecho uso de ellas, sometiéndose a las autoridades legítimas, se les aplicará la pena de prisión superior en grado.</label>
+            <label><input type="radio" name="q80" value="b" /> b) A los meros ejecutores que depongan las armas antes de haber hecho uso de ellas, sometiéndose a las autoridades legítimas, se les aplicará la pena de multa inferior en grado.</label>
+            <label><input type="radio" name="q80" value="c" /> c) A los meros ejecutores que depongan las armas antes de haber hecho uso de ellas, sometiéndose a las autoridades legítimas, se les aplicará la pena de prisión inferior en grado.</label>
+            <label class="opt-skip"><input type="radio" name="q80" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 486 -->
+        <fieldset data-q="q81">
+          <legend class="visually-hidden">Pregunta 81</legend>
+          <div class="enunciado" id="enun-q81"><strong>81.</strong> Según el artículo 486 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q81">
+            <label><input type="radio" name="q81" value="a" /> a) Si se tratara de alguna de las lesiones previstas en el artículo 150, se castigará con la pena de prisión de ocho a quince años.</label>
+            <label><input type="radio" name="q81" value="b" /> b) Si se tratara de alguna de las lesiones previstas en el artículo 150, se castigará con la pena de multa de ocho a quince años.</label>
+            <label><input type="radio" name="q81" value="c" /> c) Si se tratara de alguna de las lesiones previstas en el artículo 150, se castigará con la pena de prisión de ocho a veinte años.</label>
+            <label class="opt-skip"><input type="radio" name="q81" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 489 -->
+        <fieldset data-q="q82">
+          <legend class="visually-hidden">Pregunta 82</legend>
+          <div class="enunciado" id="enun-q82"><strong>82.</strong> Según el artículo 489 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q82">
+            <label><input type="radio" name="q82" value="a" /> a) En el caso previsto en el párrafo anterior, si la violencia o la intimidación no fueran graves, se impondrá la pena superior en grado.</label>
+            <label><input type="radio" name="q82" value="b" /> b) En el caso previsto en el párrafo anterior, si la violencia o la intimidación no fueran graves, se impondrá la pena inferior en grado.</label>
+            <label><input type="radio" name="q82" value="c" /> c) En el caso previsto en el párrafo anterior, si la violencia o la intimidación no fueran leves, se impondrá la pena inferior en grado.</label>
+            <label class="opt-skip"><input type="radio" name="q82" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 497 -->
+        <fieldset data-q="q83">
+          <legend class="visually-hidden">Pregunta 83</legend>
+          <div class="enunciado" id="enun-q83"><strong>83.</strong> Según el artículo 497 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q83">
+            <label><input type="radio" name="q83" value="a" /> a) Incurrirán en la pena de multa de seis meses a un año quienes, sin ser miembros del Congreso de los Diputados, del Senado o de una Asamblea Legislativa de Comunidad Autónoma, perturben gravemente el orden de sus sesiones.</label>
+            <label><input type="radio" name="q83" value="b" /> b) Incurrirán en la pena de prisión de siete meses a un año quienes, sin ser miembros del Congreso de los Diputados, del Senado o de una Asamblea Legislativa de Comunidad Autónoma, perturben gravemente el orden de sus sesiones.</label>
+            <label><input type="radio" name="q83" value="c" /> c) Incurrirán en la pena de prisión de seis meses a un año quienes, sin ser miembros del Congreso de los Diputados, del Senado o de una Asamblea Legislativa de Comunidad Autónoma, perturben gravemente el orden de sus sesiones.</label>
+            <label class="opt-skip"><input type="radio" name="q83" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 504 -->
+        <fieldset data-q="q84">
+          <legend class="visually-hidden">Pregunta 84</legend>
+          <div class="enunciado" id="enun-q84"><strong>84.</strong> Según el artículo 504 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q84">
+            <label><input type="radio" name="q84" value="a" /> a) Se impondrá la pena de prisión de tres a cinco años a los que empleen fuerza, violencia o intimidación para impedir a los miembros de dichos Organismos asistir a sus respectivas reuniones.</label>
+            <label><input type="radio" name="q84" value="b" /> b) Se impondrá la pena de multa de tres a cinco años a los que empleen fuerza, violencia o intimidación para impedir a los miembros de dichos Organismos asistir a sus respectivas reuniones.</label>
+            <label><input type="radio" name="q84" value="c" /> c) Se impondrá la pena de prisión de tres a seis años a los que empleen fuerza, violencia o intimidación para impedir a los miembros de dichos Organismos asistir a sus respectivas reuniones.</label>
+            <label class="opt-skip"><input type="radio" name="q84" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 511 -->
+        <fieldset data-q="q85">
+          <legend class="visually-hidden">Pregunta 85</legend>
+          <div class="enunciado" id="enun-q85"><strong>85.</strong> Según el artículo 511 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q85">
+            <label><input type="radio" name="q85" value="a" /> a) Los funcionarios públicos que cometan alguno de los hechos previstos en este artículo, incurrirán en las mismas penas en su mitad superior y en la de inhabilitación especial para empleo o cargo público por tiempo de dos a cinco años.</label>
+            <label><input type="radio" name="q85" value="b" /> b) Los funcionarios públicos que cometan alguno de los hechos previstos en este artículo, incurrirán en las mismas penas en su mitad superior y en la de inhabilitación especial para empleo o cargo público por tiempo de dos a cuatro años.</label>
+            <label><input type="radio" name="q85" value="c" /> c) Los funcionarios públicos que cometan alguno de los hechos previstos en este artículo, incurrirán en las mismas penas en su mitad inferior y en la de inhabilitación especial para empleo o cargo público por tiempo de dos a cuatro años.</label>
+            <label class="opt-skip"><input type="radio" name="q85" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 532 -->
+        <fieldset data-q="q86">
+          <legend class="visually-hidden">Pregunta 86</legend>
+          <div class="enunciado" id="enun-q86"><strong>86.</strong> Según el artículo 532 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q86">
+            <label><input type="radio" name="q86" value="a" /> a) Si los hechos descritos en los dos artículos anteriores fueran cometidos por imprudencia leve, se castigarán con la pena de suspensión de empleo o cargo público por tiempo de seis meses a dos años.</label>
+            <label><input type="radio" name="q86" value="b" /> b) Si los hechos descritos en los dos artículos anteriores fueran cometidos por imprudencia grave, se castigarán con la pena de suspensión de empleo o cargo público por tiempo de siete meses a dos años.</label>
+            <label><input type="radio" name="q86" value="c" /> c) Si los hechos descritos en los dos artículos anteriores fueran cometidos por imprudencia grave, se castigarán con la pena de suspensión de empleo o cargo público por tiempo de seis meses a dos años.</label>
+            <label class="opt-skip"><input type="radio" name="q86" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 543 -->
+        <fieldset data-q="q87">
+          <legend class="visually-hidden">Pregunta 87</legend>
+          <div class="enunciado" id="enun-q87"><strong>87.</strong> Según el artículo 543 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q87">
+            <label><input type="radio" name="q87" value="a" /> a) Las ofensas o ultrajes de palabra, por escrito o de hecho a España, a sus Comunidades Autónomas o a sus símbolos o emblemas, efectuados con publicidad, se castigarán con la pena de multa de siete a doce meses.</label>
+            <label><input type="radio" name="q87" value="b" /> b) Las ofensas o ultrajes de palabra, por escrito o de hecho a España, a sus Comunidades Autónomas o a sus símbolos o emblemas, efectuados con publicidad, se castigarán con la pena de prisión de siete a doce meses.</label>
+            <label><input type="radio" name="q87" value="c" /> c) Las ofensas o ultrajes de palabra, por escrito o de hecho a España, a sus Comunidades Autónomas o a sus símbolos o emblemas, efectuados con publicidad, se castigarán con la pena de multa de siete a quince meses.</label>
+            <label class="opt-skip"><input type="radio" name="q87" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 557 -->
+        <fieldset data-q="q88">
+          <legend class="visually-hidden">Pregunta 88</legend>
+          <div class="enunciado" id="enun-q88"><strong>88.</strong> Según el artículo 557 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q88">
+            <label><input type="radio" name="q88" value="a" /> a) La provocación, la conspiración y la proposición para las conductas previstas en los apartados 3 y 3 del presente artículo serán castigadas con las penas inferiores en uno o dos grados a las respectivamente previstas.</label>
+            <label><input type="radio" name="q88" value="b" /> b) La provocación, la conspiración y la proposición para las conductas previstas en los apartados 2 y 3 del presente artículo serán castigadas con las penas inferiores en uno o dos grados a las respectivamente previstas.</label>
+            <label><input type="radio" name="q88" value="c" /> c) La provocación, la conspiración y la proposición para las conductas previstas en los apartados 2 y 3 del presente artículo serán castigadas con las penas inferiores en uno o tres grados a las respectivamente previstas.</label>
+            <label class="opt-skip"><input type="radio" name="q88" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 563 -->
+        <fieldset data-q="q89">
+          <legend class="visually-hidden">Pregunta 89</legend>
+          <div class="enunciado" id="enun-q89"><strong>89.</strong> Según el artículo 563 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q89">
+            <label><input type="radio" name="q89" value="a" /> a) La tenencia de armas prohibidas y la de aquellas que sean resultado de la modificación sustancial de las características de fabricación de armas reglamentadas, será castigada con la pena de multa de uno a tres años.</label>
+            <label><input type="radio" name="q89" value="b" /> b) La tenencia de armas prohibidas y la de aquellas que sean resultado de la modificación sustancial de las características de fabricación de armas reglamentadas, será castigada con la pena de prisión de uno a cuatro años.</label>
+            <label><input type="radio" name="q89" value="c" /> c) La tenencia de armas prohibidas y la de aquellas que sean resultado de la modificación sustancial de las características de fabricación de armas reglamentadas, será castigada con la pena de prisión de uno a tres años.</label>
+            <label class="opt-skip"><input type="radio" name="q89" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 568 -->
+        <fieldset data-q="q90">
+          <legend class="visually-hidden">Pregunta 90</legend>
+          <div class="enunciado" id="enun-q90"><strong>90.</strong> Según el artículo 568 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q90">
+            <label><input type="radio" name="q90" value="a" /> a) En los supuestos del apartado anterior, cuando la sustancia inflamable sea un combustible líquido, la pena será de tres a cinco años de prisión.</label>
+            <label><input type="radio" name="q90" value="b" /> b) En los supuestos del apartado anterior, cuando la sustancia inflamable sea un combustible líquido, la pena será de tres a seis años de prisión.</label>
+            <label><input type="radio" name="q90" value="c" /> c) En los supuestos del apartado anterior, cuando la sustancia inflamable sea un combustible líquido, la pena será de cuatro a cinco años de prisión.</label>
+            <label class="opt-skip"><input type="radio" name="q90" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 572 -->
+        <fieldset data-q="q91">
+          <legend class="visually-hidden">Pregunta 91</legend>
+          <div class="enunciado" id="enun-q91"><strong>91.</strong> Según el artículo 572 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q91">
+            <label><input type="radio" name="q91" value="a" /> a) Quienes participaran activamente en la organización o grupo, o formaran parte de ellos, serán castigados con las penas de prisión de siete a doce años e inhabilitación absoluta durante el tiempo de la condena.</label>
+            <label><input type="radio" name="q91" value="b" /> b) Quienes participaran activamente en la organización o grupo, o formaran parte de ellos, serán castigados con las penas de prisión de seis a doce años e inhabilitación absoluta durante el tiempo de la condena.</label>
+            <label><input type="radio" name="q91" value="c" /> c) Quienes participaran activamente en la organización o grupo, o formaran parte de ellos, serán castigados con las penas de prisión de seis a quince años e inhabilitación absoluta durante el tiempo de la condena.</label>
+            <label class="opt-skip"><input type="radio" name="q91" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 573 bis -->
+        <fieldset data-q="q92">
+          <legend class="visually-hidden">Pregunta 92</legend>
+          <div class="enunciado" id="enun-q92"><strong>92.</strong> Según el artículo 573 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q92">
+            <label><input type="radio" name="q92" value="a" /> a) Los delitos de terrorismo a los que se refiere el apartado 2 del artículo anterior se castigarán con la pena inferior en grado a la respectivamente prevista en los correspondientes artículos.</label>
+            <label><input type="radio" name="q92" value="b" /> b) Los delitos de terrorismo a los que se refiere el apartado 3 del artículo anterior se castigarán con la pena superior en grado a la respectivamente prevista en los correspondientes artículos.</label>
+            <label><input type="radio" name="q92" value="c" /> c) Los delitos de terrorismo a los que se refiere el apartado 2 del artículo anterior se castigarán con la pena superior en grado a la respectivamente prevista en los correspondientes artículos.</label>
+            <label class="opt-skip"><input type="radio" name="q92" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 579 -->
+        <fieldset data-q="q93">
+          <legend class="visually-hidden">Pregunta 93</legend>
+          <div class="enunciado" id="enun-q93"><strong>93.</strong> Según el artículo 579 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q93">
+            <label><input type="radio" name="q93" value="a" /> a) En los casos previstos en este precepto, los jueces o tribunales podrán adoptar las medidas establecidas en los apartados 4 y 5 del artículo anterior.</label>
+            <label><input type="radio" name="q93" value="b" /> b) En los casos previstos en este precepto, los jueces o tribunales deberán adoptar las medidas establecidas en los apartados 4 y 5 del artículo anterior.</label>
+            <label><input type="radio" name="q93" value="c" /> c) En los casos previstos en este precepto, los jueces o tribunales podrán adoptar las medidas establecidas en los apartados 5 y 5 del artículo anterior.</label>
+            <label class="opt-skip"><input type="radio" name="q93" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 583 -->
+        <fieldset data-q="q94">
+          <legend class="visually-hidden">Pregunta 94</legend>
+          <div class="enunciado" id="enun-q94"><strong>94.</strong> Según el artículo 583 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q94">
+            <label><input type="radio" name="q94" value="a" /> a) Será castigado con la pena de prisión de doce a treinta años: 1.º El español que tome las armas contra la Patria bajo banderas enemigas.</label>
+            <label><input type="radio" name="q94" value="b" /> b) Será castigado con la pena de prisión de doce a veinte años: 1.º El español que tome las armas contra la Patria bajo banderas enemigas.</label>
+            <label><input type="radio" name="q94" value="c" /> c) Será castigado con la pena de multa de doce a veinte años: 1.º El español que tome las armas contra la Patria bajo banderas enemigas.</label>
+            <label class="opt-skip"><input type="radio" name="q94" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 596 -->
+        <fieldset data-q="q95">
+          <legend class="visually-hidden">Pregunta 95</legend>
+          <div class="enunciado" id="enun-q95"><strong>95.</strong> Según el artículo 596 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q95">
+            <label><input type="radio" name="q95" value="a" /> a) Si en la correspondencia se dieran avisos o noticias de las que pudiera aprovecharse el enemigo se impondrá la pena de multa de ocho a quince años.</label>
+            <label><input type="radio" name="q95" value="b" /> b) Si en la correspondencia se dieran avisos o noticias de las que pudiera aprovecharse el enemigo se impondrá la pena de prisión de ocho a veinte años.</label>
+            <label><input type="radio" name="q95" value="c" /> c) Si en la correspondencia se dieran avisos o noticias de las que pudiera aprovecharse el enemigo se impondrá la pena de prisión de ocho a quince años.</label>
+            <label class="opt-skip"><input type="radio" name="q95" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 605 -->
+        <fieldset data-q="q96">
+          <legend class="visually-hidden">Pregunta 96</legend>
+          <div class="enunciado" id="enun-q96"><strong>96.</strong> Según el artículo 605 del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q96">
+            <label><input type="radio" name="q96" value="a" /> a) Si se tratara de alguna de las lesiones previstas en el artículo 150 se castigará con la pena de prisión de ocho a quince años, y de cuatro a ocho años si fuera cualquier otra lesión.</label>
+            <label><input type="radio" name="q96" value="b" /> b) Si se tratara de alguna de las lesiones previstas en el artículo 150 se castigará con la pena de multa de ocho a quince años, y de cuatro a ocho años si fuera cualquier otra lesión.</label>
+            <label><input type="radio" name="q96" value="c" /> c) Si se tratara de alguna de las lesiones previstas en el artículo 150 se castigará con la pena de prisión de ocho a veinte años, y de cuatro a ocho años si fuera cualquier otra lesión.</label>
+            <label class="opt-skip"><input type="radio" name="q96" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 607 bis -->
+        <fieldset data-q="q97">
+          <legend class="visually-hidden">Pregunta 97</legend>
+          <div class="enunciado" id="enun-q97"><strong>97.</strong> Según el artículo 607 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q97">
+            <label><input type="radio" name="q97" value="a" /> a) Con la pena de prisión de 12 a 15 años si cometieran una violación, y de cuatro a siete años de prisión si el hecho consistiera en cualquier otra agresión sexual.</label>
+            <label><input type="radio" name="q97" value="b" /> b) Con la pena de prisión de 12 a 15 años si cometieran una violación, y de cuatro a seis años de prisión si el hecho consistiera en cualquier otra agresión sexual.</label>
+            <label><input type="radio" name="q97" value="c" /> c) Con la pena de multa de 12 a 15 años si cometieran una violación, y de cuatro a seis años de prisión si el hecho consistiera en cualquier otra agresión sexual.</label>
+            <label class="opt-skip"><input type="radio" name="q97" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 607 bis -->
+        <fieldset data-q="q98">
+          <legend class="visually-hidden">Pregunta 98</legend>
+          <div class="enunciado" id="enun-q98"><strong>98.</strong> Según el artículo 607 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q98">
+            <label><input type="radio" name="q98" value="a" /> a) Con la pena de multa de seis a ocho años si forzaran el embarazo de alguna mujer con intención de modificar la composición étnica de la población, sin perjuicio de la pena que corresponda, en su caso, por otros delitos.</label>
+            <label><input type="radio" name="q98" value="b" /> b) Con la pena de prisión de seis a nueve años si forzaran el embarazo de alguna mujer con intención de modificar la composición étnica de la población, sin perjuicio de la pena que corresponda, en su caso, por otros delitos.</label>
+            <label><input type="radio" name="q98" value="c" /> c) Con la pena de prisión de seis a ocho años si forzaran el embarazo de alguna mujer con intención de modificar la composición étnica de la población, sin perjuicio de la pena que corresponda, en su caso, por otros delitos.</label>
+            <label class="opt-skip"><input type="radio" name="q98" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 607 bis -->
+        <fieldset data-q="q99">
+          <legend class="visually-hidden">Pregunta 99</legend>
+          <div class="enunciado" id="enun-q99"><strong>99.</strong> Según el artículo 607 bis del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q99">
+            <label><input type="radio" name="q99" value="a" /> a) Con la pena de cuatro a ocho años de prisión si cometieran tortura grave sobre personas que tuvieran bajo su custodia o control, y con la de prisión de dos a seis años si fuera menos grave.</label>
+            <label><input type="radio" name="q99" value="b" /> b) Con la pena de cuatro a ocho años de prisión si cometieran tortura grave sobre personas que tuvieran bajo su custodia o control, y con la de prisión de dos a seis años si fuera grave.</label>
+            <label><input type="radio" name="q99" value="c" /> c) Con la pena de cuatro a ocho años de prisión si cometieran tortura leve sobre personas que tuvieran bajo su custodia o control, y con la de prisión de dos a seis años si fuera menos grave.</label>
+            <label class="opt-skip"><input type="radio" name="q99" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Código Penal, art. 616 quáter -->
+        <fieldset data-q="q100">
+          <legend class="visually-hidden">Pregunta 100</legend>
+          <div class="enunciado" id="enun-q100"><strong>100.</strong> Según el artículo 616 quáter del Código Penal, señale la afirmación correcta:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q100">
+            <label><input type="radio" name="q100" value="a" /> a) Si en la conducta anterior se empleare fuerza o violencia se impondrá la pena de doce a quince años de prisión.</label>
+            <label><input type="radio" name="q100" value="b" /> b) Si en la conducta anterior se empleare fuerza o violencia se impondrá la pena de diez a quince años de prisión.</label>
+            <label><input type="radio" name="q100" value="c" /> c) Si en la conducta anterior se empleare fuerza o violencia se impondrá la pena de diez a veinte años de prisión.</label>
+            <label class="opt-skip"><input type="radio" name="q100" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <div class="acciones">
+          <button type="submit" class="btn btn-primary" id="btn-corregir" disabled>Corregir</button>
+          <p class="hint" id="hint-completo">
+            Las preguntas no son obligatorias. «Sin responder» queda fuera de la nota.
+          </p>
+        </div>
+      </form>
+    </section>
+
+    <section id="panel-resultados" class="sheet result-block" hidden>
+      <h2>Resultado</h2>
+      <p class="puntos" id="out-puntos"></p>
+      <p class="detalle" id="out-detalle"></p>
+      <div class="bloque-repaso" id="bloque-fallidas">
+        <h3>Fallidas</h3>
+        <p class="result-muted" id="out-msg-fallidas" hidden></p>
+        <ul class="err-list" id="out-errores"></ul>
+      </div>
+      <div class="bloque-repaso" id="bloque-omitidas" hidden>
+        <h3>Sin responder</h3>
+        <ul class="err-list omit-list" id="out-omitidas"></ul>
+      </div>
+      <p class="sin-errores" id="out-sin-errores" hidden></p>
+    </section>
+  </main>
+
+  <script>
+    const SKIP = "_skip";
+    const CORRECTAS = {
+      "q1": "b",
+      "q2": "c",
+      "q3": "a",
+      "q4": "b",
+      "q5": "c",
+      "q6": "a",
+      "q7": "b",
+      "q8": "c",
+      "q9": "a",
+      "q10": "b",
+      "q11": "c",
+      "q12": "a",
+      "q13": "b",
+      "q14": "c",
+      "q15": "a",
+      "q16": "b",
+      "q17": "c",
+      "q18": "a",
+      "q19": "b",
+      "q20": "c",
+      "q21": "a",
+      "q22": "b",
+      "q23": "c",
+      "q24": "a",
+      "q25": "b",
+      "q26": "c",
+      "q27": "a",
+      "q28": "b",
+      "q29": "c",
+      "q30": "a",
+      "q31": "b",
+      "q32": "c",
+      "q33": "a",
+      "q34": "b",
+      "q35": "c",
+      "q36": "a",
+      "q37": "b",
+      "q38": "c",
+      "q39": "a",
+      "q40": "b",
+      "q41": "c",
+      "q42": "a",
+      "q43": "b",
+      "q44": "c",
+      "q45": "a",
+      "q46": "b",
+      "q47": "c",
+      "q48": "a",
+      "q49": "b",
+      "q50": "c",
+      "q51": "a",
+      "q52": "b",
+      "q53": "c",
+      "q54": "a",
+      "q55": "b",
+      "q56": "c",
+      "q57": "a",
+      "q58": "b",
+      "q59": "c",
+      "q60": "a",
+      "q61": "b",
+      "q62": "c",
+      "q63": "a",
+      "q64": "b",
+      "q65": "c",
+      "q66": "a",
+      "q67": "b",
+      "q68": "c",
+      "q69": "a",
+      "q70": "b",
+      "q71": "c",
+      "q72": "a",
+      "q73": "b",
+      "q74": "c",
+      "q75": "a",
+      "q76": "b",
+      "q77": "c",
+      "q78": "a",
+      "q79": "b",
+      "q80": "c",
+      "q81": "a",
+      "q82": "b",
+      "q83": "c",
+      "q84": "a",
+      "q85": "b",
+      "q86": "c",
+      "q87": "a",
+      "q88": "b",
+      "q89": "c",
+      "q90": "a",
+      "q91": "b",
+      "q92": "c",
+      "q93": "a",
+      "q94": "b",
+      "q95": "c",
+      "q96": "a",
+      "q97": "b",
+      "q98": "c",
+      "q99": "a",
+      "q100": "b"
+};
+    const EXPLICACIONES = {
+      "q1": "El artículo 13 del Código Penal establece: Son delitos graves las infracciones que la Ley castiga con pena grave.",
+      "q2": "El artículo 21 del Código Penal establece: La de actuar el culpable a causa de su grave adicción a las sustancias mencionadas en el número 2.º del artículo anterior.",
+      "q3": "El artículo 36 del Código Penal establece: La pena de prisión tendrá una duración mínima de tres meses y máxima de veinte años, salvo lo que excepcionalmente dispongan otros preceptos del presente Código.",
+      "q4": "El artículo 50 del Código Penal establece: Las penas de multa imponibles a personas jurídicas tendrán una extensión máxima de cinco años.",
+      "q5": "El artículo 55 del Código Penal establece: La pena de prisión igual o superior a diez años llevará consigo la inhabilitación absoluta durante el tiempo de la condena, salvo que ésta ya estuviere prevista como pena principal para el supuesto de que se trate.",
+      "q6": "El artículo 69 del Código Penal establece: Al mayor de dieciocho años y menor de veintiuno que cometa un hecho delictivo, podrán aplicársele las disposiciones de la ley que regule la responsabilidad penal del menor en los casos y con los requisitos que ésta disponga.",
+      "q7": "El artículo 81 del Código Penal establece: En el caso de que la suspensión hubiera sido acordada de conformidad con lo dispuesto en el apartado 5 del artículo anterior, el plazo de suspensión será de tres a cinco años.",
+      "q8": "El artículo 89 del Código Penal establece: El extranjero no podrá regresar a España en un plazo de cinco a diez años, contados desde la fecha de su expulsión, atendidas la duración de la pena sustituida y las circunstancias personales del penado.",
+      "q9": "El artículo 90 del Código Penal establece: Los apartados 2 y 3 no serán aplicables a las personas condenadas por la comisión de alguno de los delitos regulados en el Capítulo VII del Título XXII del Libro II de este Código o por delitos cometidos en el seno de organizaciones criminales.",
+      "q10": "El artículo 101 del Código Penal establece: El internamiento no podrá exceder del tiempo que habría durado la pena privativa de libertad, si hubiera sido declarado responsable el sujeto, y a tal efecto el Juez o Tribunal fijará en la sentencia ese límite máximo.",
+      "q11": "El artículo 103 del Código Penal establece: El internamiento no podrá exceder del tiempo que habría durado la pena privativa de libertad, si el sujeto hubiera sido declarado responsable y, a tal efecto, el Juez o Tribunal fijará en la sentencia ese límite máximo.",
+      "q12": "El artículo 108 del Código Penal establece: El extranjero no podrá regresar a España en un plazo de 10 años, contados desde la fecha de su expulsión.",
+      "q13": "El artículo 131 del Código Penal establece: Los delitos prescriben: A los veinte años, cuando la pena máxima señalada al delito sea prisión de quince o más años.",
+      "q14": "El artículo 133 del Código Penal establece: A los 15, las de inhabilitación por más de seis años y que no excedan de 10, y las de prisión por más de cinco años y que no excedan de 10.",
+      "q15": "El artículo 139 del Código Penal establece: Será castigado con la pena de prisión de quince a veinticinco años, como reo de asesinato, el que matare a otro concurriendo alguna de las circunstancias siguientes: 1.ª Con alevosía.",
+      "q16": "El artículo 142 del Código Penal establece: Si el homicidio se hubiera cometido por imprudencia profesional, se impondrá además la pena de inhabilitación especial para el ejercicio de la profesión, oficio o cargo por un periodo de tres a seis años.",
+      "q17": "El artículo 143 del Código Penal establece: El que induzca al suicidio de otro será castigado con la pena de prisión de cuatro a ocho años.",
+      "q18": "El artículo 145 del Código Penal establece: La mujer que produjere su aborto o consintiere que otra persona se lo cause, fuera de los casos permitidos por la ley, será castigada con la pena de multa de seis a veinticuatro meses.",
+      "q19": "El artículo 149 del Código Penal establece: El que causara a otro una mutilación genital en cualquiera de sus manifestaciones será castigado con la pena de prisión de seis a 12 años.",
+      "q20": "El artículo 152 del Código Penal establece: Con la pena de prisión de seis meses a dos años, si se tratare de las lesiones del artículo 150.",
+      "q21": "El artículo 153 del Código Penal establece: No obstante lo previsto en los apartados anteriores, el Juez o Tribunal, razonándolo en sentencia, en atención a las circunstancias personales del autor y las concurrentes en la realización del hecho, podrá imponer la pena inferior en grado.",
+      "q22": "El artículo 156 bis del Código Penal establece: Cuando se tratare de los jefes, administradores o encargados de dichas organizaciones o grupos, se les aplicará la pena en su mitad superior, que podrá elevarse a la inmediatamente superior en grado.",
+      "q23": "El artículo 159 del Código Penal establece: Si la alteración del genotipo fuere realizada por imprudencia grave, la pena será de multa de seis a quince meses e inhabilitación especial para empleo o cargo público, profesión u oficio de uno a tres años.",
+      "q24": "El artículo 163 del Código Penal establece: Si el culpable diera libertad al encerrado o detenido dentro de los tres primeros días de su detención, sin haber logrado el objeto que se había propuesto, se impondrá la pena inferior en grado.",
+      "q25": "El artículo 164 del Código Penal establece: El secuestro de una persona exigiendo alguna condición para ponerla en libertad, será castigado con la pena de prisión de seis a diez años.",
+      "q26": "El artículo 169 del Código Penal establece: De no conseguirlo, se impondrá la pena de prisión de seis meses a tres años.",
+      "q27": "El artículo 171 del Código Penal establece: Igual pena se impondrá al que de modo leve amenace a una persona especialmente vulnerable que conviva con el autor.",
+      "q28": "El artículo 172 del Código Penal establece: No obstante lo previsto en los párrafos anteriores, el Juez o Tribunal, razonándolo en sentencia, en atención a las circunstancias personales del autor y a las concurrentes en la realización del hecho, podrá imponer la pena inferior en grado.",
+      "q29": "El artículo 172 ter del Código Penal establece: En este caso no será necesaria la denuncia a que se refiere el apartado 4 de este artículo.",
+      "q30": "El artículo 173 del Código Penal establece: Cuando de acuerdo con lo establecido en el artículo 31 bis, una persona jurídica sea responsable de los delitos comprendidos en los párrafos anteriores, se le impondrá la pena de multa de seis meses a dos años.",
+      "q31": "El artículo 177 bis del Código Penal establece: Se impondrá la pena superior en grado a la prevista en el apartado 1 de este artículo e inhabilitación absoluta de seis a doce años a los que realicen los hechos prevaliéndose de su condición de autoridad, agente de ésta o funcionario público.",
+      "q32": "El artículo 177 bis del Código Penal establece: Cuando se trate de los jefes, administradores o encargados de dichas organizaciones o asociaciones, se les aplicará la pena en su mitad superior, que podrá elevarse a la inmediatamente superior en grado.",
+      "q33": "El artículo 180 del Código Penal establece: Si concurrieren dos o más de las anteriores circunstancias, las penas respectivamente previstas en el apartado 1 de este artículo se impondrán en su mitad superior.",
+      "q34": "El artículo 181 del Código Penal establece: En todos los casos previstos en este artículo, cuando el culpable se hubiera prevalido de su condición de autoridad, agente de esta o funcionario público, se impondrá, además, la pena de inhabilitación absoluta de seis a doce años.",
+      "q35": "El artículo 187 del Código Penal establece: Se impondrá la pena de prisión de dos a cuatro años y multa de doce a veinticuatro meses a quien se lucre explotando la prostitución de otra persona, aun con el consentimiento de la misma.",
+      "q36": "El artículo 195 del Código Penal establece: El que no socorriere a una persona que se halle desamparada y en peligro manifiesto y grave, cuando pudiere hacerlo sin riesgo propio ni de terceros, será castigado con la pena de multa de tres a doce meses.",
+      "q37": "El artículo 197 del Código Penal establece: Si los hechos se realizan con fines lucrativos, se impondrán las penas respectivamente previstas en los apartados 1 al 4 de este artículo en su mitad superior.",
+      "q38": "El artículo 199 del Código Penal establece: El que revelare secretos ajenos, de los que tenga conocimiento por razón de su oficio o sus relaciones laborales, será castigado con la pena de prisión de uno a tres años y multa de seis a doce meses.",
+      "q39": "El artículo 208 del Código Penal establece: Solamente serán constitutivas de delito las injurias que, por su naturaleza, efectos y circunstancias, sean tenidas en el concepto público por graves, sin perjuicio de lo dispuesto en el apartado 4 del artículo 173.",
+      "q40": "El artículo 220 del Código Penal establece: Las sustituciones de un niño por otro que se produjeren en centros sanitarios o socio-sanitarios por imprudencia grave de los responsables de su identificación y custodia, serán castigadas con la pena de prisión de seis meses a un año.",
+      "q41": "El artículo 225 bis del Código Penal establece: Si la restitución la hiciere, sin la comunicación a que se refiere el párrafo anterior, dentro de los quince días siguientes a la sustracción, le será impuesta la pena de prisión de seis meses a dos años.",
+      "q42": "El artículo 232 del Código Penal establece: Los que utilizaren o prestaren a menores de edad o personas con discapacidad necesitadas de especial protección para la práctica de la mendicidad, incluso si ésta es encubierta, serán castigados con la pena de prisión de seis meses a un año.",
+      "q43": "El artículo 236 del Código Penal establece: Será castigado con multa de tres a doce meses el que, siendo dueño de una cosa mueble o actuando con el consentimiento de éste, la sustrajere de quien la tenga legítimamente en su poder, con perjuicio del mismo o de un tercero.",
+      "q44": "El artículo 241 del Código Penal establece: El robo cometido en casa habitada, edificio o local abiertos al público, o en cualquiera de sus dependencias, se castigará con una pena de prisión de dos a cinco años.",
+      "q45": "El artículo 242 del Código Penal establece: En atención a la menor entidad de la violencia o intimidación ejercidas y valorando además las restantes circunstancias del hecho, podrá imponerse la pena inferior en grado a la prevista en los apartados anteriores.",
+      "q46": "El artículo 247 del Código Penal establece: El que, sin hallarse autorizado, distrajere las aguas de uso público o privativo de su curso, o de su embalse natural o artificial, será castigado con la pena de multa de tres a seis meses.",
+      "q47": "El artículo 250 del Código Penal establece: Si concurrieran las circunstancias incluidas en los numerales 4.º, 5.º, 6.º o 7.º con la del numeral 1.º del apartado anterior, se impondrán las penas de prisión de cuatro a ocho años y multa de doce a veinticuatro meses.",
+      "q48": "El artículo 254 del Código Penal establece: Si la cuantía de lo apropiado no excediere de 400 euros, se impondrá una pena de multa de uno a dos meses.",
+      "q49": "El artículo 257 del Código Penal establece: Será castigado con las penas de prisión de uno a cuatro años y multa de doce a veinticuatro meses: 1.º El que se alce con sus bienes en perjuicio de sus acreedores.",
+      "q50": "El artículo 261 del Código Penal establece: El que en procedimiento concursal presentare, a sabiendas, datos falsos relativos al estado contable, con el fin de lograr indebidamente la declaración de aquel, será castigado con la pena de prisión de uno a dos años y multa de seis a 12 meses.",
+      "q51": "El artículo 264 bis del Código Penal establece: Si los hechos hubieran perjudicado de forma relevante la actividad normal de una empresa, negocio o de una Administración pública, se impondrá la pena en su mitad superior, pudiéndose alcanzar la pena superior en grado.",
+      "q52": "El artículo 270 del Código Penal establece: En los supuestos a que se refiere el apartado 1, la distribución o comercialización ambulante o meramente ocasional se castigará con una pena de prisión de seis meses a dos años.",
+      "q53": "El artículo 281 del Código Penal establece: Se impondrá la pena superior en grado si el hecho se realiza en situaciones de grave necesidad o catastróficas.",
+      "q54": "El artículo 286 bis del Código Penal establece: Los jueces y tribunales, en atención a la cuantía del beneficio o al valor de la ventaja, y a la trascendencia de las funciones del culpable, podrán imponer la pena inferior en grado y reducir la de multa a su prudente arbitrio.",
+      "q55": "El artículo 301 del Código Penal establece: La pena se impondrá en su mitad superior cuando los bienes tengan su origen en alguno de los delitos relacionados con el tráfico de drogas tóxicas, estupefacientes o sustancias psicotrópicas descritos en los artículos 368 a 372 de este Código.",
+      "q56": "El artículo 304 del Código Penal establece: La provocación, la conspiración y la proposición para cometer los delitos previstos en los artículos 301 a 303 se castigará, respectivamente, con la pena inferior en uno o dos grados.",
+      "q57": "El artículo 307 ter del Código Penal establece: Además de las penas señaladas, se impondrá al responsable la pérdida de la posibilidad de obtener subvenciones y del derecho a gozar de los beneficios o incentivos fiscales o de la Seguridad Social durante el período de tres a seis años.",
+      "q58": "El artículo 317 del Código Penal establece: Cuando el delito a que se refiere el artículo anterior se cometa por imprudencia grave, será castigado con la pena inferior en grado.",
+      "q59": "El artículo 323 del Código Penal establece: En todos estos casos, los jueces o tribunales podrán ordenar, a cargo del autor del daño, la adopción de medidas encaminadas a restaurar, en lo posible, el bien dañado.",
+      "q60": "El artículo 332 del Código Penal establece: Si los hechos se hubieran cometido por imprudencia grave, se impondrá una pena de prisión de tres meses a un año o multa de cuatro a ocho meses, e inhabilitación especial para profesión u oficio por tiempo de tres meses a dos años.",
+      "q61": "El artículo 340 bis del Código Penal establece: Si el delito se hubiera cometido utilizando armas de fuego, el juez o tribunal podrá imponer motivadamente la pena de privación del derecho a tenencia y porte de armas por un tiempo de dos a cinco años.",
+      "q62": "El artículo 345 del Código Penal establece: Si los hechos a que se refieren los apartados anteriores se hubieran cometido por imprudencia grave, se impondrá la pena inferior en grado a la señalada en los mismos.",
+      "q63": "El artículo 351 del Código Penal establece: Los Jueces o Tribunales podrán imponer la pena inferior en grado atendidas la menor entidad del peligro causado y las demás circunstancias del hecho.",
+      "q64": "El artículo 355 del Código Penal establece: En todos los casos previstos en esta sección, los Jueces o Tribunales podrán acordar que la calificación del suelo en las zonas afectadas por un incendio forestal no pueda modificarse en un plazo de hasta treinta años.",
+      "q65": "El artículo 364 del Código Penal establece: Si el reo fuera el propietario o el responsable de producción de una fábrica de productos alimenticios, se le impondrá, además, la pena de inhabilitación especial para profesión, oficio, industria o comercio de seis a diez años.",
+      "q66": "El artículo 372 del Código Penal establece: Se impondrá la pena de inhabilitación absoluta de diez a veinte años cuando los referidos hechos fueren realizados por autoridad o agente de la misma, en el ejercicio de su cargo.",
+      "q67": "El artículo 386 del Código Penal establece: Será castigado con la pena de prisión de ocho a doce años y multa del tanto al décuplo del valor aparente de la moneda: 1.º El que altere la moneda o fabrique moneda falsa.",
+      "q68": "El artículo 389 del Código Penal establece: El que falsificare o expendiere, en connivencia con el falsificador, sellos de correos o efectos timbrados, o los introdujera en España conociendo su falsedad, será castigado con la pena de prisión de seis meses a tres años.",
+      "q69": "El artículo 395 del Código Penal establece: El que, para perjudicar a otro, cometiere en documento privado alguna de las falsedades previstas en los tres primeros números del apartado 1 del artículo 390, será castigado con la pena de prisión de seis meses a dos años.",
+      "q70": "El artículo 399 bis del Código Penal establece: Cuando de acuerdo con lo establecido en el artículo 31 bis una persona jurídica sea responsable de los anteriores delitos, se le impondrá la pena de multa de dos a cinco años.",
+      "q71": "El artículo 403 del Código Penal establece: El que ejerciere actos propios de una profesión sin poseer el correspondiente título académico expedido o reconocido en España de acuerdo con la legislación vigente, incurrirá en la pena de multa de doce a veinticuatro meses.",
+      "q72": "El artículo 412 del Código Penal establece: Si se tratase de un delito contra la integridad, libertad sexual, salud o libertad de las personas, será castigado con la pena de multa de doce a dieciocho meses y suspensión de empleo o cargo público de uno a tres años.",
+      "q73": "El artículo 430 del Código Penal establece: Cuando de acuerdo con lo establecido en el artículo 31 bis una persona jurídica sea responsable de los delitos recogidos en este Capítulo, se le impondrá la pena de multa de seis meses a dos años.",
+      "q74": "El artículo 446 del Código Penal establece: En ambos casos se impondrá, además, la pena de inhabilitación absoluta por tiempo de diez a veinte años.",
+      "q75": "El artículo 455 del Código Penal establece: El que, para realizar un derecho propio, actuando fuera de las vías legales, empleare violencia, intimidación o fuerza en las cosas, será castigado con la pena de multa de seis a doce meses.",
+      "q76": "El artículo 458 del Código Penal establece: Si el falso testimonio se diera en contra del reo en causa criminal por delito, las penas serán de prisión de uno a tres años y multa de seis a doce meses.",
+      "q77": "El artículo 465 del Código Penal establece: Si los hechos descritos en el apartado primero de este artículo fueran realizados por un particular, la pena será de multa de tres a seis meses.",
+      "q78": "El artículo 471 bis del Código Penal establece: Si a consecuencia del testimonio se dictara un fallo condenatorio, se impondrá pena de prisión de cuatro a cinco años.",
+      "q79": "El artículo 471 bis del Código Penal establece: El que solicitara o aceptara un soborno en calidad de funcionario de la Corte y en relación con sus funciones oficiales incurrirá en la pena de prisión de dos a cinco años y multa del tanto al triplo del valor de la dádiva solicitada o aceptada.",
+      "q80": "El artículo 480 del Código Penal establece: A los meros ejecutores que depongan las armas antes de haber hecho uso de ellas, sometiéndose a las autoridades legítimas, se les aplicará la pena de prisión inferior en grado.",
+      "q81": "El artículo 486 del Código Penal establece: Si se tratara de alguna de las lesiones previstas en el artículo 150, se castigará con la pena de prisión de ocho a quince años.",
+      "q82": "El artículo 489 del Código Penal establece: En el caso previsto en el párrafo anterior, si la violencia o la intimidación no fueran graves, se impondrá la pena inferior en grado.",
+      "q83": "El artículo 497 del Código Penal establece: Incurrirán en la pena de prisión de seis meses a un año quienes, sin ser miembros del Congreso de los Diputados, del Senado o de una Asamblea Legislativa de Comunidad Autónoma, perturben gravemente el orden de sus sesiones.",
+      "q84": "El artículo 504 del Código Penal establece: Se impondrá la pena de prisión de tres a cinco años a los que empleen fuerza, violencia o intimidación para impedir a los miembros de dichos Organismos asistir a sus respectivas reuniones.",
+      "q85": "El artículo 511 del Código Penal establece: Los funcionarios públicos que cometan alguno de los hechos previstos en este artículo, incurrirán en las mismas penas en su mitad superior y en la de inhabilitación especial para empleo o cargo público por tiempo de dos a cuatro años.",
+      "q86": "El artículo 532 del Código Penal establece: Si los hechos descritos en los dos artículos anteriores fueran cometidos por imprudencia grave, se castigarán con la pena de suspensión de empleo o cargo público por tiempo de seis meses a dos años.",
+      "q87": "El artículo 543 del Código Penal establece: Las ofensas o ultrajes de palabra, por escrito o de hecho a España, a sus Comunidades Autónomas o a sus símbolos o emblemas, efectuados con publicidad, se castigarán con la pena de multa de siete a doce meses.",
+      "q88": "El artículo 557 del Código Penal establece: La provocación, la conspiración y la proposición para las conductas previstas en los apartados 2 y 3 del presente artículo serán castigadas con las penas inferiores en uno o dos grados a las respectivamente previstas.",
+      "q89": "El artículo 563 del Código Penal establece: La tenencia de armas prohibidas y la de aquellas que sean resultado de la modificación sustancial de las características de fabricación de armas reglamentadas, será castigada con la pena de prisión de uno a tres años.",
+      "q90": "El artículo 568 del Código Penal establece: En los supuestos del apartado anterior, cuando la sustancia inflamable sea un combustible líquido, la pena será de tres a cinco años de prisión.",
+      "q91": "El artículo 572 del Código Penal establece: Quienes participaran activamente en la organización o grupo, o formaran parte de ellos, serán castigados con las penas de prisión de seis a doce años e inhabilitación absoluta durante el tiempo de la condena.",
+      "q92": "El artículo 573 bis del Código Penal establece: Los delitos de terrorismo a los que se refiere el apartado 2 del artículo anterior se castigarán con la pena superior en grado a la respectivamente prevista en los correspondientes artículos.",
+      "q93": "El artículo 579 del Código Penal establece: En los casos previstos en este precepto, los jueces o tribunales podrán adoptar las medidas establecidas en los apartados 4 y 5 del artículo anterior.",
+      "q94": "El artículo 583 del Código Penal establece: Será castigado con la pena de prisión de doce a veinte años: 1.º El español que tome las armas contra la Patria bajo banderas enemigas.",
+      "q95": "El artículo 596 del Código Penal establece: Si en la correspondencia se dieran avisos o noticias de las que pudiera aprovecharse el enemigo se impondrá la pena de prisión de ocho a quince años.",
+      "q96": "El artículo 605 del Código Penal establece: Si se tratara de alguna de las lesiones previstas en el artículo 150 se castigará con la pena de prisión de ocho a quince años, y de cuatro a ocho años si fuera cualquier otra lesión.",
+      "q97": "El artículo 607 bis del Código Penal establece: Con la pena de prisión de 12 a 15 años si cometieran una violación, y de cuatro a seis años de prisión si el hecho consistiera en cualquier otra agresión sexual.",
+      "q98": "El artículo 607 bis del Código Penal establece: Con la pena de prisión de seis a ocho años si forzaran el embarazo de alguna mujer con intención de modificar la composición étnica de la población, sin perjuicio de la pena que corresponda, en su caso, por otros delitos.",
+      "q99": "El artículo 607 bis del Código Penal establece: Con la pena de cuatro a ocho años de prisión si cometieran tortura grave sobre personas que tuvieran bajo su custodia o control, y con la de prisión de dos a seis años si fuera menos grave.",
+      "q100": "El artículo 616 quáter del Código Penal establece: Si en la conducta anterior se empleare fuerza o violencia se impondrá la pena de diez a quince años de prisión."
+};
+    const IDS = Object.keys(CORRECTAS);
+
+    const elTimer = document.getElementById("timer");
+    const elTimerBlock = document.getElementById("timer-block");
+    const panelInicio = document.getElementById("panel-inicio");
+    const panelExamen = document.getElementById("panel-examen");
+    const panelResultados = document.getElementById("panel-resultados");
+    const form = document.getElementById("form-examen");
+    const btnEmpezar = document.getElementById("btn-empezar");
+    const btnCorregir = document.getElementById("btn-corregir");
+    const outPuntos = document.getElementById("out-puntos");
+    const outDetalle = document.getElementById("out-detalle");
+    const outErrores = document.getElementById("out-errores");
+    const outMsgFallidas = document.getElementById("out-msg-fallidas");
+    const bloqueOmitidas = document.getElementById("bloque-omitidas");
+    const outOmitidas = document.getElementById("out-omitidas");
+    const outSinErrores = document.getElementById("out-sin-errores");
+
+    let intervalId = null;
+    let segundosTranscurridos = 0;
+    let examenIniciado = false;
+    let cronometroParado = false;
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function formatTranscurrido(totalSeg) {
+      const h = Math.floor(totalSeg / 3600);
+      const m = Math.floor((totalSeg % 3600) / 60);
+      const s = totalSeg % 60;
+      if (h > 0) {
+        return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
+      return m + ":" + String(s).padStart(2, "0");
+    }
+
+    function tickCronometro() {
+      if (cronometroParado) return;
+      segundosTranscurridos += 1;
+      elTimer.textContent = formatTranscurrido(segundosTranscurridos);
+    }
+
+    function textoEnunciado(id) {
+      const fs = form.querySelector('fieldset[data-q="' + id + '"]');
+      const el = fs && fs.querySelector(".enunciado");
+      return el ? el.textContent.trim() : id;
+    }
+
+    function etiquetaOpcion(id, valor) {
+      if (valor === SKIP) return "Sin responder";
+      const inp = form.querySelector('input[name="' + id + '"][value="' + valor + '"]');
+      if (!inp) return valor;
+      const lab = inp.closest("label");
+      return lab ? lab.textContent.trim() : valor;
+    }
+
+    btnEmpezar.addEventListener("click", function () {
+      if (examenIniciado) return;
+      examenIniciado = true;
+      cronometroParado = false;
+      segundosTranscurridos = 0;
+      panelInicio.hidden = true;
+      panelExamen.hidden = false;
+      panelResultados.hidden = true;
+      elTimerBlock.classList.remove("inactivo");
+      elTimer.textContent = "0:00";
+      btnCorregir.disabled = false;
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(tickCronometro, 1000);
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      let aciertos = 0;
+      let fallos = 0;
+      let contestadas = 0;
+      const errores = [];
+      const omitidas = [];
+
+      for (const id of IDS) {
+        const elegido = fd.get(id);
+        const ok = CORRECTAS[id];
+        const exp = EXPLICACIONES[id] || "";
+
+        if (!elegido || elegido === SKIP) {
+          omitidas.push({ id, exp });
+          continue;
+        }
+
+        contestadas += 1;
+        if (elegido === ok) {
+          aciertos += 1;
+        } else {
+          fallos += 1;
+          errores.push({
+            id,
+            elegido: String(elegido),
+            correcta: ok,
+            exp,
+          });
+        }
+      }
+
+      const penal = Math.floor(fallos / 2);
+      const puntuacion = aciertos - penal;
+
+      cronometroParado = true;
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+
+      panelResultados.hidden = false;
+      outPuntos.textContent = String(puntuacion);
+      outDetalle.textContent =
+        "Contestadas: " +
+        contestadas +
+        " · Sin responder: " +
+        omitidas.length +
+        " · Aciertos: " +
+        aciertos +
+        " · Fallos: " +
+        fallos +
+        " · Penalización: −" +
+        penal +
+        " · Tiempo: " +
+        formatTranscurrido(segundosTranscurridos);
+
+      outErrores.innerHTML = "";
+      outMsgFallidas.hidden = true;
+      outMsgFallidas.textContent = "";
+
+      if (errores.length === 0) {
+        outMsgFallidas.hidden = false;
+        outMsgFallidas.textContent =
+          contestadas === 0
+            ? "No marcaste ninguna respuesta distinta de «Sin responder»."
+            : "Ninguna de las respuestas contestadas es incorrecta.";
+      } else {
+        for (const err of errores) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(err.id)) +
+            "</strong>" +
+            '<span class="mini">Tu respuesta: ' +
+            esc(etiquetaOpcion(err.id, err.elegido)) +
+            " · Correcta: " +
+            esc(etiquetaOpcion(err.id, err.correcta)) +
+            "</span>" +
+            '<span class="explicacion">' +
+            esc(err.exp) +
+            "</span>";
+          outErrores.appendChild(li);
+        }
+      }
+
+      outOmitidas.innerHTML = "";
+      if (omitidas.length === 0) {
+        bloqueOmitidas.hidden = true;
+      } else {
+        bloqueOmitidas.hidden = false;
+        for (const om of omitidas) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(om.id)) +
+            "</strong>" +
+            '<span class="mini">No elegiste a), b) ni c).</span>' +
+            '<span class="explicacion">Respuesta acertada habría sido: ' +
+            esc(etiquetaOpcion(om.id, CORRECTAS[om.id])) +
+            ". " +
+            esc(om.exp) +
+            "</span>";
+          outOmitidas.appendChild(li);
+        }
+      }
+
+      const perfectoContestadas = contestadas > 0 && fallos === 0;
+      const nadaContestado = contestadas === 0;
+      if (perfectoContestadas && errores.length === 0 && !nadaContestado) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length === 0) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length > 0 && perfectoContestadas) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Sin fallos en lo que respondiste; revisa las omitidas arriba.";
+      } else {
+        outSinErrores.hidden = true;
+      }
+
+      btnCorregir.disabled = true;
+      elTimerBlock.classList.add("inactivo");
+      form.querySelectorAll("input").forEach(function (inp) {
+        inp.disabled = true;
+      });
+    });
+
+  </script>
+</body>
+</html>

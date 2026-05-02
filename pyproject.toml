@@ -13,7 +13,9 @@ dependencies = [
 ]
 
 [project.scripts]
+generate_test = "opo_scripts.generate_test:main"
 pdf_to_markdown = "opo_scripts.pdf_to_markdown:main"
+test_results_server = "opo_scripts.test_results_server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["opo_scripts"]
