@@ -17,10 +17,11 @@ Si **ya existe** una sección `## DD/MM/AAAA` para la fecha de hoy, no dupliques
 ## 2. Git: cambios y subida a `main`
 
 1. Ejecuta `git status` en la raíz del repositorio.
-2. Si hay cambios (incluida la bitácora o este propio comando), añade los ficheros pertinentes, crea un commit con mensaje claro en español (ej. `Bitácora: temas estudiados DD/MM/AAAA` o `Añade comando fin_estudio`).
-3. Asegúrate de estar en la rama `main`. Si aún no hay commits, el primer commit puede incluir los cambios necesarios.
-4. Ejecuta `git push origin main`. Si el push falla (sin upstream, remoto caído, conflictos), explica al usuario qué ocurrió y qué puede hacer, sin inventar que se subió si no fue así.
+2. Si hay **cualquier** cambio (tracked o untracked), inclúyelo **todo** en el commit: desde la raíz del repo ejecuta `git add -A` (respeta `.gitignore`; no fuerces ficheros ignorados). No limites el stage a la bitácora ni a un subconjunto arbitrario: el remoto debe reflejar el estado completo del trabajo local pendiente.
+3. Si tras el `git add -A` hay algo que commitear, crea **un** commit con mensaje claro en español centrado en la sesión de estudio de hoy (ej. `Bitácora: temas estudiados DD/MM/AAAA`), aunque el commit agrupe también otros ficheros modificados ese día.
+4. Asegúrate de estar en la rama `main`.
+5. Ejecuta `git push origin main` (o `git push -u origin main` si aún no hay upstream). Si el push falla (sin credenciales, remoto caído, conflictos), explica al usuario qué ocurrió y qué puede hacer, sin inventar que se subió si no fue así.
 
 ## 3. Respuesta al opositor
 
-Confirma en una frase qué temas quedaron registrados para hoy y que el repositorio está al día en remoto (o el error concreto si no pudo subirse). Tono cercano y breve, alineado con la sesión de oposición.
+Confirma en una frase qué temas quedaron registrados para hoy y que **todos** los cambios del repositorio quedaron subidos a `main` en remoto (o el error concreto si no pudo subirse). Tono cercano y breve, alineado con la sesión de oposición.
