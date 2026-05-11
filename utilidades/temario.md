@@ -1,15 +1,81 @@
 ---
-titulo: "Temario"
+
+## titulo: "Temario"
 documento: "Temario Escala Ejecutiva Policía Nacional"
 fuente: "Ministerio del Interior"
-url: "https://www.interior.gob.es/opencms/es/servicios-al-ciudadano/empleo-publico/oposiciones/policia-nacional/escala-ejecutiva/temario/"
+url: "[https://www.interior.gob.es/opencms/es/servicios-al-ciudadano/empleo-publico/oposiciones/policia-nacional/escala-ejecutiva/temario/](https://www.interior.gob.es/opencms/es/servicios-al-ciudadano/empleo-publico/oposiciones/policia-nacional/escala-ejecutiva/temario/)"
 idioma: "es"
 fecha_extraccion: "2026-05-02"
 extraido_en: "2026-05-02T20:21:38+02:00"
 formato: "Markdown"
----
 
 # Temario
+
+## Legislación de referencia
+
+- [BOE-A-1978-31229 - Constitución Española](../leyes/BOE-A-1978-31229.md)
+- [BOE-A-1995-25444 - Ley Orgánica 10/1995, de 23 de noviembre, del Código Penal](../leyes/BOE-A-1995-25444.md)
+- [BOE-A-2015-11719 - Real Decreto Legislativo 5/2015, de 30 de octubre, por el que se aprueba el texto refundido de la Ley del Estatuto Básico del Empleado Público](../leyes/BOE-A-2015-11719.md)
+- [BOE-A-2000-544 - Ley Orgánica 4/2000, de 11 de enero, sobre derechos y libertades de los extranjeros en España y su integración social](../leyes/BOE-A-2000-544.md)
+- [BOE-A-2024-24099 - Real Decreto 1155/2024, de 19 de noviembre, por el que se aprueba el Reglamento de la Ley Orgánica 4/2000, de 11 de enero, sobre derechos y libertades de los extranjeros en España y su integración social](../leyes/BOE-A-2024-24099.md)
+- [BOE-A-2007-4184 - Real Decreto 240/2007, de 16 de febrero, sobre entrada, libre circulación y residencia en España de ciudadanos de los Estados miembros de la Unión Europea y de otros Estados parte en el Acuerdo sobre el Espacio Económico Europeo](../leyes/BOE-A-2007-4184.md)
+
+## Relación de leyes con el temario
+
+
+| BOE                                              | Norma                                                                                                                                                                             | Temas relacionados       |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| [BOE-A-1978-31229](../leyes/BOE-A-1978-31229.md) | Constitución Española                                                                                                                                                             | Temas 1, 4, 5, 6, 7 y 43 |
+| [BOE-A-1979-23709](../leyes/BOE-A-1979-23709.md) | Ley Orgánica 2/1979, de 3 de octubre, del Tribunal Constitucional                                                                                                                 | Temas 5 y 6              |
+| [BOE-A-1981-10325](../leyes/BOE-A-1981-10325.md) | Ley Orgánica 3/1981, de 6 de abril, del Defensor del Pueblo                                                                                                                       | Tema 5                   |
+| [BOE-A-2015-10565](../leyes/BOE-A-2015-10565.md) | Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas                                                                             | Tema 10                  |
+| [BOE-A-2015-10566](../leyes/BOE-A-2015-10566.md) | Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público                                                                                                              | Temas 10 y 11            |
+| [BOE-A-1997-25336](../leyes/BOE-A-1997-25336.md) | Ley 50/1997, de 27 de noviembre, del Gobierno                                                                                                                                     | Tema 11                  |
+| [BOE-A-2015-11719](../leyes/BOE-A-2015-11719.md) | Real Decreto Legislativo 5/2015, de 30 de octubre, por el que se aprueba el texto refundido de la Ley del Estatuto Básico del Empleado Público                                    | Tema 12                  |
+| [BOE-A-1986-6859](../leyes/BOE-A-1986-6859.md)   | Ley Orgánica 2/1986, de 13 de marzo, de Fuerzas y Cuerpos de Seguridad                                                                                                            | Tema 14                  |
+| [BOE-A-2015-8468](../leyes/BOE-A-2015-8468.md)   | Ley Orgánica 9/2015, de 28 de julio, de Régimen de Personal de la Policía Nacional                                                                                                | Temas 13 y 14                 |
+| [BOE-A-2010-8115](../leyes/BOE-A-2010-8115.md)   | Ley Orgánica 4/2010, de 20 de mayo, del Régimen disciplinario del Cuerpo Nacional de Policía                                                                                      | Tema 14                  |
+| [BOE-A-2023-24842](../leyes/BOE-A-2023-24842.md) | Real Decreto 1009/2023, de 5 de diciembre, por el que se establece la estructura orgánica básica de los departamentos ministeriales                                               | Temas 13 y 14            |
+| [BOE-A-2024-3793](../leyes/BOE-A-2024-3793.md)   | Real Decreto 207/2024, de 27 de febrero, por el que se desarrolla la estructura orgánica básica del Ministerio del Interior                                                       | Tema 13                  |
+| [BOE-A-2023-17072](../leyes/BOE-A-2023-17072.md) | Orden INT/859/2023, de 21 de julio, por la que se desarrolla la estructura orgánica y funciones de los servicios centrales y territoriales de la Dirección General de la Policía  | Tema 13                  |
+| [BOE-A-2000-544](../leyes/BOE-A-2000-544.md)     | Ley Orgánica 4/2000, de 11 de enero, sobre derechos y libertades de los extranjeros en España y su integración social                                                             | Temas 15, 16 y 17        |
+| [BOE-A-2024-24099](../leyes/BOE-A-2024-24099.md) | Real Decreto 1155/2024, de 19 de noviembre, por el que se aprueba el Reglamento de la Ley Orgánica 4/2000                                                                         | Temas 15, 16 y 17        |
+| [BOE-A-2007-4184](../leyes/BOE-A-2007-4184.md)   | Real Decreto 240/2007, de 16 de febrero, sobre entrada, libre circulación y residencia en España de ciudadanos de la Unión Europea y del Espacio Económico Europeo                | Temas 15, 16 y 17        |
+| [BOE-A-2009-17242](../leyes/BOE-A-2009-17242.md) | Ley 12/2009, de 30 de octubre, reguladora del derecho de asilo y de la protección subsidiaria                                                                                     | Temas 15, 16 y 17        |
+| [BOE-A-1995-5542](../leyes/BOE-A-1995-5542.md)   | Real Decreto 203/1995, de 10 de febrero, por el que se aprueba el Reglamento de aplicación de la normativa sobre derecho de asilo y condición de refugiado                        | Temas 15, 16 y 17        |
+| [BOE-A-2001-14166](../leyes/BOE-A-2001-14166.md) | Real Decreto 865/2001, de 20 de julio, por el que se aprueba el Reglamento de reconocimiento del estatuto de apátrida                                                             | Temas 15, 16 y 17        |
+| [BOE-A-2003-19714](../leyes/BOE-A-2003-19714.md) | Real Decreto 1325/2003, de 24 de octubre, por el que se aprueba el Reglamento sobre régimen de protección temporal en caso de afluencia masiva de personas desplazadas            | Temas 15, 16 y 17        |
+| [BOE-A-2015-3442](../leyes/BOE-A-2015-3442.md)   | Ley Orgánica 4/2015, de 30 de marzo, de protección de la seguridad ciudadana                                                                                                      | Tema 19                  |
+| [BOE-A-2014-3649](../leyes/BOE-A-2014-3649.md)   | Ley 5/2014, de 4 de abril, de Seguridad Privada                                                                                                                                   | Tema 18                  |
+| [BOE-A-2011-7630](../leyes/BOE-A-2011-7630.md)   | Ley 8/2011, de 28 de abril, por la que se establecen medidas para la protección de las infraestructuras críticas                                                                  | Tema 21                  |
+| [BOE-A-2011-8849](../leyes/BOE-A-2011-8849.md)   | Real Decreto 704/2011, de 20 de mayo, por el que se aprueba el Reglamento de protección de las infraestructuras críticas                                                          | Tema 21                  |
+| [BOE-A-2018-16673](../leyes/BOE-A-2018-16673.md) | Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales                                                                    | Tema 20                  |
+| [BOE-A-2021-8806](../leyes/BOE-A-2021-8806.md)   | Ley Orgánica 7/2021, de 26 de mayo, de protección de datos personales tratados para fines penales y de ejecución de sanciones penales                                             | Tema 20                  |
+| [BOE-A-1995-25444](../leyes/BOE-A-1995-25444.md) | Ley Orgánica 10/1995, de 23 de noviembre, del Código Penal                                                                                                                        | Temas 22 a 44            |
+| [BOE-A-1882-6036](../leyes/BOE-A-1882-6036.md)   | Real Decreto de 14 de septiembre de 1882 por el que se aprueba la Ley de Enjuiciamiento Criminal                                                                                  | Temas 46 a 50            |
+| [BOE-A-1985-12666](../leyes/BOE-A-1985-12666.md) | Ley Orgánica 6/1985, de 1 de julio, del Poder Judicial                                                                                                                            | Temas 6, 45 y 47         |
+| [BOE-A-2025-76](../leyes/BOE-A-2025-76.md)       | Ley Orgánica 1/2025, de 2 de enero, de medidas en materia de eficiencia del Servicio Público de Justicia                                                                          | Temas 45, 46 y 47        |
+| [BOE-A-2014-12029](../leyes/BOE-A-2014-12029.md) | Ley 23/2014, de 20 de noviembre, de reconocimiento mutuo de resoluciones penales en la Unión Europea                                                                              | Tema 24                  |
+| [BOE-A-1985-4816](../leyes/BOE-A-1985-4816.md)   | Ley 4/1985, de 21 de marzo, de Extradición Pasiva                                                                                                                                 | Tema 23                  |
+| [BOE-A-1984-11620](../leyes/BOE-A-1984-11620.md) | Ley Orgánica 6/1984, de 24 de mayo, reguladora del procedimiento de Habeas Corpus                                                                                                 | Tema 46                  |
+| [BOE-A-2000-641](../leyes/BOE-A-2000-641.md)     | Ley Orgánica 5/2000, de 12 de enero, reguladora de la responsabilidad penal de los menores                                                                                        | Tema 46                  |
+| [BOE-A-2015-4606](../leyes/BOE-A-2015-4606.md)   | Ley 4/2015, de 27 de abril, del Estatuto de la víctima del delito                                                                                                                 | Tema 51                  |
+| [BOE-A-1982-837](../leyes/BOE-A-1982-837.md)     | Ley 50/1981, de 30 de diciembre, por la que se regula el Estatuto Orgánico del Ministerio Fiscal                                                                                  | Temas 46 y 47            |
+| [BOE-A-2021-10957](../leyes/BOE-A-2021-10957.md) | Ley Orgánica 9/2021, de 1 de julio, de aplicación del Reglamento de la Fiscalía Europea                                                                                           | Tema 9                   |
+| [BOE-A-2007-6115](../leyes/BOE-A-2007-6115.md)   | Ley Orgánica 3/2007, de 22 de marzo, para la igualdad efectiva de mujeres y hombres                                                                                               | Tema 52                  |
+| [BOE-A-2004-21760](../leyes/BOE-A-2004-21760.md) | Ley Orgánica 1/2004, de 28 de diciembre, de Medidas de Protección Integral contra la Violencia de Género                                                                          | Tema 52                  |
+| [BOE-A-2022-14630](../leyes/BOE-A-2022-14630.md) | Ley Orgánica 10/2022, de 6 de septiembre, de garantía integral de la libertad sexual                                                                                              | Tema 52                  |
+| [BOE-A-2023-5366](../leyes/BOE-A-2023-5366.md)   | Ley 4/2023, de 28 de febrero, para la igualdad real y efectiva de las personas trans y para la garantía de los derechos de las personas LGTBI                                     | Tema 52                  |
+| [BOE-A-1995-24292](../leyes/BOE-A-1995-24292.md) | Ley 31/1995, de 8 de noviembre, de Prevención de Riesgos Laborales                                                                                                                | Tema 53                  |
+| [BOE-A-2006-624](../leyes/BOE-A-2006-624.md)     | Real Decreto 2/2006, de 16 de enero, sobre prevención de riesgos laborales en la actividad de los funcionarios del Cuerpo Nacional de Policía                                     | Tema 53                  |
+| [BOE-A-2015-11722](../leyes/BOE-A-2015-11722.md) | Real Decreto Legislativo 6/2015, de 30 de octubre, por el que se aprueba el texto refundido de la Ley sobre Tráfico, Circulación de Vehículos a Motor y Seguridad Vial            | Temas 78, 79 y 80        |
+| [BOE-A-2003-23514](../leyes/BOE-A-2003-23514.md) | Real Decreto 1428/2003, de 21 de noviembre, por el que se aprueba el Reglamento General de Circulación                                                                            | Temas 78, 79 y 80        |
+| [BOE-A-2009-9481](../leyes/BOE-A-2009-9481.md)   | Real Decreto 818/2009, de 8 de mayo, por el que se aprueba el Reglamento General de Conductores                                                                                   | Temas 78, 79 y 80        |
+| [BOE-A-1999-1826](../leyes/BOE-A-1999-1826.md)   | Real Decreto 2822/1998, de 23 de diciembre, por el que se aprueba el Reglamento General de Vehículos                                                                              | Temas 78, 79 y 80        |
+| [BOE-A-2017-12841](../leyes/BOE-A-2017-12841.md) | Real Decreto 920/2017, de 23 de octubre, por el que se regula la inspección técnica de vehículos                                                                                  | Temas 78, 79 y 80        |
+| [BOE-A-2004-18911](../leyes/BOE-A-2004-18911.md) | Real Decreto Legislativo 8/2004, de 29 de octubre, por el que se aprueba el texto refundido de la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor | Temas 78, 79 y 80        |
+| [BOE-A-1993-6202](../leyes/BOE-A-1993-6202.md)   | Real Decreto 137/1993, de 29 de enero, por el que se aprueba el Reglamento de Armas                                                                                               | Tema 81                  |
+
 
 ## CIENCIAS JURÍDICAS
 
@@ -100,3 +166,4 @@ formato: "Markdown"
 - **Tema 79.** El procedimiento sancionador en materia de tráfico: potestad sancionadora y tipo de denuncias. Esfera competencial por parte de los funcionarios de Policía Nacional. Actuación en accidentes de tráfico: primeras actuaciones operativas en la gestión de accidentes y trámite documental. Medidas de protección, investigación y coordinación con otros equipos de seguridad y emergencia.
 - **Tema 80.** El vehículo prioritario. Definición de vehículo prioritario. Facultades de los conductores de vehículos prioritarios. Comportamiento de los demás conductores respecto de los vehículos prioritarios. La conducción de vehículos en situación de emergencia. Utilización de las señales de emergencia.
 - **Tema 81.** Origen de las armas de fuego. Definición, clasificación, categorías y funcionamiento de las armas de fuego: especial referencia al reglamento de armas. Cartucho: definición y componentes. Armas prohibidas. Documentación que ampara la tenencia y porte de armas. Balística forense.
+

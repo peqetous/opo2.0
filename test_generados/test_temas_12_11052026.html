@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Test Tema 12 - 15 preguntas</title>
+  <style>
+    :root {
+      --bg: #f2f2f7;
+      --surface: #ffffff;
+      --separator: rgba(60, 60, 67, 0.12);
+      --text: #1c1c1e;
+      --text-secondary: rgba(60, 60, 67, 0.6);
+      --text-tertiary: rgba(60, 60, 67, 0.45);
+      --blue: #007aff;
+      --blue-pressed: #0062cc;
+      --green: #34c759;
+      --red: #ff3b30;
+      --radius-lg: 14px;
+      --radius-pill: 980px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Text",
+        "SF Pro Display",
+        "Helvetica Neue",
+        sans-serif;
+      font-size: 17px;
+      line-height: 1.35;
+      letter-spacing: -0.022em;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1.25rem;
+      padding-top: max(0.75rem, env(safe-area-inset-top));
+      background: rgba(255, 255, 255, 0.72);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .topbar-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.024em;
+    }
+
+    .timer-block {
+      text-align: right;
+      min-width: 4.5rem;
+    }
+
+    .timer-block .timer-caption {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 1px;
+    }
+
+    .timer-block .timer-value {
+      font-size: 20px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .timer-block.inactivo .timer-value {
+      color: var(--text-tertiary);
+    }
+
+    main {
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 2.5rem;
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .sheet {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.25rem 1.35rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .sheet + .sheet {
+      margin-top: 1rem;
+    }
+
+    .inicio .lead {
+      margin: 0 0 0.75rem;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .hint {
+      margin: 0 0 1.25rem;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text-tertiary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.022em;
+      padding: 0.65rem 1.35rem;
+      border: none;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-pressed);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.38;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    #panel-examen {
+      margin-top: 1rem;
+    }
+
+    #panel-examen[hidden] {
+      display: none !important;
+    }
+
+    fieldset {
+      margin: 0 0 0.75rem;
+      padding: 0;
+      border: none;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    fieldset:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .enunciado {
+      padding: 0.95rem 1rem 0.85rem;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.022em;
+      line-height: 1.35;
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .options {
+      padding: 0 0 0.35rem;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 0;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      font-size: 17px;
+      color: var(--text);
+      border-top: 0.5px solid var(--separator);
+    }
+
+    label.opt-skip {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    label:first-of-type {
+      border-top: none;
+    }
+
+    label input {
+      margin: 0;
+      width: 1.15rem;
+      height: 1.15rem;
+      accent-color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .acciones {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .acciones .hint {
+      margin: 0;
+    }
+
+    #panel-inicio[hidden],
+    #panel-resultados[hidden] {
+      display: none !important;
+    }
+
+    .result-block h2 {
+      margin: 0 0 0.35rem;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.026em;
+    }
+
+    .result-block .puntos {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.35rem;
+      line-height: 1.15;
+    }
+
+    .result-block .detalle {
+      margin: 0 0 1.5rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .result-block h3 {
+      margin: 0 0 0.5rem;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-tertiary);
+    }
+
+    .result-block h3 + .result-muted {
+      margin-top: -0.25rem;
+    }
+
+    .result-muted {
+      margin: 0 0 1rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .err-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .err-list li {
+      padding: 0.85rem 1rem;
+      background: rgba(255, 59, 48, 0.06);
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      border: 0.5px solid rgba(255, 59, 48, 0.18);
+    }
+
+    .err-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .err-list li strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .err-list .mini {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    .err-list .explicacion {
+      display: block;
+      margin-top: 0.55rem;
+      padding-top: 0.55rem;
+      border-top: 0.5px solid rgba(255, 59, 48, 0.2);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .omit-list li {
+      background: rgba(60, 60, 67, 0.06);
+      border-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .omit-list .explicacion {
+      border-top-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .bloque-repaso {
+      margin-bottom: 1.25rem;
+    }
+
+    .bloque-repaso:last-child {
+      margin-bottom: 0;
+    }
+
+    .sin-errores {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--green);
+    }
+    </style>
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="topbar-title">Test Tema 12 - 15 preguntas</h1>
+    <div id="timer-block" class="timer-block inactivo" aria-live="polite">
+      <span class="timer-caption">Transcurrido</span>
+      <span id="timer" class="timer-value">0:00</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="panel-inicio" class="sheet inicio">
+      <p class="lead">
+        Pulsa <strong>Empezar</strong> para iniciar el cronómetro y ver las 15 preguntas.
+        Puedes pulsar <strong>Corregir</strong> cuando quieras; las que dejes en «Sin responder» no suman ni restan.
+      </p>
+      <p class="hint">
+        Puntuación (solo sobre las contestadas, excluido «Sin responder»): cada 2 incorrectas restan 1 acierto (la nota puede ser negativa).
+      </p>
+      <button type="button" class="btn btn-primary" id="btn-empezar">Empezar</button>
+    </section>
+
+    <section id="panel-examen" hidden>
+      <form id="form-examen">
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 8 -->
+        <fieldset data-q="q1">
+          <legend class="visually-hidden">Pregunta 1</legend>
+          <div class="enunciado" id="enun-q1"><strong>1.</strong> Según el Estatuto Básico del Empleado Público, ¿cuál de las siguientes clasificaciones de empleados públicos coincide íntegramente con la prevista para el personal al servicio de las Administraciones Públicas?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q1">
+            <label><input type="radio" name="q1" value="a" /> a) Funcionarios de carrera, funcionarios interinos, personal laboral fijo o temporal y personal directivo profesional.</label>
+            <label><input type="radio" name="q1" value="b" /> b) Funcionarios de carrera, funcionarios interinos, personal laboral fijo, por tiempo indefinido o temporal, y personal eventual.</label>
+            <label><input type="radio" name="q1" value="c" /> c) Funcionarios de carrera, personal laboral, personal eventual y personal estatutario de los Servicios de Salud como categoría autónoma.</label>
+            <label class="opt-skip"><input type="radio" name="q1" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 10.1.c -->
+        <fieldset data-q="q2">
+          <legend class="visually-hidden">Pregunta 2</legend>
+          <div class="enunciado" id="enun-q2"><strong>2.</strong> Un funcionario interino es nombrado para ejecutar un programa de carácter temporal. Conforme al Estatuto Básico del Empleado Público, ¿cuál es el límite ordinario de duración de ese supuesto y qué posible ampliación admite?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q2">
+            <label><input type="radio" name="q2" value="a" /> a) Tres años, ampliables hasta doce meses más por las leyes de Función Pública dictadas en desarrollo del Estatuto.</label>
+            <label><input type="radio" name="q2" value="b" /> b) Nueve meses dentro de un periodo de dieciocho meses, ampliables por necesidades urgentes del servicio.</label>
+            <label><input type="radio" name="q2" value="c" /> c) Tres años improrrogables, salvo que la convocatoria del proceso selectivo se publique antes de finalizar dicho plazo.</label>
+            <label class="opt-skip"><input type="radio" name="q2" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 10.4 -->
+        <fieldset data-q="q3">
+          <legend class="visually-hidden">Pregunta 3</legend>
+          <div class="enunciado" id="enun-q3"><strong>3.</strong> En relación con las plazas vacantes desempeñadas por funcionarios interinos cuando no sea posible su cobertura por funcionarios de carrera, ¿qué regla establece el Estatuto una vez transcurridos tres años desde el nombramiento?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q3">
+            <label><input type="radio" name="q3" value="a" /> a) El interino podrá permanecer indefinidamente si la plaza sigue dotada presupuestariamente y no se ha amortizado.</label>
+            <label><input type="radio" name="q3" value="b" /> b) Se producirá el fin de la relación de interinidad y la vacante solo podrá ser ocupada por personal funcionario de carrera, salvo que el proceso selectivo quede desierto.</label>
+            <label><input type="radio" name="q3" value="c" /> c) La Administración deberá indemnizar al interino y convocar necesariamente concurso de méritos restringido para consolidar la plaza.</label>
+            <label class="opt-skip"><input type="radio" name="q3" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 12 -->
+        <fieldset data-q="q4">
+          <legend class="visually-hidden">Pregunta 4</legend>
+          <div class="enunciado" id="enun-q4"><strong>4.</strong> ¿Cuál de las siguientes afirmaciones sobre el personal eventual reproduce correctamente el régimen básico previsto en el Estatuto?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q4">
+            <label><input type="radio" name="q4" value="a" /> a) Su nombramiento es libre, pero su cese exige expediente motivado cuando cambie la autoridad a la que asesora.</label>
+            <label><input type="radio" name="q4" value="b" /> b) Realiza funciones permanentes de gestión ordinaria y su condición puede valorarse como mérito específico para la promoción interna.</label>
+            <label><input type="radio" name="q4" value="c" /> c) Solo realiza funciones expresamente calificadas como de confianza o asesoramiento especial, y su cese tiene lugar en todo caso cuando se produzca el de la autoridad a la que presta esa función.</label>
+            <label class="opt-skip"><input type="radio" name="q4" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 13 -->
+        <fieldset data-q="q5">
+          <legend class="visually-hidden">Pregunta 5</legend>
+          <div class="enunciado" id="enun-q5"><strong>5.</strong> Respecto del personal directivo profesional, ¿qué combinación de reglas se ajusta al Estatuto Básico del Empleado Público?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q5">
+            <label><input type="radio" name="q5" value="a" /> a) La designación atiende a mérito, capacidad e idoneidad mediante procedimientos con publicidad y concurrencia, y sus condiciones de empleo no son materia de negociación colectiva.</label>
+            <label><input type="radio" name="q5" value="b" /> b) La designación se basa en libre nombramiento sin exigencia de concurrencia, y sus condiciones de empleo se negocian en la Mesa General correspondiente.</label>
+            <label><input type="radio" name="q5" value="c" /> c) La evaluación solo procede si el personal directivo es funcionario de carrera, y en caso de ser laboral queda sometido a la relación laboral común.</label>
+            <label class="opt-skip"><input type="radio" name="q5" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 14.j bis -->
+        <fieldset data-q="q6">
+          <legend class="visually-hidden">Pregunta 6</legend>
+          <div class="enunciado" id="enun-q6"><strong>6.</strong> Entre los derechos individuales de los empleados públicos, ¿cuál está expresamente reconocido por el Estatuto en los términos vigentes?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q6">
+            <label><input type="radio" name="q6" value="a" /> a) El derecho a percibir participación en multas impuestas cuando esté normativamente atribuido al servicio.</label>
+            <label><input type="radio" name="q6" value="b" /> b) El derecho a la intimidad en el uso de dispositivos digitales puestos a su disposición y frente al uso de videovigilancia y geolocalización, así como a la desconexión digital.</label>
+            <label><input type="radio" name="q6" value="c" /> c) El derecho a que la carrera profesional horizontal se aplique automáticamente sin necesidad de sistemas objetivos de evaluación.</label>
+            <label class="opt-skip"><input type="radio" name="q6" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 18.2 -->
+        <fieldset data-q="q7">
+          <legend class="visually-hidden">Pregunta 7</legend>
+          <div class="enunciado" id="enun-q7"><strong>7.</strong> Según el régimen de promoción interna de los funcionarios de carrera, ¿qué requisito temporal mínimo exige el Estatuto para promocionar desde un Subgrupo inferior, sin perjuicio de los demás requisitos y pruebas?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q7">
+            <label><input type="radio" name="q7" value="a" /> a) Tres años de servicios efectivos en el cuerpo o escala de procedencia.</label>
+            <label><input type="radio" name="q7" value="b" /> b) Cinco años inmediatamente anteriores en cualquiera de las Administraciones Públicas.</label>
+            <label><input type="radio" name="q7" value="c" /> c) Al menos dos años de servicio activo en el inferior Subgrupo o Grupo de clasificación profesional si este no tiene Subgrupo.</label>
+            <label class="opt-skip"><input type="radio" name="q7" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 20.5 -->
+        <fieldset data-q="q8">
+          <legend class="visually-hidden">Pregunta 8</legend>
+          <div class="enunciado" id="enun-q8"><strong>8.</strong> En materia de evaluación del desempeño, ¿qué condición impone el Estatuto para aplicar la carrera profesional horizontal, ciertas retribuciones complementarias y el cese del puesto obtenido por concurso?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q8">
+            <label><input type="radio" name="q8" value="a" /> a) La aprobación previa, en cada caso, de sistemas objetivos que permitan evaluar el desempeño conforme a criterios de transparencia, objetividad, imparcialidad y no discriminación.</label>
+            <label><input type="radio" name="q8" value="b" /> b) La existencia de informe favorable de la Junta de Personal, que sustituye a la resolución motivada individual.</label>
+            <label><input type="radio" name="q8" value="c" /> c) La superación de un curso selectivo anual, con efectos automáticos sobre carrera, formación y provisión de puestos.</label>
+            <label class="opt-skip"><input type="radio" name="q8" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 25.1 -->
+        <fieldset data-q="q9">
+          <legend class="visually-hidden">Pregunta 9</legend>
+          <div class="enunciado" id="enun-q9"><strong>9.</strong> Sobre las retribuciones de los funcionarios interinos, ¿qué opción se corresponde con el Estatuto?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q9">
+            <label><input type="radio" name="q9" value="a" /> a) Perciben solo sueldo y trienios, sin pagas extraordinarias ni retribuciones complementarias.</label>
+            <label><input type="radio" name="q9" value="b" /> b) Perciben retribuciones básicas y pagas extraordinarias del Subgrupo o Grupo de adscripción, determinadas retribuciones complementarias y las correspondientes a la categoría de entrada del cuerpo o escala en que se les nombre.</label>
+            <label><input type="radio" name="q9" value="c" /> c) Perciben todas las retribuciones complementarias del artículo 24, incluida necesariamente la progresión alcanzada dentro del sistema de carrera administrativa.</label>
+            <label class="opt-skip"><input type="radio" name="q9" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 30.2 -->
+        <fieldset data-q="q10">
+          <legend class="visually-hidden">Pregunta 10</legend>
+          <div class="enunciado" id="enun-q10"><strong>10.</strong> Si un funcionario público ejerce el derecho de huelga, ¿qué efecto retributivo prevé expresamente el Estatuto?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q10">
+            <label><input type="radio" name="q10" value="a" /> a) La Administración podrá deducir haberes únicamente si previamente se ha impuesto sanción disciplinaria firme.</label>
+            <label><input type="radio" name="q10" value="b" /> b) Mantendrá sus retribuciones básicas, pero perderá las complementarias durante todo el mes natural correspondiente.</label>
+            <label><input type="radio" name="q10" value="c" /> c) No devengará ni percibirá las retribuciones correspondientes al tiempo en huelga, sin que la deducción tenga carácter sancionador ni afecte a sus prestaciones sociales.</label>
+            <label class="opt-skip"><input type="radio" name="q10" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 60 -->
+        <fieldset data-q="q11">
+          <legend class="visually-hidden">Pregunta 11</legend>
+          <div class="enunciado" id="enun-q11"><strong>11.</strong> En los órganos de selección del empleo público, ¿qué exclusión y qué regla de pertenencia establece el Estatuto?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q11">
+            <label><input type="radio" name="q11" value="a" /> a) Pueden integrarlos funcionarios interinos si actúan en representación sindical, y la pertenencia se ostenta por cuenta de la organización que los proponga.</label>
+            <label><input type="radio" name="q11" value="b" /> b) No pueden formar parte el personal de elección o designación política, los funcionarios interinos ni el personal eventual, y la pertenencia es siempre a título individual.</label>
+            <label><input type="radio" name="q11" value="c" /> c) No pueden formar parte funcionarios de carrera, salvo que sean designados por sorteo y actúen en representación de su cuerpo o escala.</label>
+            <label class="opt-skip"><input type="radio" name="q11" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 62.1 -->
+        <fieldset data-q="q12">
+          <legend class="visually-hidden">Pregunta 12</legend>
+          <div class="enunciado" id="enun-q12"><strong>12.</strong> Para adquirir la condición de funcionario de carrera, ¿qué secuencia de requisitos recoge el Estatuto Básico del Empleado Público?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q12">
+            <label><input type="radio" name="q12" value="a" /> a) Superación del proceso selectivo, nombramiento publicado en el Diario Oficial correspondiente, acatamiento de la Constitución y, en su caso, del Estatuto de Autonomía y del ordenamiento jurídico, y toma de posesión dentro de plazo.</label>
+            <label><input type="radio" name="q12" value="b" /> b) Superación del proceso selectivo, toma de posesión provisional, publicación posterior del nombramiento y juramento únicamente de la Constitución.</label>
+            <label><input type="radio" name="q12" value="c" /> c) Aprobación de la oferta de empleo público, superación del periodo de prácticas y reconocimiento administrativo de servicios previos.</label>
+            <label class="opt-skip"><input type="radio" name="q12" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 64 -->
+        <fieldset data-q="q13">
+          <legend class="visually-hidden">Pregunta 13</legend>
+          <div class="enunciado" id="enun-q13"><strong>13.</strong> Un funcionario presenta renuncia voluntaria por escrito, pero está sujeto a expediente disciplinario. ¿Qué dispone el Estatuto sobre la aceptación de esa renuncia?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q13">
+            <label><input type="radio" name="q13" value="a" /> a) Debe aceptarse si la renuncia no perjudica al servicio y el funcionario renuncia también a reingresar.</label>
+            <label><input type="radio" name="q13" value="b" /> b) Se acepta automáticamente al mes de presentarse, aunque exista expediente, porque la renuncia no tiene efectos disciplinarios.</label>
+            <label><input type="radio" name="q13" value="c" /> c) No podrá ser aceptada mientras esté sujeto a expediente disciplinario; tampoco si se hubiera dictado auto de procesamiento o de apertura de juicio oral por delito.</label>
+            <label class="opt-skip"><input type="radio" name="q13" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 66 -->
+        <fieldset data-q="q14">
+          <legend class="visually-hidden">Pregunta 14</legend>
+          <div class="enunciado" id="enun-q14"><strong>14.</strong> ¿Qué efecto produce la pena principal o accesoria de inhabilitación especial para cargo público cuando la sentencia que la impone adquiere firmeza?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q14">
+            <label><input type="radio" name="q14" value="a" /> a) Produce la pérdida de la condición de funcionario respecto de aquellos empleos o cargos especificados en la sentencia.</label>
+            <label><input type="radio" name="q14" value="b" /> b) Produce la pérdida de la condición de funcionario respecto de todos los empleos o cargos que tuviera, sin atender a la sentencia.</label>
+            <label><input type="radio" name="q14" value="c" /> c) Solo produce suspensión de funciones hasta seis años y permite conservar todos los derechos inherentes a la condición.</label>
+            <label class="opt-skip"><input type="radio" name="q14" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Estatuto Básico del Empleado Público, art. 89.4 -->
+        <fieldset data-q="q15">
+          <legend class="visually-hidden">Pregunta 15</legend>
+          <div class="enunciado" id="enun-q15"><strong>15.</strong> En la excedencia por cuidado de familiares, ¿qué regla sobre duración, cómputo y reserva de puesto establece el Estatuto?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q15">
+            <label><input type="radio" name="q15" value="a" /> a) Tiene duración máxima de un año, no computa a efectos de trienios y solo reserva el puesto durante los seis primeros meses.</label>
+            <label><input type="radio" name="q15" value="b" /> b) No exige sujeto causante concreto, permite encadenar periodos sin límite y reserva indefinidamente el mismo puesto desempeñado.</label>
+            <label><input type="radio" name="q15" value="c" /> c) Puede alcanzar hasta tres años para atender a cada hijo o familiar en los términos previstos; el tiempo computa a efectos de trienios, carrera y Seguridad Social, y se reserva el puesto al menos durante dos años.</label>
+            <label class="opt-skip"><input type="radio" name="q15" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <div class="acciones">
+          <button type="submit" class="btn btn-primary" id="btn-corregir" disabled>Corregir</button>
+          <p class="hint" id="hint-completo">
+            Las preguntas no son obligatorias. «Sin responder» queda fuera de la nota.
+          </p>
+        </div>
+      </form>
+    </section>
+
+    <section id="panel-resultados" class="sheet result-block" hidden>
+      <h2>Resultado</h2>
+      <p class="puntos" id="out-puntos"></p>
+      <p class="detalle" id="out-detalle"></p>
+      <p class="result-muted" id="out-guardado" hidden></p>
+      <div class="bloque-repaso" id="bloque-fallidas">
+        <h3>Fallidas</h3>
+        <p class="result-muted" id="out-msg-fallidas" hidden></p>
+        <ul class="err-list" id="out-errores"></ul>
+      </div>
+      <div class="bloque-repaso" id="bloque-omitidas" hidden>
+        <h3>Sin responder</h3>
+        <ul class="err-list omit-list" id="out-omitidas"></ul>
+      </div>
+      <p class="sin-errores" id="out-sin-errores" hidden></p>
+    </section>
+  </main>
+
+  <script>
+    const SKIP = "_skip";
+    const EXAMEN_ID = "test_temas_12_11052026.html";
+    const RESULTADOS_ENDPOINT = "http://127.0.0.1:8765/resultados-test";
+    const CORRECTAS = {
+      "q1": "b",
+      "q2": "a",
+      "q3": "b",
+      "q4": "c",
+      "q5": "a",
+      "q6": "b",
+      "q7": "c",
+      "q8": "a",
+      "q9": "b",
+      "q10": "c",
+      "q11": "b",
+      "q12": "a",
+      "q13": "c",
+      "q14": "a",
+      "q15": "c"
+};
+    const EXPLICACIONES = {
+      "q1": "El artículo 8 clasifica a los empleados públicos en funcionarios de carrera, funcionarios interinos, personal laboral fijo, por tiempo indefinido o temporal, y personal eventual.",
+      "q2": "El artículo 10.1.c fija para la ejecución de programas temporales una duración no superior a tres años, ampliable hasta doce meses más por las leyes de Función Pública de desarrollo.",
+      "q3": "El artículo 10.4 prevé que, transcurridos tres años desde el nombramiento, finalice la interinidad y la vacante solo pueda ocuparse por funcionario de carrera, salvo proceso selectivo desierto.",
+      "q4": "El artículo 12 define al personal eventual por funciones de confianza o asesoramiento especial; su nombramiento y cese son libres y cesa en todo caso al cesar la autoridad correspondiente.",
+      "q5": "El artículo 13 exige mérito, capacidad, idoneidad, publicidad y concurrencia, somete al directivo a evaluación y excluye sus condiciones de empleo de la negociación colectiva.",
+      "q6": "El artículo 14.j bis reconoce la intimidad en el uso de dispositivos digitales, frente a videovigilancia y geolocalización, y la desconexión digital.",
+      "q7": "El artículo 18.2 exige poseer los requisitos de ingreso, tener al menos dos años de servicio activo en el inferior Subgrupo o Grupo si no tiene Subgrupo, y superar las pruebas selectivas.",
+      "q8": "El artículo 20.5 exige la aprobación previa de sistemas objetivos de evaluación para esos efectos, conforme a los criterios del propio artículo.",
+      "q9": "El artículo 25.1 reconoce a los interinos retribuciones básicas, pagas extraordinarias, complementarias de los apartados b), c) y d) del artículo 24 y las de la categoría de entrada.",
+      "q10": "El artículo 30.2 establece que quienes ejerciten huelga no devengan ni perciben las retribuciones del tiempo en esa situación; la deducción no es sanción ni afecta a prestaciones sociales.",
+      "q11": "El artículo 60 excluye del órgano de selección al personal político, funcionarios interinos y personal eventual, y dispone que la pertenencia será siempre a título individual.",
+      "q12": "El artículo 62.1 exige sucesivamente superar el proceso selectivo, nombramiento publicado, acatamiento de la Constitución y normativa correspondiente, y toma de posesión dentro de plazo.",
+      "q13": "El artículo 64 exige renuncia escrita y aceptación expresa, pero impide aceptarla cuando el funcionario esté sujeto a expediente disciplinario o tenga auto de procesamiento o apertura de juicio oral por delito.",
+      "q14": "El artículo 66 distingue la inhabilitación absoluta, que afecta a todos los empleos o cargos, de la especial, que produce la pérdida respecto de los especificados en la sentencia.",
+      "q15": "El artículo 89.4 reconoce excedencia hasta tres años para cuidado de hijo o familiar, computa el tiempo a efectos de trienios, carrera y Seguridad Social, y reserva el puesto al menos dos años."
+};
+    const IDS = Object.keys(CORRECTAS);
+
+    const elTimer = document.getElementById("timer");
+    const elTimerBlock = document.getElementById("timer-block");
+    const panelInicio = document.getElementById("panel-inicio");
+    const panelExamen = document.getElementById("panel-examen");
+    const panelResultados = document.getElementById("panel-resultados");
+    const form = document.getElementById("form-examen");
+    const btnEmpezar = document.getElementById("btn-empezar");
+    const btnCorregir = document.getElementById("btn-corregir");
+    const outPuntos = document.getElementById("out-puntos");
+    const outDetalle = document.getElementById("out-detalle");
+    const outGuardado = document.getElementById("out-guardado");
+    const outErrores = document.getElementById("out-errores");
+    const outMsgFallidas = document.getElementById("out-msg-fallidas");
+    const bloqueOmitidas = document.getElementById("bloque-omitidas");
+    const outOmitidas = document.getElementById("out-omitidas");
+    const outSinErrores = document.getElementById("out-sin-errores");
+
+    let intervalId = null;
+    let segundosTranscurridos = 0;
+    let examenIniciado = false;
+    let cronometroParado = false;
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function formatTranscurrido(totalSeg) {
+      const h = Math.floor(totalSeg / 3600);
+      const m = Math.floor((totalSeg % 3600) / 60);
+      const s = totalSeg % 60;
+      if (h > 0) {
+        return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
+      return m + ":" + String(s).padStart(2, "0");
+    }
+
+    function tickCronometro() {
+      if (cronometroParado) return;
+      segundosTranscurridos += 1;
+      elTimer.textContent = formatTranscurrido(segundosTranscurridos);
+    }
+
+    function textoEnunciado(id) {
+      const fs = form.querySelector('fieldset[data-q="' + id + '"]');
+      const el = fs && fs.querySelector(".enunciado");
+      return el ? el.textContent.trim() : id;
+    }
+
+    function etiquetaOpcion(id, valor) {
+      if (valor === SKIP) return "Sin responder";
+      const inp = form.querySelector('input[name="' + id + '"][value="' + valor + '"]');
+      if (!inp) return valor;
+      const lab = inp.closest("label");
+      return lab ? lab.textContent.trim() : valor;
+    }
+
+    function guardarResultado(payload) {
+      outGuardado.hidden = false;
+      outGuardado.textContent = "Guardando intento...";
+
+      fetch(RESULTADOS_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(function (resp) {
+          if (!resp.ok) throw new Error("No se pudo guardar el intento.");
+          outGuardado.textContent = "Intento guardado en resultados_test.csv.";
+        })
+        .catch(function () {
+          outGuardado.textContent =
+            "No se pudo guardar el intento. Comprueba que el servidor de resultados está en marcha.";
+        });
+    }
+
+    btnEmpezar.addEventListener("click", function () {
+      if (examenIniciado) return;
+      examenIniciado = true;
+      cronometroParado = false;
+      segundosTranscurridos = 0;
+      panelInicio.hidden = true;
+      panelExamen.hidden = false;
+      panelResultados.hidden = true;
+      elTimerBlock.classList.remove("inactivo");
+      elTimer.textContent = "0:00";
+      btnCorregir.disabled = false;
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(tickCronometro, 1000);
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      let aciertos = 0;
+      let fallos = 0;
+      let contestadas = 0;
+      const errores = [];
+      const omitidas = [];
+
+      for (const id of IDS) {
+        const elegido = fd.get(id);
+        const ok = CORRECTAS[id];
+        const exp = EXPLICACIONES[id] || "";
+
+        if (!elegido || elegido === SKIP) {
+          omitidas.push({ id, exp });
+          continue;
+        }
+
+        contestadas += 1;
+        if (elegido === ok) {
+          aciertos += 1;
+        } else {
+          fallos += 1;
+          errores.push({
+            id,
+            elegido: String(elegido),
+            correcta: ok,
+            exp,
+          });
+        }
+      }
+
+      const penal = Math.floor(fallos / 2);
+      const puntuacion = aciertos - penal;
+
+      cronometroParado = true;
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+
+      panelResultados.hidden = false;
+      outPuntos.textContent = String(puntuacion);
+      outDetalle.textContent =
+        "Contestadas: " +
+        contestadas +
+        " · Sin responder: " +
+        omitidas.length +
+        " · Aciertos: " +
+        aciertos +
+        " · Fallos: " +
+        fallos +
+        " · Penalización: −" +
+        penal +
+        " · Tiempo: " +
+        formatTranscurrido(segundosTranscurridos);
+      guardarResultado({
+        examen: EXAMEN_ID,
+        preguntas_respondidas: contestadas,
+        preguntas_sin_responder: omitidas.length,
+        aciertos: aciertos,
+        fallos: fallos,
+        resultado: puntuacion,
+      });
+
+      outErrores.innerHTML = "";
+      outMsgFallidas.hidden = true;
+      outMsgFallidas.textContent = "";
+
+      if (errores.length === 0) {
+        outMsgFallidas.hidden = false;
+        outMsgFallidas.textContent =
+          contestadas === 0
+            ? "No marcaste ninguna respuesta distinta de «Sin responder»."
+            : "Ninguna de las respuestas contestadas es incorrecta.";
+      } else {
+        for (const err of errores) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(err.id)) +
+            "</strong>" +
+            '<span class="mini">Tu respuesta: ' +
+            esc(etiquetaOpcion(err.id, err.elegido)) +
+            " · Correcta: " +
+            esc(etiquetaOpcion(err.id, err.correcta)) +
+            "</span>" +
+            '<span class="explicacion">' +
+            esc(err.exp) +
+            "</span>";
+          outErrores.appendChild(li);
+        }
+      }
+
+      outOmitidas.innerHTML = "";
+      if (omitidas.length === 0) {
+        bloqueOmitidas.hidden = true;
+      } else {
+        bloqueOmitidas.hidden = false;
+        for (const om of omitidas) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(om.id)) +
+            "</strong>" +
+            '<span class="mini">No elegiste a), b) ni c).</span>' +
+            '<span class="explicacion">Respuesta acertada habría sido: ' +
+            esc(etiquetaOpcion(om.id, CORRECTAS[om.id])) +
+            ". " +
+            esc(om.exp) +
+            "</span>";
+          outOmitidas.appendChild(li);
+        }
+      }
+
+      const perfectoContestadas = contestadas > 0 && fallos === 0;
+      const nadaContestado = contestadas === 0;
+      if (perfectoContestadas && errores.length === 0 && !nadaContestado) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length === 0) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length > 0 && perfectoContestadas) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Sin fallos en lo que respondiste; revisa las omitidas arriba.";
+      } else {
+        outSinErrores.hidden = true;
+      }
+
+      btnCorregir.disabled = true;
+      elTimerBlock.classList.add("inactivo");
+      form.querySelectorAll("input").forEach(function (inp) {
+        inp.disabled = true;
+      });
+    });
+
+  </script>
+</body>
+</html>
