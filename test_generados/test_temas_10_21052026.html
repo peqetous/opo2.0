@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Test Tema 10 - 25 preguntas</title>
+  <style>
+    :root {
+      --bg: #f2f2f7;
+      --surface: #ffffff;
+      --separator: rgba(60, 60, 67, 0.12);
+      --text: #1c1c1e;
+      --text-secondary: rgba(60, 60, 67, 0.6);
+      --text-tertiary: rgba(60, 60, 67, 0.45);
+      --blue: #007aff;
+      --blue-pressed: #0062cc;
+      --green: #34c759;
+      --red: #ff3b30;
+      --radius-lg: 14px;
+      --radius-pill: 980px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Text",
+        "SF Pro Display",
+        "Helvetica Neue",
+        sans-serif;
+      font-size: 17px;
+      line-height: 1.35;
+      letter-spacing: -0.022em;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1.25rem;
+      padding-top: max(0.75rem, env(safe-area-inset-top));
+      background: rgba(255, 255, 255, 0.72);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .topbar-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.024em;
+    }
+
+    .timer-block {
+      text-align: right;
+      min-width: 4.5rem;
+    }
+
+    .timer-block .timer-caption {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 1px;
+    }
+
+    .timer-block .timer-value {
+      font-size: 20px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .timer-block.inactivo .timer-value {
+      color: var(--text-tertiary);
+    }
+
+    main {
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 2.5rem;
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .sheet {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.25rem 1.35rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .sheet + .sheet {
+      margin-top: 1rem;
+    }
+
+    .inicio .lead {
+      margin: 0 0 0.75rem;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .hint {
+      margin: 0 0 1.25rem;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text-tertiary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.022em;
+      padding: 0.65rem 1.35rem;
+      border: none;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-pressed);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.38;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    #panel-examen {
+      margin-top: 1rem;
+    }
+
+    #panel-examen[hidden] {
+      display: none !important;
+    }
+
+    fieldset {
+      margin: 0 0 0.75rem;
+      padding: 0;
+      border: none;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    fieldset:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .enunciado {
+      padding: 0.95rem 1rem 0.85rem;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.022em;
+      line-height: 1.35;
+      border-bottom: 0.5px solid var(--separator);
+    }
+
+    .options {
+      padding: 0 0 0.35rem;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin: 0;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      font-size: 17px;
+      color: var(--text);
+      border-top: 0.5px solid var(--separator);
+    }
+
+    label.opt-skip {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    label:first-of-type {
+      border-top: none;
+    }
+
+    label input {
+      margin: 0;
+      width: 1.15rem;
+      height: 1.15rem;
+      accent-color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .acciones {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .acciones .hint {
+      margin: 0;
+    }
+
+    #panel-inicio[hidden],
+    #panel-resultados[hidden] {
+      display: none !important;
+    }
+
+    .result-block h2 {
+      margin: 0 0 0.35rem;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.026em;
+    }
+
+    .result-block .puntos {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.35rem;
+      line-height: 1.15;
+    }
+
+    .result-block .detalle {
+      margin: 0 0 1.5rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .result-block h3 {
+      margin: 0 0 0.5rem;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-tertiary);
+    }
+
+    .result-block h3 + .result-muted {
+      margin-top: -0.25rem;
+    }
+
+    .result-muted {
+      margin: 0 0 1rem;
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .err-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .err-list li {
+      padding: 0.85rem 1rem;
+      background: rgba(255, 59, 48, 0.06);
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      border: 0.5px solid rgba(255, 59, 48, 0.18);
+    }
+
+    .err-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .err-list li strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .err-list .mini {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    .err-list .explicacion {
+      display: block;
+      margin-top: 0.55rem;
+      padding-top: 0.55rem;
+      border-top: 0.5px solid rgba(255, 59, 48, 0.2);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .omit-list li {
+      background: rgba(60, 60, 67, 0.06);
+      border-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .omit-list .explicacion {
+      border-top-color: rgba(60, 60, 67, 0.12);
+    }
+
+    .bloque-repaso {
+      margin-bottom: 1.25rem;
+    }
+
+    .bloque-repaso:last-child {
+      margin-bottom: 0;
+    }
+
+    .sin-errores {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--green);
+    }
+    </style>
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="topbar-title">Test Tema 10 - 25 preguntas</h1>
+    <div id="timer-block" class="timer-block inactivo" aria-live="polite">
+      <span class="timer-caption">Transcurrido</span>
+      <span id="timer" class="timer-value">0:00</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="panel-inicio" class="sheet inicio">
+      <p class="lead">
+        Pulsa <strong>Empezar</strong> para iniciar el cronómetro y ver las 25 preguntas.
+        Puedes pulsar <strong>Corregir</strong> cuando quieras; las que dejes en «Sin responder» no suman ni restan.
+      </p>
+      <p class="hint">
+        Puntuación (solo sobre las contestadas, excluido «Sin responder»): cada 2 incorrectas restan 1 acierto (la nota puede ser negativa).
+      </p>
+      <button type="button" class="btn btn-primary" id="btn-empezar">Empezar</button>
+    </section>
+
+    <section id="panel-examen" hidden>
+      <form id="form-examen">
+        <!-- Fuente: Ley 39/2015, art. 1 -->
+        <fieldset data-q="q1">
+          <legend class="visually-hidden">Pregunta 1</legend>
+          <div class="enunciado" id="enun-q1"><strong>1.</strong> Según la Ley 39/2015, ¿cuál es uno de los objetos de esta Ley?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q1">
+            <label><input type="radio" name="q1" value="a" /> a) Regular solo la organización de los ministerios.</label>
+            <label><input type="radio" name="q1" value="b" /> b) Regular los requisitos de validez y eficacia de los actos administrativos y el procedimiento administrativo común.</label>
+            <label><input type="radio" name="q1" value="c" /> c) Regular exclusivamente el proceso contencioso-administrativo.</label>
+            <label class="opt-skip"><input type="radio" name="q1" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 40/2015, art. 3.1 -->
+        <fieldset data-q="q2">
+          <legend class="visually-hidden">Pregunta 2</legend>
+          <div class="enunciado" id="enun-q2"><strong>2.</strong> Según la Ley 40/2015, las Administraciones Públicas actúan con sometimiento pleno a:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q2">
+            <label><input type="radio" name="q2" value="a" /> a) La Constitución, la Ley y el Derecho.</label>
+            <label><input type="radio" name="q2" value="b" /> b) La oportunidad política y la costumbre administrativa.</label>
+            <label><input type="radio" name="q2" value="c" /> c) Las instrucciones internas, aunque contradigan la ley.</label>
+            <label class="opt-skip"><input type="radio" name="q2" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 40/2015, art. 4.1 -->
+        <fieldset data-q="q3">
+          <legend class="visually-hidden">Pregunta 3</legend>
+          <div class="enunciado" id="enun-q3"><strong>3.</strong> Según la Ley 40/2015, cuando una Administración limita derechos para desarrollar una actividad, debe:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q3">
+            <label><input type="radio" name="q3" value="a" /> a) Elegir siempre la medida más intensa disponible.</label>
+            <label><input type="radio" name="q3" value="b" /> b) Evitar motivar la medida si se publica oficialmente.</label>
+            <label><input type="radio" name="q3" value="c" /> c) Aplicar proporcionalidad, elegir la medida menos restrictiva y motivar su necesidad.</label>
+            <label class="opt-skip"><input type="radio" name="q3" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 40/2015, art. 8.1 -->
+        <fieldset data-q="q4">
+          <legend class="visually-hidden">Pregunta 4</legend>
+          <div class="enunciado" id="enun-q4"><strong>4.</strong> Según la Ley 40/2015, la competencia administrativa es:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q4">
+            <label><input type="radio" name="q4" value="a" /> a) Irrenunciable, salvo ejercicio por delegación o avocación en los términos legales.</label>
+            <label><input type="radio" name="q4" value="b" /> b) Renunciable por simple acuerdo del titular del órgano.</label>
+            <label><input type="radio" name="q4" value="c" /> c) Transmisible libremente mediante orden de servicio.</label>
+            <label class="opt-skip"><input type="radio" name="q4" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 40/2015, art. 9.2 -->
+        <fieldset data-q="q5">
+          <legend class="visually-hidden">Pregunta 5</legend>
+          <div class="enunciado" id="enun-q5"><strong>5.</strong> Según la Ley 40/2015, no puede ser objeto de delegación:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q5">
+            <label><input type="radio" name="q5" value="a" /> a) La tramitación material de expedientes homogéneos.</label>
+            <label><input type="radio" name="q5" value="b" /> b) La adopción de disposiciones de carácter general.</label>
+            <label><input type="radio" name="q5" value="c" /> c) La emisión de comunicaciones ordinarias sin contenido decisorio.</label>
+            <label class="opt-skip"><input type="radio" name="q5" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 5.3 -->
+        <fieldset data-q="q6">
+          <legend class="visually-hidden">Pregunta 6</legend>
+          <div class="enunciado" id="enun-q6"><strong>6.</strong> Según la Ley 39/2015, para interponer recursos en nombre de otra persona:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q6">
+            <label><input type="radio" name="q6" value="a" /> a) La representación solo se presume si el recurso es estimatorio.</label>
+            <label><input type="radio" name="q6" value="b" /> b) Debe acreditarse la representación.</label>
+            <label><input type="radio" name="q6" value="c" /> c) Basta siempre una manifestación verbal del representante.</label>
+            <label class="opt-skip"><input type="radio" name="q6" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 14.2 -->
+        <fieldset data-q="q7">
+          <legend class="visually-hidden">Pregunta 7</legend>
+          <div class="enunciado" id="enun-q7"><strong>7.</strong> Según la Ley 39/2015, ¿quiénes están obligados a relacionarse electrónicamente con las Administraciones Públicas?</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q7">
+            <label><input type="radio" name="q7" value="a" /> a) Todas las personas físicas en cualquier trámite.</label>
+            <label><input type="radio" name="q7" value="b" /> b) Solo las personas físicas que lo hayan elegido voluntariamente.</label>
+            <label><input type="radio" name="q7" value="c" /> c) Las personas jurídicas y las entidades sin personalidad jurídica, entre otros sujetos.</label>
+            <label class="opt-skip"><input type="radio" name="q7" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 19.1 -->
+        <fieldset data-q="q8">
+          <legend class="visually-hidden">Pregunta 8</legend>
+          <div class="enunciado" id="enun-q8"><strong>8.</strong> Según la Ley 39/2015, la comparecencia ante oficinas públicas solo será obligatoria cuando:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q8">
+            <label><input type="radio" name="q8" value="a" /> a) Esté previsto en una norma con rango de ley.</label>
+            <label><input type="radio" name="q8" value="b" /> b) Lo ordene una instrucción interna del servicio.</label>
+            <label><input type="radio" name="q8" value="c" /> c) Lo considere útil el empleado público que tramite el expediente.</label>
+            <label class="opt-skip"><input type="radio" name="q8" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 21.1 -->
+        <fieldset data-q="q9">
+          <legend class="visually-hidden">Pregunta 9</legend>
+          <div class="enunciado" id="enun-q9"><strong>9.</strong> Según la Ley 39/2015, la Administración debe dictar resolución expresa y notificarla:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q9">
+            <label><input type="radio" name="q9" value="a" /> a) Solo en procedimientos iniciados a solicitud del interesado.</label>
+            <label><input type="radio" name="q9" value="b" /> b) Solo cuando el silencio tenga sentido desestimatorio.</label>
+            <label><input type="radio" name="q9" value="c" /> c) En todos los procedimientos, cualquiera que sea su forma de iniciación, con las excepciones legales.</label>
+            <label class="opt-skip"><input type="radio" name="q9" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 21.3 -->
+        <fieldset data-q="q10">
+          <legend class="visually-hidden">Pregunta 10</legend>
+          <div class="enunciado" id="enun-q10"><strong>10.</strong> Según la Ley 39/2015, si la norma del procedimiento no fija plazo máximo para resolver, el plazo será de:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q10">
+            <label><input type="radio" name="q10" value="a" /> a) Seis meses.</label>
+            <label><input type="radio" name="q10" value="b" /> b) Tres meses.</label>
+            <label><input type="radio" name="q10" value="c" /> c) Un mes.</label>
+            <label class="opt-skip"><input type="radio" name="q10" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 24.2 -->
+        <fieldset data-q="q11">
+          <legend class="visually-hidden">Pregunta 11</legend>
+          <div class="enunciado" id="enun-q11"><strong>11.</strong> Según la Ley 39/2015, la estimación por silencio administrativo tiene la consideración de:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q11">
+            <label><input type="radio" name="q11" value="a" /> a) Acto administrativo finalizador del procedimiento a todos los efectos.</label>
+            <label><input type="radio" name="q11" value="b" /> b) Simple informe sin eficacia jurídica.</label>
+            <label><input type="radio" name="q11" value="c" /> c) Acto de trámite pendiente siempre de confirmación expresa.</label>
+            <label class="opt-skip"><input type="radio" name="q11" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 25.1.b -->
+        <fieldset data-q="q12">
+          <legend class="visually-hidden">Pregunta 12</legend>
+          <div class="enunciado" id="enun-q12"><strong>12.</strong> Según la Ley 39/2015, en procedimientos iniciados de oficio sancionadores o de intervención con efectos desfavorables, la falta de resolución en plazo produce:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q12">
+            <label><input type="radio" name="q12" value="a" /> a) La estimación de las pretensiones del interesado.</label>
+            <label><input type="radio" name="q12" value="b" /> b) La caducidad, con archivo de actuaciones en la resolución que la declare.</label>
+            <label><input type="radio" name="q12" value="c" /> c) La ampliación automática del plazo por otros seis meses.</label>
+            <label class="opt-skip"><input type="radio" name="q12" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 30.2 -->
+        <fieldset data-q="q13">
+          <legend class="visually-hidden">Pregunta 13</legend>
+          <div class="enunciado" id="enun-q13"><strong>13.</strong> Según la Ley 39/2015, si los plazos se señalan por días y no se expresa otro cómputo, son:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q13">
+            <label><input type="radio" name="q13" value="a" /> a) Naturales, incluyendo sábados, domingos y festivos.</label>
+            <label><input type="radio" name="q13" value="b" /> b) Hábiles, incluyendo sábados y excluyendo solo domingos.</label>
+            <label><input type="radio" name="q13" value="c" /> c) Hábiles, excluyendo sábados, domingos y festivos.</label>
+            <label class="opt-skip"><input type="radio" name="q13" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 33.1 -->
+        <fieldset data-q="q14">
+          <legend class="visually-hidden">Pregunta 14</legend>
+          <div class="enunciado" id="enun-q14"><strong>14.</strong> Según la Ley 39/2015, la tramitación de urgencia reduce a la mitad:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q14">
+            <label><input type="radio" name="q14" value="a" /> a) Todos los plazos, incluidos solicitudes y recursos.</label>
+            <label><input type="radio" name="q14" value="b" /> b) Los plazos del procedimiento ordinario, salvo los relativos a presentación de solicitudes y recursos.</label>
+            <label><input type="radio" name="q14" value="c" /> c) Solo el plazo para emitir informes facultativos.</label>
+            <label class="opt-skip"><input type="radio" name="q14" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 34 -->
+        <fieldset data-q="q15">
+          <legend class="visually-hidden">Pregunta 15</legend>
+          <div class="enunciado" id="enun-q15"><strong>15.</strong> Según la Ley 39/2015, el contenido de los actos administrativos debe:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q15">
+            <label><input type="radio" name="q15" value="a" /> a) Ajustarse al ordenamiento jurídico y ser determinado y adecuado a sus fines.</label>
+            <label><input type="radio" name="q15" value="b" /> b) Limitarse a reproducir la solicitud del interesado.</label>
+            <label><input type="radio" name="q15" value="c" /> c) Ser siempre discrecional, aunque se aparte de sus fines.</label>
+            <label class="opt-skip"><input type="radio" name="q15" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 35.1 -->
+        <fieldset data-q="q16">
+          <legend class="visually-hidden">Pregunta 16</legend>
+          <div class="enunciado" id="enun-q16"><strong>16.</strong> Según la Ley 39/2015, deben ser motivados:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q16">
+            <label><input type="radio" name="q16" value="a" /> a) Solo los actos favorables no recurribles.</label>
+            <label><input type="radio" name="q16" value="b" /> b) Los actos que limiten derechos subjetivos o intereses legítimos, entre otros.</label>
+            <label><input type="radio" name="q16" value="c" /> c) Únicamente los documentos auxiliares internos.</label>
+            <label class="opt-skip"><input type="radio" name="q16" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 39.1 -->
+        <fieldset data-q="q17">
+          <legend class="visually-hidden">Pregunta 17</legend>
+          <div class="enunciado" id="enun-q17"><strong>17.</strong> Según la Ley 39/2015, los actos sujetos al Derecho Administrativo se presumen válidos y producen efectos:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q17">
+            <label><input type="radio" name="q17" value="a" /> a) Desde la fecha en que se dicten, salvo que en ellos se disponga otra cosa.</label>
+            <label><input type="radio" name="q17" value="b" /> b) Solo desde que sean firmes judicialmente.</label>
+            <label><input type="radio" name="q17" value="c" /> c) Siempre desde su publicación en el boletín oficial.</label>
+            <label class="opt-skip"><input type="radio" name="q17" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 40.2 -->
+        <fieldset data-q="q18">
+          <legend class="visually-hidden">Pregunta 18</legend>
+          <div class="enunciado" id="enun-q18"><strong>18.</strong> Según la Ley 39/2015, toda notificación debe cursarse dentro del plazo de:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q18">
+            <label><input type="radio" name="q18" value="a" /> a) Cinco días desde la firmeza del acto.</label>
+            <label><input type="radio" name="q18" value="b" /> b) Diez días desde la fecha en que el acto haya sido dictado.</label>
+            <label><input type="radio" name="q18" value="c" /> c) Un mes desde la entrada de la solicitud.</label>
+            <label class="opt-skip"><input type="radio" name="q18" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 41.5 -->
+        <fieldset data-q="q19">
+          <legend class="visually-hidden">Pregunta 19</legend>
+          <div class="enunciado" id="enun-q19"><strong>19.</strong> Según la Ley 39/2015, si el interesado rechaza una notificación:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q19">
+            <label><input type="radio" name="q19" value="a" /> a) Debe intentarse siempre por tres medios distintos.</label>
+            <label><input type="radio" name="q19" value="b" /> b) El procedimiento queda suspendido hasta su aceptación.</label>
+            <label><input type="radio" name="q19" value="c" /> c) Se hace constar, se da por efectuado el trámite y continúa el procedimiento.</label>
+            <label class="opt-skip"><input type="radio" name="q19" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 43.2 -->
+        <fieldset data-q="q20">
+          <legend class="visually-hidden">Pregunta 20</legend>
+          <div class="enunciado" id="enun-q20"><strong>20.</strong> Según la Ley 39/2015, una notificación electrónica obligatoria o elegida se entiende rechazada tras:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q20">
+            <label><input type="radio" name="q20" value="a" /> a) Diez días naturales desde la puesta a disposición sin acceso al contenido.</label>
+            <label><input type="radio" name="q20" value="b" /> b) Quince días hábiles desde la publicación en el boletín oficial.</label>
+            <label><input type="radio" name="q20" value="c" /> c) Un mes desde la fecha del acto notificado.</label>
+            <label class="opt-skip"><input type="radio" name="q20" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 47.1.b -->
+        <fieldset data-q="q21">
+          <legend class="visually-hidden">Pregunta 21</legend>
+          <div class="enunciado" id="enun-q21"><strong>21.</strong> Según la Ley 39/2015, son nulos de pleno derecho los actos dictados por órgano manifiestamente incompetente por razón de:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q21">
+            <label><input type="radio" name="q21" value="a" /> a) La cuantía o la oportunidad administrativa.</label>
+            <label><input type="radio" name="q21" value="b" /> b) La materia o el territorio.</label>
+            <label><input type="radio" name="q21" value="c" /> c) La antigüedad del expediente o la carga de trabajo.</label>
+            <label class="opt-skip"><input type="radio" name="q21" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 48.2 -->
+        <fieldset data-q="q22">
+          <legend class="visually-hidden">Pregunta 22</legend>
+          <div class="enunciado" id="enun-q22"><strong>22.</strong> Según la Ley 39/2015, el defecto de forma solo determina anulabilidad cuando:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q22">
+            <label><input type="radio" name="q22" value="a" /> a) El acto sea favorable y esté correctamente notificado.</label>
+            <label><input type="radio" name="q22" value="b" /> b) El defecto consista en un error aritmético subsanable.</label>
+            <label><input type="radio" name="q22" value="c" /> c) El acto carezca de requisitos formales indispensables para alcanzar su fin o dé lugar a indefensión.</label>
+            <label class="opt-skip"><input type="radio" name="q22" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 77.2 -->
+        <fieldset data-q="q23">
+          <legend class="visually-hidden">Pregunta 23</legend>
+          <div class="enunciado" id="enun-q23"><strong>23.</strong> Según la Ley 39/2015, en el período de prueba ordinario acordado por el instructor, el plazo no podrá ser:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q23">
+            <label><input type="radio" name="q23" value="a" /> a) Superior a quince días ni inferior a cinco.</label>
+            <label><input type="radio" name="q23" value="b" /> b) Superior a tres meses ni inferior a un mes.</label>
+            <label><input type="radio" name="q23" value="c" /> c) Superior a treinta días ni inferior a diez.</label>
+            <label class="opt-skip"><input type="radio" name="q23" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 82.2 -->
+        <fieldset data-q="q24">
+          <legend class="visually-hidden">Pregunta 24</legend>
+          <div class="enunciado" id="enun-q24"><strong>24.</strong> Según la Ley 39/2015, en el trámite de audiencia los interesados podrán alegar y presentar documentos en un plazo:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q24">
+            <label><input type="radio" name="q24" value="a" /> a) No inferior a diez días ni superior a quince.</label>
+            <label><input type="radio" name="q24" value="b" /> b) De cinco días improrrogables en todo caso.</label>
+            <label><input type="radio" name="q24" value="c" /> c) No inferior a un mes ni superior a tres meses.</label>
+            <label class="opt-skip"><input type="radio" name="q24" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <!-- Fuente: Ley 39/2015, art. 106.1 -->
+        <fieldset data-q="q25">
+          <legend class="visually-hidden">Pregunta 25</legend>
+          <div class="enunciado" id="enun-q25"><strong>25.</strong> Según la Ley 39/2015, la revisión de oficio de actos nulos que hayan puesto fin a la vía administrativa o no hayan sido recurridos en plazo exige:</div>
+          <div class="options" role="radiogroup" aria-labelledby="enun-q25">
+            <label><input type="radio" name="q25" value="a" /> a) Acuerdo verbal del órgano que dictó el acto.</label>
+            <label><input type="radio" name="q25" value="b" /> b) La previa interposición de recurso de alzada por cualquier persona.</label>
+            <label><input type="radio" name="q25" value="c" /> c) Dictamen favorable del Consejo de Estado u órgano consultivo equivalente, si lo hubiere.</label>
+            <label class="opt-skip"><input type="radio" name="q25" value="_skip" checked /> Sin responder</label>
+          </div>
+        </fieldset>
+        <div class="acciones">
+          <button type="submit" class="btn btn-primary" id="btn-corregir" disabled>Corregir</button>
+          <p class="hint" id="hint-completo">
+            Las preguntas no son obligatorias. «Sin responder» queda fuera de la nota.
+          </p>
+        </div>
+      </form>
+    </section>
+
+    <section id="panel-resultados" class="sheet result-block" hidden>
+      <h2>Resultado</h2>
+      <p class="puntos" id="out-puntos"></p>
+      <p class="detalle" id="out-detalle"></p>
+      <p class="result-muted" id="out-guardado" hidden></p>
+      <div class="bloque-repaso" id="bloque-fallidas">
+        <h3>Fallidas</h3>
+        <p class="result-muted" id="out-msg-fallidas" hidden></p>
+        <ul class="err-list" id="out-errores"></ul>
+      </div>
+      <div class="bloque-repaso" id="bloque-omitidas" hidden>
+        <h3>Sin responder</h3>
+        <ul class="err-list omit-list" id="out-omitidas"></ul>
+      </div>
+      <p class="sin-errores" id="out-sin-errores" hidden></p>
+    </section>
+  </main>
+
+  <script>
+    const SKIP = "_skip";
+    const EXAMEN_ID = "test_temas_10_21052026.html";
+    const RESULTADOS_ENDPOINT = "http://127.0.0.1:8765/resultados-test";
+    const CORRECTAS = {
+      "q1": "b",
+      "q2": "a",
+      "q3": "c",
+      "q4": "a",
+      "q5": "b",
+      "q6": "b",
+      "q7": "c",
+      "q8": "a",
+      "q9": "c",
+      "q10": "b",
+      "q11": "a",
+      "q12": "b",
+      "q13": "c",
+      "q14": "b",
+      "q15": "a",
+      "q16": "b",
+      "q17": "a",
+      "q18": "b",
+      "q19": "c",
+      "q20": "a",
+      "q21": "b",
+      "q22": "c",
+      "q23": "c",
+      "q24": "a",
+      "q25": "c"
+};
+    const EXPLICACIONES = {
+      "q1": "La respuesta se fundamenta en Ley 39/2015, art. 1.",
+      "q2": "La respuesta se fundamenta en Ley 40/2015, art. 3.1.",
+      "q3": "La respuesta se fundamenta en Ley 40/2015, art. 4.1.",
+      "q4": "La respuesta se fundamenta en Ley 40/2015, art. 8.1.",
+      "q5": "La respuesta se fundamenta en Ley 40/2015, art. 9.2.",
+      "q6": "La respuesta se fundamenta en Ley 39/2015, art. 5.3.",
+      "q7": "La respuesta se fundamenta en Ley 39/2015, art. 14.2.",
+      "q8": "La respuesta se fundamenta en Ley 39/2015, art. 19.1.",
+      "q9": "La respuesta se fundamenta en Ley 39/2015, art. 21.1.",
+      "q10": "La respuesta se fundamenta en Ley 39/2015, art. 21.3.",
+      "q11": "La respuesta se fundamenta en Ley 39/2015, art. 24.2.",
+      "q12": "La respuesta se fundamenta en Ley 39/2015, art. 25.1.b.",
+      "q13": "La respuesta se fundamenta en Ley 39/2015, art. 30.2.",
+      "q14": "La respuesta se fundamenta en Ley 39/2015, art. 33.1.",
+      "q15": "La respuesta se fundamenta en Ley 39/2015, art. 34.",
+      "q16": "La respuesta se fundamenta en Ley 39/2015, art. 35.1.",
+      "q17": "La respuesta se fundamenta en Ley 39/2015, art. 39.1.",
+      "q18": "La respuesta se fundamenta en Ley 39/2015, art. 40.2.",
+      "q19": "La respuesta se fundamenta en Ley 39/2015, art. 41.5.",
+      "q20": "La respuesta se fundamenta en Ley 39/2015, art. 43.2.",
+      "q21": "La respuesta se fundamenta en Ley 39/2015, art. 47.1.b.",
+      "q22": "La respuesta se fundamenta en Ley 39/2015, art. 48.2.",
+      "q23": "La respuesta se fundamenta en Ley 39/2015, art. 77.2.",
+      "q24": "La respuesta se fundamenta en Ley 39/2015, art. 82.2.",
+      "q25": "La respuesta se fundamenta en Ley 39/2015, art. 106.1."
+};
+    const IDS = Object.keys(CORRECTAS);
+
+    const elTimer = document.getElementById("timer");
+    const elTimerBlock = document.getElementById("timer-block");
+    const panelInicio = document.getElementById("panel-inicio");
+    const panelExamen = document.getElementById("panel-examen");
+    const panelResultados = document.getElementById("panel-resultados");
+    const form = document.getElementById("form-examen");
+    const btnEmpezar = document.getElementById("btn-empezar");
+    const btnCorregir = document.getElementById("btn-corregir");
+    const outPuntos = document.getElementById("out-puntos");
+    const outDetalle = document.getElementById("out-detalle");
+    const outGuardado = document.getElementById("out-guardado");
+    const outErrores = document.getElementById("out-errores");
+    const outMsgFallidas = document.getElementById("out-msg-fallidas");
+    const bloqueOmitidas = document.getElementById("bloque-omitidas");
+    const outOmitidas = document.getElementById("out-omitidas");
+    const outSinErrores = document.getElementById("out-sin-errores");
+
+    let intervalId = null;
+    let segundosTranscurridos = 0;
+    let examenIniciado = false;
+    let cronometroParado = false;
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function formatTranscurrido(totalSeg) {
+      const h = Math.floor(totalSeg / 3600);
+      const m = Math.floor((totalSeg % 3600) / 60);
+      const s = totalSeg % 60;
+      if (h > 0) {
+        return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
+      return m + ":" + String(s).padStart(2, "0");
+    }
+
+    function tickCronometro() {
+      if (cronometroParado) return;
+      segundosTranscurridos += 1;
+      elTimer.textContent = formatTranscurrido(segundosTranscurridos);
+    }
+
+    function textoEnunciado(id) {
+      const fs = form.querySelector('fieldset[data-q="' + id + '"]');
+      const el = fs && fs.querySelector(".enunciado");
+      return el ? el.textContent.trim() : id;
+    }
+
+    function etiquetaOpcion(id, valor) {
+      if (valor === SKIP) return "Sin responder";
+      const inp = form.querySelector('input[name="' + id + '"][value="' + valor + '"]');
+      if (!inp) return valor;
+      const lab = inp.closest("label");
+      return lab ? lab.textContent.trim() : valor;
+    }
+
+    function guardarResultado(payload) {
+      outGuardado.hidden = false;
+      outGuardado.textContent = "Guardando intento...";
+
+      fetch(RESULTADOS_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(function (resp) {
+          if (!resp.ok) throw new Error("No se pudo guardar el intento.");
+          outGuardado.textContent = "Intento guardado en resultados_test.csv.";
+        })
+        .catch(function () {
+          outGuardado.textContent =
+            "No se pudo guardar el intento. Comprueba que el servidor de resultados está en marcha.";
+        });
+    }
+
+    btnEmpezar.addEventListener("click", function () {
+      if (examenIniciado) return;
+      examenIniciado = true;
+      cronometroParado = false;
+      segundosTranscurridos = 0;
+      panelInicio.hidden = true;
+      panelExamen.hidden = false;
+      panelResultados.hidden = true;
+      elTimerBlock.classList.remove("inactivo");
+      elTimer.textContent = "0:00";
+      btnCorregir.disabled = false;
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(tickCronometro, 1000);
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      let aciertos = 0;
+      let fallos = 0;
+      let contestadas = 0;
+      const errores = [];
+      const omitidas = [];
+
+      for (const id of IDS) {
+        const elegido = fd.get(id);
+        const ok = CORRECTAS[id];
+        const exp = EXPLICACIONES[id] || "";
+
+        if (!elegido || elegido === SKIP) {
+          omitidas.push({ id, exp });
+          continue;
+        }
+
+        contestadas += 1;
+        if (elegido === ok) {
+          aciertos += 1;
+        } else {
+          fallos += 1;
+          errores.push({
+            id,
+            elegido: String(elegido),
+            correcta: ok,
+            exp,
+          });
+        }
+      }
+
+      const penal = Math.floor(fallos / 2);
+      const puntuacion = aciertos - penal;
+
+      cronometroParado = true;
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+
+      panelResultados.hidden = false;
+      outPuntos.textContent = String(puntuacion);
+      outDetalle.textContent =
+        "Contestadas: " +
+        contestadas +
+        " · Sin responder: " +
+        omitidas.length +
+        " · Aciertos: " +
+        aciertos +
+        " · Fallos: " +
+        fallos +
+        " · Penalización: −" +
+        penal +
+        " · Tiempo: " +
+        formatTranscurrido(segundosTranscurridos);
+      guardarResultado({
+        examen: EXAMEN_ID,
+        preguntas_respondidas: contestadas,
+        preguntas_sin_responder: omitidas.length,
+        aciertos: aciertos,
+        fallos: fallos,
+        resultado: puntuacion,
+      });
+
+      outErrores.innerHTML = "";
+      outMsgFallidas.hidden = true;
+      outMsgFallidas.textContent = "";
+
+      if (errores.length === 0) {
+        outMsgFallidas.hidden = false;
+        outMsgFallidas.textContent =
+          contestadas === 0
+            ? "No marcaste ninguna respuesta distinta de «Sin responder»."
+            : "Ninguna de las respuestas contestadas es incorrecta.";
+      } else {
+        for (const err of errores) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(err.id)) +
+            "</strong>" +
+            '<span class="mini">Tu respuesta: ' +
+            esc(etiquetaOpcion(err.id, err.elegido)) +
+            " · Correcta: " +
+            esc(etiquetaOpcion(err.id, err.correcta)) +
+            "</span>" +
+            '<span class="explicacion">' +
+            esc(err.exp) +
+            "</span>";
+          outErrores.appendChild(li);
+        }
+      }
+
+      outOmitidas.innerHTML = "";
+      if (omitidas.length === 0) {
+        bloqueOmitidas.hidden = true;
+      } else {
+        bloqueOmitidas.hidden = false;
+        for (const om of omitidas) {
+          const li = document.createElement("li");
+          li.innerHTML =
+            "<strong>" +
+            esc(textoEnunciado(om.id)) +
+            "</strong>" +
+            '<span class="mini">No elegiste a), b) ni c).</span>' +
+            '<span class="explicacion">Respuesta acertada habría sido: ' +
+            esc(etiquetaOpcion(om.id, CORRECTAS[om.id])) +
+            ". " +
+            esc(om.exp) +
+            "</span>";
+          outOmitidas.appendChild(li);
+        }
+      }
+
+      const perfectoContestadas = contestadas > 0 && fallos === 0;
+      const nadaContestado = contestadas === 0;
+      if (perfectoContestadas && errores.length === 0 && !nadaContestado) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length === 0) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Todas las contestadas son correctas.";
+      } else if (errores.length === 0 && omitidas.length > 0 && perfectoContestadas) {
+        outSinErrores.hidden = false;
+        outSinErrores.textContent = "Sin fallos en lo que respondiste; revisa las omitidas arriba.";
+      } else {
+        outSinErrores.hidden = true;
+      }
+
+      btnCorregir.disabled = true;
+      elTimerBlock.classList.add("inactivo");
+      form.querySelectorAll("input").forEach(function (inp) {
+        inp.disabled = true;
+      });
+    });
+
+  </script>
+</body>
+</html>
